@@ -53,6 +53,18 @@ literalCaracterDR	\".\"
 literalEnteroDR	[+-]?[0-9]+
 literalRealDR	{literalEnteroDR}[rR]
 puntoYComaDR	;
+dosPuntosDR		:
+comaDR			,
+greaterThanDR	>
+lowerThanDR		<
+greaterEqThanDR	>=
+lowerEqThanDR	<=
+openParDR		\(
+closeParDR		\)
+openCorDR		\[
+closeCorDR		\]
+openKeyDR		\{
+closeKeyDR		\}
 verdaderoDR	(?i:verdadero)
 
 %%
@@ -62,7 +74,6 @@ verdaderoDR	(?i:verdadero)
  //No todas las definiciones regulares necesitan reglas. Por ejemplo, la ultima
  //que he puesto solo se emplea para que no se haga echo de los caracteres que
  //no cumplan ninguna definicion regular
-
 (?i:const)	{
 	printf("(constTK, )\n");
 }
@@ -74,6 +85,36 @@ verdaderoDR	(?i:verdadero)
 }
 =	{
 	printf("(igualTK, )\n");
+}
+{greaterThanDR}	{
+	printf("(greaterTK, )\n");
+}
+{lowerThanDR}	{
+	printf("(lowerTK, )\n");
+}
+{greaterEqThanDR}	{
+	printf("(greaterEqTK, )\n");
+}
+{lowerEqThanDR}	{
+	printf("(lowerEqTK, )\n");
+}
+{openParDR}	{
+	printf("(openParTK, )\n");
+}
+{closeParDR}	{
+	printf("(closeParTK, )\n");
+}
+{openCorDR}	{
+	printf("(openCorTK, )\n");
+}
+{closeCorDR}	{
+	printf("(closeCorTK, )\n");
+}
+{openKeyDR}	{
+	printf("(openKeyTK, )\n");
+}
+{closeKeyDR}	{
+	printf("(closeKeyTK, )\n");
 }
 '([^']|\/')*'	{
 	printf("(literalCadenaTK, %s)\n", yytext);
@@ -99,8 +140,14 @@ verdaderoDR	(?i:verdadero)
 [A-Z][A-Z_]*	{
 	printf("(nombreConstanteTK, %s)\n", yytext);
 }
+{comaDR}	{
+	printf("(comaTK,)\n");
+}
 {puntoYComaDR}	{
 	printf("(puntoYComaTK, )\n");
+}
+{dosPuntosDR}	{
+	printf("(dosPuntosTK, )\n");
 }
 {verdaderoDR}	{
 	printf("(literalBooleanoTK, verdadero)\n");
