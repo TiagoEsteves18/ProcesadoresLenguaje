@@ -2,6 +2,9 @@ algoritmo sumacomb;
 	ent n, m: entero;
 	sal suma: entero;
 {Prec: n= N AND m = M AND M >= N >0}
+	const
+		prueba:= 1;
+	fconst
 	var
 		i, comb: entero;
 	fvar

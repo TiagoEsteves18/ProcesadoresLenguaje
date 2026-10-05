@@ -69,9 +69,8 @@ salidaDR (?i:sal)
 enteroDR (?i:entero)
 inicioVariablesDR (?i:var)
 finVariablesDR (?i:fvar)
-
-
-
+inicioConstantesDR (?i:const)
+finalConstantesDR (?i:fconst)
 
 asignacionDR := 
 entoncesDR -> 
@@ -93,6 +92,10 @@ parentesisAbreDR \(
 parentesisCierraDR \) 
 corcheteAbreDR \[
 corcheteCierraDR \]
+dobleComillaDR \"
+comillaSimpleDR \'
+barraBajaDR \_
+potenciaDR \^
 
 %%
 
@@ -118,7 +121,8 @@ corcheteCierraDR \]
 {enteroDR} { printf("(enteroTK, )\n"); }
 {inicioVariablesDR} { printf("(inicioVariablesTK, )\n"); }
 {finVariablesDR} { printf("(finVariablesTK, )\n"); }
-
+{inicioConstantesDR} { printf("(inicioConstantesTK, )\n"); }
+{finalConstantesDR} { printf("(finconstantesTK, )\n"); }
 
 {literalEnteroDR} { printf("(literalEnteroTK, %d)\n", atoi(yytext)); }
 {literalRealDR} { printf("(literalRealTK, %f)\n", atof(yytext)); } 
@@ -145,7 +149,11 @@ corcheteCierraDR \]
 {parentesisCierraDR} { printf("(parentesisCierraTK, )\n"); } 
 {corcheteAbreDR} { printf("(corcheteAbreTK, )\n"); } 
 {corcheteCierraDR} { printf("(corcheteCierraTK, )\n"); } 
- 
+{dobleComillaDR} { printf("(dobleComillaTK, )\n"); }
+{comillaSimpleDR} { printf("(comillaSimpleTK, )\n"); }
+{barraBajaDR} { printf("(barraBajaTK, )\n"); }
+{potenciaDR} { printf("(potenciaTK, )\n"); }
+
 {identificadorDR} { printf("(identificadorTK, %s)\n", yytext); }
 
 [\t\n\r]+ {
