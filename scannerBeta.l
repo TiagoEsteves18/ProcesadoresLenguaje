@@ -52,6 +52,8 @@ cifraDR [0-9]
 identificadorDR {letraDR}({letraDR}|{cifraDR})*
 
 comentarioDR	\{([^}]|\/\})*\}
+comentarioPreDR	\{(?i:Prec\:\ )([^}]|\/\})*\}
+comentarioPostDR	\{(?i:Post\:\ )([^}]|\/\})*\}
 
 literalEnteroDR [+-]?[0-9]+ 
 literalRealDR [+-]?[0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?[rR]? 
@@ -71,6 +73,8 @@ inicioVariablesDR (?i:var)
 finVariablesDR (?i:fvar)
 inicioConstantesDR (?i:const)
 finalConstantesDR (?i:fconst)
+inicioMientrasDR (?i:mientras)
+finMientasDR (?i:fmientras)
 
 asignacionDR := 
 entoncesDR -> 
@@ -105,10 +109,12 @@ potenciaDR \^
  //que he puesto solo se emplea para que no se haga echo de los caracteres que
  //no cumplan ninguna definicion regular
 
- // Comentarios
+{comentarioPreDR} { printf("(comentarioPreTK, )\n"); }
+{comentarioPostDR} { printf("(comentarioPostTK, )\n"); }
 {comentarioDR} { 
 	//Los comentarios no generan tokens 
 }
+
 
 {algoritmoDR} { printf("(algoritmoTK, )\n"); } 
 {falgoritmoDR} { printf("(falgoritmoTK, )\n"); } 
@@ -123,6 +129,8 @@ potenciaDR \^
 {finVariablesDR} { printf("(finVariablesTK, )\n"); }
 {inicioConstantesDR} { printf("(inicioConstantesTK, )\n"); }
 {finalConstantesDR} { printf("(finconstantesTK, )\n"); }
+{inicioMientrasDR} {printf("(inicioMientrasTK, )\n"); }
+{finMientasDR} {printf("(finMientasTK, )\n"); }
 
 {literalEnteroDR} { printf("(literalEnteroTK, %d)\n", atoi(yytext)); }
 {literalRealDR} { printf("(literalRealTK, %f)\n", atof(yytext)); } 
