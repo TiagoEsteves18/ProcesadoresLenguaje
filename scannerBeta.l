@@ -57,11 +57,11 @@ comentarioPostDR	\{(?i:Post\:\ )([^}]|\/\})*\}
 
 literalEnteroDR [+-]?[0-9]+ 
 literalRealDR [+-]?[0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?[rR]? 
-literalCaracterDR \"([^\"\\]|\\.)\" 
+literalCaracterDR \"([^"]|\/")\" 
 literalCadenaDR '([^']|\/')*'
 
 algoritmoDR (?i:algoritmo)
-falgoritmoDR (?i:falgoritmo)
+falgoritmoDR (?i:falgoritmo)s
 siDR (?i:si)
 fsiDR (?i:fsi)
 verdaderoDR (?i:verdadero)
