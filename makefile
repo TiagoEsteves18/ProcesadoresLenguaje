@@ -1,4 +1,4 @@
-PRUEBA = alg1.txt
+PRUEBA = ./alg/alg1.txt
 
 all: scannerBeta scanner
 

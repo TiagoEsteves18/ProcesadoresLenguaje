@@ -55,13 +55,13 @@ comentarioDR	\{([^}]|\/\})*\}
 comentarioPreDR	\{(?i:Prec\:\ )([^}]|\/\})*\}
 comentarioPostDR	\{(?i:Post\:\ )([^}]|\/\})*\}
 
-literalEnteroDR [+-]?[0-9]+ 
-literalRealDR [+-]?[0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?[rR]? 
-literalCaracterDR \"([^"]|\/")\" 
+literalEnteroDR [0-9]+ 
+literalRealDR [0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?[rR]? 
+literalCaracterDR \"[^"\n]\"
 literalCadenaDR '([^']|\/')*'
 
 algoritmoDR (?i:algoritmo)
-falgoritmoDR (?i:falgoritmo)s
+falgoritmoDR (?i:falgoritmo)
 siDR (?i:si)
 fsiDR (?i:fsi)
 verdaderoDR (?i:verdadero)
@@ -75,6 +75,33 @@ inicioConstantesDR (?i:const)
 finalConstantesDR (?i:fconst)
 inicioMientrasDR (?i:mientras)
 finMientasDR (?i:fmientras)
+accionDR (?i:accion)
+faccionDR (?i:faccion)
+funcionDR (?i:funcion)
+ffuncionDR (?i:ffuncion)
+devDR (?i:dev)
+entradaSalidaDR (?i:e\/s)
+inicioTipoDR (?i:tipo)
+finTipoDR (?i:ftipo)
+tuplaDR (?i:tupla)
+ftuplaDR (?i:ftupla)
+tablaDR (?i:tabla)
+deDR (?i:de)
+refDR (?i:ref)
+realDR (?i:real)
+booleanoDR (?i:booleano)
+caracterDR (?i:caracter)
+cadenaDR (?i:cadena)
+paraDR (?i:para)
+fparaDR (?i:fpara)
+hastaDR (?i:hasta)
+hacerDR (?i:hacer)
+continuarDR (?i:continuar)
+divEnteraDR (?i:div)
+modDR (?i:mod)
+yDR (?i:y)
+oDR (?i:o)
+noDR (?i:no)
 
 asignacionDR := 
 entoncesDR -> 
@@ -100,6 +127,8 @@ dobleComillaDR \"
 comillaSimpleDR \'
 barraBajaDR \_
 potenciaDR \^
+subrangoDR \.\.
+sinoSiDR \[\]
 
 %%
 
@@ -131,6 +160,33 @@ potenciaDR \^
 {finalConstantesDR} { printf("(finconstantesTK, )\n"); }
 {inicioMientrasDR} {printf("(inicioMientrasTK, )\n"); }
 {finMientasDR} {printf("(finMientasTK, )\n"); }
+{accionDR} { printf("(accionTK, )\n"); }
+{faccionDR} { printf("(faccionTK, )\n"); }
+{funcionDR} { printf("(funcionTK, )\n"); }
+{ffuncionDR} { printf("(ffuncionTK, )\n"); }
+{devDR} { printf("(devTK, )\n"); }
+{entradaSalidaDR} { printf("(entradaSalidaTK, )\n"); }
+{inicioTipoDR} { printf("(inicioTipoTK, )\n"); }
+{finTipoDR} { printf("(finTipoTK, )\n"); }
+{tuplaDR} { printf("(tuplaTK, )\n"); }
+{ftuplaDR} { printf("(ftuplaTK, )\n"); }
+{tablaDR} { printf("(tablaTK, )\n"); }
+{deDR} { printf("(deTK, )\n"); }
+{refDR} { printf("(refTK, )\n"); }
+{realDR} { printf("(realTK, )\n"); }
+{booleanoDR} { printf("(booleanoTK, )\n"); }
+{caracterDR} { printf("(caracterTK, )\n"); }
+{cadenaDR} { printf("(cadenaTK, )\n"); }
+{paraDR} { printf("(paraTK, )\n"); }
+{fparaDR} { printf("(fparaTK, )\n"); }
+{hastaDR} { printf("(hastaTK, )\n"); }
+{hacerDR} { printf("(hacerTK, )\n"); }
+{continuarDR} { printf("(continuarTK, )\n"); }
+{divEnteraDR} { printf("(divEnteraTK, )\n"); }
+{modDR} { printf("(modTK, )\n"); }
+{yDR} { printf("(yTK, )\n"); }
+{oDR} { printf("(oTK, )\n"); }
+{noDR} { printf("(noTK, )\n"); }
 
 {literalEnteroDR} { printf("(literalEnteroTK, %d)\n", atoi(yytext)); }
 {literalRealDR} { printf("(literalRealTK, %f)\n", atof(yytext)); } 
@@ -161,15 +217,12 @@ potenciaDR \^
 {comillaSimpleDR} { printf("(comillaSimpleTK, )\n"); }
 {barraBajaDR} { printf("(barraBajaTK, )\n"); }
 {potenciaDR} { printf("(potenciaTK, )\n"); }
+{subrangoDR} { printf("(subrangoTK, )\n"); }
+{sinoSiDR} { printf("(sinoSiTK, )\n"); }
 
 {identificadorDR} { printf("(identificadorTK, %s)\n", yytext); }
 
-[\t\n\r]+ {
-	printf("\n");
-} 
-[ ]+ {
-	printf("(espacioTK, )\n");
-}
+[ \t\r\n]+ ;
 
 . { printf("(ERROR, caracter no reconocido: %s)\n", yytext); }
 
