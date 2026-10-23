@@ -1,10 +1,10 @@
- //Archivo: scannerBeta.l
- //Ejemplo de archivo .l que permite crear un scanner que a partir de una entrada  
+ //Archivo: scanner.l
+ // Archivo .l que permite crear un scanner que a partir de una entrada  
  // escrita en el fichero estandard de entrada devuelve una secuencia de tokens validos 
- // para la gram�tica explicada en el ejemplo.
- //Autor: Federico Fari�a
- //Fecha: 27/9/23
- //Version: 0.0.1
+ // para la gramática explicada en el ejemplo.
+ //Autor: Tiago Filipe Esteves Iria y Juan Pablo Jiménez Arenas
+ //Fecha: 19/10/26
+ //Version: 1.0.0
  //Copyright: Este ejemplo se hace para que lo puedan analizar los alumnos de 
  // la asignatura de procesadores de lenguaje de la UPNA. El autor prohibe 
  // expresamente la copia/uso de este fichero salvo para los alumnos de la 
@@ -18,6 +18,17 @@
  //2-Compilar el fichero generado por flex con la opcion -lfl (-ll en OSx)
  //3-Ejecutar el fichero resultante
  //4-Introducir lo que quiera que lea el scanner mediante el teclado
+
+
+ //Uso de make para compilacion y uso:
+ //  make -> genera el ejecutable scanner (flex + gcc -lfl)
+ //  make prueba -> ejecuta el scanner con programa1.alg
+ //  make prueba PRUEBA=programa2.alg -> ejecuta el scanner con otro fichero
+ //  make pruebas -> ejecuta el scanner con todos los programaX.alg
+ //  make clean -> borra los ficheros que se generan
+ //  Tambien se puede ejecutar a mano: 
+ // 	./scanner < programa1.alg
+ // 	cat programa1.alg | ./scanner
 
  //PARTE 1: ZONA DE DECLARACIONES
  //PARTE 1.1: Constantes manifiestas y codigo necesario para el .c que genera flex 
@@ -74,7 +85,7 @@ finVariablesDR (?i:fvar)
 inicioConstantesDR (?i:const)
 finalConstantesDR (?i:fconst)
 inicioMientrasDR (?i:mientras)
-finMientasDR (?i:fmientras)
+finMientrasDR (?i:fmientras)
 accionDR (?i:accion)
 faccionDR (?i:faccion)
 funcionDR (?i:funcion)
@@ -155,9 +166,9 @@ sinoSiDR \[\]
 {inicioVariablesDR} { printf("(inicioVariablesTK, )\n"); }
 {finVariablesDR} { printf("(finVariablesTK, )\n"); }
 {inicioConstantesDR} { printf("(inicioConstantesTK, )\n"); }
-{finalConstantesDR} { printf("(finconstantesTK, )\n"); }
+{finalConstantesDR} { printf("(finConstantesTK, )\n"); }
 {inicioMientrasDR} {printf("(inicioMientrasTK, )\n"); }
-{finMientasDR} {printf("(finMientasTK, )\n"); }
+{finMientrasDR} {printf("(finMientrasTK, )\n"); }
 {accionDR} { printf("(accionTK, )\n"); }
 {faccionDR} { printf("(faccionTK, )\n"); }
 {funcionDR} { printf("(funcionTK, )\n"); }
