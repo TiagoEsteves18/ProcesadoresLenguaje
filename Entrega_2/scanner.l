@@ -117,91 +117,91 @@ sinoSiDR \[\]
  //PARTE 2: Reglas
  //Aqui se indica que codigo tiene que ejecutarse al leer cada patron definido
 
-{comentarioPreDR} { printf("(comentarioPreTK, )\n"); }
-{comentarioPostDR} { printf("(comentarioPostTK, )\n"); }
+{comentarioPreDR} { return comentarioPreTK; }
+{comentarioPostDR} { return comentarioPostTK; }
 {comentarioDR} { 
 	//Los comentarios no generan tokens 
 }
 
 
-{algoritmoDR} { printf("(algoritmoTK, )\n"); } 
-{falgoritmoDR} { printf("(falgoritmoTK, )\n"); } 
-{siDR} { printf("(siTK, )\n"); } 
-{fsiDR} { printf("(fsiTK, )\n");  }
-{verdaderoDR} { printf("(literalBooleanoTK, verdadero)\n"); }
-{falsoDR} { printf("(literalBooleanoTK, falso)\n"); }
-{entradaDR} { printf("(entradaTK, )\n"); }
-{salidaDR} { printf("(salidaTK, )\n"); }
-{enteroDR} { printf("(enteroTK, )\n"); }
-{inicioVariablesDR} { printf("(inicioVariablesTK, )\n"); }
-{finVariablesDR} { printf("(finVariablesTK, )\n"); }
-{inicioConstantesDR} { printf("(inicioConstantesTK, )\n"); }
-{finalConstantesDR} { printf("(finConstantesTK, )\n"); }
-{inicioMientrasDR} {printf("(inicioMientrasTK, )\n"); }
-{finMientrasDR} {printf("(finMientrasTK, )\n"); }
-{accionDR} { printf("(accionTK, )\n"); }
-{faccionDR} { printf("(faccionTK, )\n"); }
-{funcionDR} { printf("(funcionTK, )\n"); }
-{ffuncionDR} { printf("(ffuncionTK, )\n"); }
-{devDR} { printf("(devTK, )\n"); }
-{entradaSalidaDR} { printf("(entradaSalidaTK, )\n"); }
-{inicioTipoDR} { printf("(inicioTipoTK, )\n"); }
-{finTipoDR} { printf("(finTipoTK, )\n"); }
-{tuplaDR} { printf("(tuplaTK, )\n"); }
-{ftuplaDR} { printf("(ftuplaTK, )\n"); }
-{tablaDR} { printf("(tablaTK, )\n"); }
-{deDR} { printf("(deTK, )\n"); }
-{refDR} { printf("(refTK, )\n"); }
-{realDR} { printf("(realTK, )\n"); }
-{booleanoDR} { printf("(booleanoTK, )\n"); }
-{caracterDR} { printf("(caracterTK, )\n"); }
-{cadenaDR} { printf("(cadenaTK, )\n"); }
-{paraDR} { printf("(paraTK, )\n"); }
-{fparaDR} { printf("(fparaTK, )\n"); }
-{hastaDR} { printf("(hastaTK, )\n"); }
-{hacerDR} { printf("(hacerTK, )\n"); }
-{continuarDR} { printf("(continuarTK, )\n"); }
-{divEnteraDR} { printf("(divEnteraTK, )\n"); }
-{modDR} { printf("(modTK, )\n"); }
-{yDR} { printf("(yTK, )\n"); }
-{oDR} { printf("(oTK, )\n"); }
-{noDR} { printf("(noTK, )\n"); }
+{algoritmoDR} { return algoritmoTK; } 
+{falgoritmoDR} { return falgoritmoTK; } 
+{siDR} { return siTK; } 
+{fsiDR} { return fsiTK;  }
+{verdaderoDR} { return literalBooleanoTK; }
+{falsoDR} { return literalBooleanoTK; }
+{entradaDR} { return entradaTK; }
+{salidaDR} { return salidaTK; }
+{enteroDR} { return enteroTK; }
+{inicioVariablesDR} { return inicioVariablesTK; }
+{finVariablesDR} { return finVariablesTK; }
+{inicioConstantesDR} { return inicioConstantesTK; }
+{finalConstantesDR} { return finConstantesTK; }
+{inicioMientrasDR} {return inicioMientrasTK; }
+{finMientrasDR} {return finMientrasTK; }
+{accionDR} { return accionTK; }
+{faccionDR} { return faccionTK; }
+{funcionDR} { return funcionTK; }
+{ffuncionDR} { return ffuncionTK; }
+{devDR} { return devTK; }
+{entradaSalidaDR} { return entradaSalidaTK; }
+{inicioTipoDR} { return inicioTipoTK; }
+{finTipoDR} { return finTipoTK; }
+{tuplaDR} { return tuplaTK; }
+{ftuplaDR} { return ftuplaTK; }
+{tablaDR} { return tablaTK; }
+{deDR} { return deTK; }
+{refDR} { return refTK; }
+{realDR} { return realTK; }
+{booleanoDR} { return booleanoTK; }
+{caracterDR} { return caracterTK; }
+{cadenaDR} { return cadenaTK; }
+{paraDR} { return paraTK; }
+{fparaDR} { return fparaTK; }
+{hastaDR} { return hastaTK; }
+{hacerDR} { return hacerTK; }
+{continuarDR} { return continuarTK; }
+{divEnteraDR} { return divEnteraTK; }
+{modDR} { return modTK; }
+{yDR} { return yTK; }
+{oDR} { return oTK; }
+{noDR} { return noTK; }
 
-{asignacionDR} { printf("(asignacionTK, )\n"); } 
-{entoncesDR} { printf("(entoncesTK, )\n"); } 
-{menorIgualDR} { printf("(menorIgualTK, )\n"); } 
-{mayorIgualDR} { printf("(mayorIgualTK, )\n"); } 
-{distintoDR} { printf("(distintoTK, )\n"); } 
-{igualDR} { printf("(igualTK, )\n"); } 
-{menorDR} { printf("(menorTK, )\n"); } 
-{mayorDR} { printf("(mayorTK, )\n"); } 
-{masDR} { printf("(masTK, )\n"); } 
-{menosDR} { printf("(menosTK, )\n"); } 
-{porDR} { printf("(porTK, )\n"); } 
-{divisionDR} { printf("(divisionTK, )\n"); }
-{puntoYComaDR} { printf("(puntoYComaTK, )\n"); }
-{comaDR} { printf("(comaTK, )\n"); } 
-{puntoDR} { printf("(puntoTK, )\n"); } 
-{dosPuntosDR} { printf("(dosPuntosTK, )\n"); } 
-{parentesisAbreDR} { printf("(parentesisAbreTK, )\n"); } 
-{parentesisCierraDR} { printf("(parentesisCierraTK, )\n"); } 
-{corcheteAbreDR} { printf("(corcheteAbreTK, )\n"); } 
-{corcheteCierraDR} { printf("(corcheteCierraTK, )\n"); } 
-{dobleComillaDR} { printf("(dobleComillaTK, )\n"); }
-{comillaSimpleDR} { printf("(comillaSimpleTK, )\n"); }
-{subrangoDR} { printf("(subrangoTK, )\n"); }
-{sinoSiDR} { printf("(sinoSiTK, )\n"); }
+{asignacionDR} { return asignacionTK; } 
+{entoncesDR} { return entoncesTK; } 
+{menorIgualDR} { return menorIgualTK; } 
+{mayorIgualDR} { return mayorIgualTK; } 
+{distintoDR} { return distintoTK; } 
+{igualDR} { return igualTK; } 
+{menorDR} { return menorTK; } 
+{mayorDR} { return mayorTK; } 
+{masDR} { return masTK; } 
+{menosDR} { return menosTK; } 
+{porDR} { return porTK; } 
+{divisionDR} { return divisionTK; }
+{puntoYComaDR} { return puntoYComaTK; }
+{comaDR} { return comaTK; } 
+{puntoDR} { return puntoTK; } 
+{dosPuntosDR} { return dosPuntosTK; } 
+{parentesisAbreDR} { return parentesisAbreTK; } 
+{parentesisCierraDR} { return parentesisCierraTK; } 
+{corcheteAbreDR} { return corcheteAbreTK; } 
+{corcheteCierraDR} { return corcheteCierraTK; } 
+{dobleComillaDR} { return dobleComillaTK; }
+{comillaSimpleDR} { return comillaSimpleTK; }
+{subrangoDR} { return subrangoTK; }
+{sinoSiDR} { return sinoSiTK; }
 
-{literalEnteroDR} { printf("(literalEnteroTK, %d)\n", atoi(yytext)); }
-{literalRealDR} { printf("(literalRealTK, %f)\n", atof(yytext)); } 
-{literalCaracterDR} { printf("(literalCaracterTK, %c)\n", yytext[1]); } 
-{literalCadenaDR} { printf("(literalCadenaTK, %s)\n", yytext); } 
+{literalEnteroDR} { return literalEnteroTK; }
+{literalRealDR} { return literalRealTK; } 
+{literalCaracterDR} { return literalCaracterTK; } 
+{literalCadenaDR} { return literalCadenaTK; } 
 
-{identificadorDR} { printf("(identificadorTK, %s)\n", yytext); }
+{identificadorDR} { return identificadorTK; }
 
 [ \t\r\n]+ ;
 
-. { printf("(ERROR, caracter no reconocido: %s)\n", yytext); }
+. { return ERROR, caracter no reconocido; }
 
 %%
 
