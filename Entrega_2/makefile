@@ -1,5 +1,5 @@
 compilador: parser.tab.c lex.yy.o literal.o literal.h nombresDeTipos.h tablaDeConstantes.o tablaDeConstantes.h
-	gcc parser.tab.c lex.yy.o tablaDeConstantes.o literal.o
+	gcc parser.tab.c lex.yy.o tablaDeConstantes.o literal.o -lfl
 	mv a.out compilador
 
 parser.tab.c parser.tab.h: parser.y literal.h nombresDeTipos.h tablaDeConstantes.h
@@ -15,10 +15,10 @@ literal.o: literal.c
 tablaDeConstantes.o: tablaDeConstantes.c
 	gcc -c tablaDeConstantes.c
 
-scanner: scanner.l
-	flex scanner.l
+scanner: scannerBeta.l
+	flex scannerBeta.l
 	gcc lex.yy.c -lfl
 	mv a.out scanner
 
 clean:
-	rm *.tab.* lex.yy.c *.o
+	rm *.tab.* lex.yy.c *.o parser.output compilador

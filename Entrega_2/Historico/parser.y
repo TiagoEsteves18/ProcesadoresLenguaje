@@ -1,12 +1,12 @@
  //Archivo: Ejemplo de de archivo .y para la gramatica que indica la practica
- // Autor: Federico Fariña
+ // Autor: Federico Fariï¿½a
  // Fecha: 7/9/23
  // Version: 0.0.1
  // Copyright: Este ejemplo se hace para que lo puedan analizar los alumnos de 
  // la asignatura de procesadores de lenguaje de la UPNA. El autor prohibe 
  // expresamente la copia/uso de este fichero salvo para los alumnos de la 
  // asignatura. Estos pueden usarlo como muestra para desarrollar la practica,
- // pero para ningún otro tipo de uso.
+ // pero para ningï¿½n otro tipo de uso.
 
  //  1: ZONA DE DECLARACIONES
  // PARTE 1.2: Cosas que necesitamos que esten en el .c
