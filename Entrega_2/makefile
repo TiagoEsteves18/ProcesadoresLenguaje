@@ -1,8 +1,8 @@
 compilador: parser.tab.c lex.yy.o literal.o literal.h nombresDeTipos.h tablaDeConstantes.o tablaDeConstantes.h
 	gcc parser.tab.c lex.yy.o tablaDeConstantes.o literal.o
-	mv a.exe compilador
+	mv a.out compilador
 
-parser.tab.c parser.tah.h: parser.y literal.h nombresDeTipos.h tablaDeConstantes.h
+parser.tab.c parser.tab.h: parser.y literal.h nombresDeTipos.h tablaDeConstantes.h
 	bison -d -v -t parser.y
 
 lex.yy.o: scanner.l parser.tab.h literal.h nombresDeTipos.h tablaDeConstantes.h
@@ -15,10 +15,10 @@ literal.o: literal.c
 tablaDeConstantes.o: tablaDeConstantes.c
 	gcc -c tablaDeConstantes.c
 
-scanner: scannerBeta.l
-	flex scannerBeta.l
+scanner: scanner.l
+	flex scanner.l
 	gcc lex.yy.c -lfl
-	mv a.exe scanner
+	mv a.out scanner
 
 clean:
 	rm *.tab.* lex.yy.c *.o

@@ -1,0 +1,132 @@
+Grammar
+
+    0 $accept: declaracionConstantesV $end
+
+    1 declaracionConstantesV: constTK listaDeclConstantesV fconstTK
+
+    2 listaDeclConstantesV: declaracionDeConstanteV
+    3                     | listaDeclConstantesV puntoYComaTK listaDeclConstantesV
+
+    4 declaracionDeConstanteV: nombreCteTK igualTK literalTK
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    error (256)
+    constTK (258) 1
+    literalTK <literal> (259) 4
+    fconstTK (260) 1
+    igualTK (261) 4
+    nombreCteTK <cadena> (262) 4
+    puntoYComaTK (263) 3
+
+
+Nonterminals, with rules where they appear
+
+    $accept (9)
+        on left: 0
+    declaracionConstantesV (10)
+        on left: 1
+        on right: 0
+    listaDeclConstantesV <entero> (11)
+        on left: 2 3
+        on right: 1 3
+    declaracionDeConstanteV (12)
+        on left: 4
+        on right: 2
+
+
+State 0
+
+    0 $accept: • declaracionConstantesV $end
+
+    constTK  shift, and go to state 1
+
+    declaracionConstantesV  go to state 2
+
+
+State 1
+
+    1 declaracionConstantesV: constTK • listaDeclConstantesV fconstTK
+
+    nombreCteTK  shift, and go to state 3
+
+    listaDeclConstantesV     go to state 4
+    declaracionDeConstanteV  go to state 5
+
+
+State 2
+
+    0 $accept: declaracionConstantesV • $end
+
+    $end  shift, and go to state 6
+
+
+State 3
+
+    4 declaracionDeConstanteV: nombreCteTK • igualTK literalTK
+
+    igualTK  shift, and go to state 7
+
+
+State 4
+
+    1 declaracionConstantesV: constTK listaDeclConstantesV • fconstTK
+    3 listaDeclConstantesV: listaDeclConstantesV • puntoYComaTK listaDeclConstantesV
+
+    fconstTK      shift, and go to state 8
+    puntoYComaTK  shift, and go to state 9
+
+
+State 5
+
+    2 listaDeclConstantesV: declaracionDeConstanteV •
+
+    $default  reduce using rule 2 (listaDeclConstantesV)
+
+
+State 6
+
+    0 $accept: declaracionConstantesV $end •
+
+    $default  accept
+
+
+State 7
+
+    4 declaracionDeConstanteV: nombreCteTK igualTK • literalTK
+
+    literalTK  shift, and go to state 10
+
+
+State 8
+
+    1 declaracionConstantesV: constTK listaDeclConstantesV fconstTK •
+
+    $default  reduce using rule 1 (declaracionConstantesV)
+
+
+State 9
+
+    3 listaDeclConstantesV: listaDeclConstantesV puntoYComaTK • listaDeclConstantesV
+
+    nombreCteTK  shift, and go to state 3
+
+    listaDeclConstantesV     go to state 11
+    declaracionDeConstanteV  go to state 5
+
+
+State 10
+
+    4 declaracionDeConstanteV: nombreCteTK igualTK literalTK •
+
+    $default  reduce using rule 4 (declaracionDeConstanteV)
+
+
+State 11
+
+    3 listaDeclConstantesV: listaDeclConstantesV • puntoYComaTK listaDeclConstantesV
+    3                     | listaDeclConstantesV puntoYComaTK listaDeclConstantesV •
+
+    $default  reduce using rule 3 (listaDeclConstantesV)

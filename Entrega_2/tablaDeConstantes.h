@@ -1,7 +1,7 @@
 #ifndef FFF_TABLA_DE_CONSTANTES_H
 #define FFF_TABLA_DE_CONSTANTES_H
 
-#include <stdbool.h>
+#include <stdbool.h> 
 #include "literal.h"
 
 typedef struct celda {
