@@ -15,12 +15,86 @@
    ==================================================== */
 %define api.value.type {int}   /* Tipo de valor semántico por defecto (ej. int) */
 
-%token NUM
-%token PLUS MINUS MULT DIV
-%token EOL
+%token letraTK
+%token cifraTK
+%token identificadorTK
+ 
+%token comentarioTKtoken 
+%token comentarioPreTK	
+%token comentarioPostTK	
+ 
+%token literalEnteroTK 
+%token literalRealTK  
+%token literalCaracterTK  
+%token literalCadenaTK
 
-%left PLUS MINUS
-%left MULT DIV
+%token algoritmoTK 
+%token falgoritmoTK 
+%token siTK 
+%token fsiTK 
+%token verdaderoTK
+%token falsoTK 
+%token entradaTK 
+%token salidaTK
+%token enteroTK
+%token inicioVariablesTK
+%token finVariablesTK
+%token inicioConstantesTK
+%token finalConstantesTK
+%token inicioMientrasTK
+%token finMientrasTK
+%token accionTK
+%token faccionTK
+%token funcionTK
+%token ffuncionTK
+%token devTK
+%token entradaSalidaTK
+%token inicioTipoTK
+%token finTipoTK
+%token tuplaTK
+%token ftuplaTK
+%token tablaTK
+%token deTK
+%token refTK
+%token realTK
+%token booleanoTK
+%token caracterTK
+%token cadenaTK
+%token paraTK 
+%token fparaTK
+%token hastaTK
+%token hacerTK
+%token continuarTK
+%token divEnteraTK
+%token modTK
+%token yTK
+%token oTK
+%token noTK
+
+%token asignacionTK 
+%token entoncesTK 
+%token menorIgualTK 
+%token mayorIgualTK 
+%token distintoTK 
+%token igualTK 
+%token menorTK 
+%token mayorTK 
+%token masTK 
+%token menosTK 
+%token porTK 
+%token divisionTK 
+%token puntoYComaTK 
+%token comaTK 
+%token puntoTK 
+%token dosPuntosTK 
+%token parentesisAbreTK 
+%token parentesisCierraTK 
+%token corcheteAbreTK
+%token corcheteCierraTK
+%token dobleComillaTK
+%token comillaSimpleTK
+%token subrangoTK
+%token sinoSiTK
 
 %%
 /* ====================================================
