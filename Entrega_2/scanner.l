@@ -24,11 +24,12 @@
 	#include <stdio.h> //Para poder escribir en el terminal
 	#include <stdlib.h> //Para usar exit()
 	#include <strings.h> //Para trabajar con cadenas de caracteres
-	
+	#include "parser.tab.h"
+
 	void errorEnScanner(char*, char*); //prototipo necesario para compilar
 	
 %}
-
+%option yylineno
  // PARTE 1.2: Zona de definiciones regulares
 
 letraDR [a-zA-Z]
@@ -136,7 +137,7 @@ sinoSiDR \[\]
 {inicioVariablesDR} { return inicioVariablesTK; }
 {finVariablesDR} { return finVariablesTK; }
 {inicioConstantesDR} { return inicioConstantesTK; }
-{finalConstantesDR} { return finConstantesTK; }
+{finalConstantesDR} { return finalConstantesTK; }
 {inicioMientrasDR} {return inicioMientrasTK; }
 {finMientrasDR} {return finMientrasTK; }
 {accionDR} { return accionTK; }
@@ -201,7 +202,7 @@ sinoSiDR \[\]
 
 [ \t\r\n]+ ;
 
-. { return ERROR, caracter no reconocido; }
+. { printf("(ERROR, caracter no reconocido: %s)\n", yytext); }
 
 %%
 
@@ -212,3 +213,6 @@ void errorEnScanner(char* definicionDelError, char * variable){
 	exit(EXIT_FAILURE);
 }
 
+int yywrap(){
+	return(1);
+}
