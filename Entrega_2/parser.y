@@ -296,31 +296,99 @@ decl_sal: salidaTK lista_d_var {
 };
 
 expresion:
-	expresion masTK expresion						{ }
-	| expresion menosTK expresion					{ }
-	| expresion porTK expresion						{ }
-	| expresion divisionTK expresion				{ }
-	| expresion modTK expresion						{ }
-	| expresion divEnteraTK expresion				{ }
-	| menosTK expresion %prec UMENOS				{ }
-	| masTK expresion %prec UMENOS					{ }
-	| expresion yTK expresion						{ }
-	| expresion oTK expresion						{ }
-	| noTK expresion								{ }
-	| expresion menorTK expresion					{ }
-	| expresion mayorTK expresion					{ }
-	| expresion menorIgualTK expresion				{ }
-	| expresion mayorIgualTK expresion				{ }
-	| expresion igualTK expresion					{ }
-	| expresion distintoTK expresion				{ }
-	| parentesisAbreTK expresion parentesisCierraTK	{ }
-	| operando										{ }
-	| literalEnteroTK								{ }
-	| literalRealTK									{ }
-	| literalCaracterTK								{ }
-	| literalCadenaTK								{ }
-	| literalBooleanoTK								{ }
-	| funcion_ll									{ }
+	exp_a			{
+
+	}
+	| exp_b			{
+
+	}
+	| funcion_ll	{
+
+	}
+	;
+
+exp_a:
+	exp_a masTK exp_a							{
+
+	}
+	| exp_a menosTK exp_a						{
+
+	}
+	| exp_a porTK exp_a							{
+
+	}
+	| exp_a divisionTK exp_a					{
+
+	}
+	| exp_a modTK exp_a							{
+
+	}
+	| exp_a divEnteraTK exp_a					{
+
+	}
+	| parentesisAbreTK exp_a parentesisCierraTK	{
+
+	}
+	| operando									{
+
+	}
+	| literalEnteroTK							{
+
+	}
+	| literalRealTK								{
+
+	}
+	| menosTK exp_a %prec UMENOS				{
+
+	}
+	| masTK exp_a %prec UMENOS					{
+
+	}
+	;
+	
+exp_b:
+	exp_b yTK exp_b								{
+
+	}
+	| exp_b oTK exp_b							{
+
+	}
+	| noTK exp_b								{
+
+	}
+	| operando									{
+
+	}
+	| literalBooleanoTK							{
+
+	}
+	| expresion oprel expresion					{
+
+	}
+	| parentesisAbreTK exp_b parentesisCierraTK	{
+
+	}
+	;
+
+oprel:
+	menorTK			{
+
+	}
+	| mayorTK		{
+
+	}
+	| menorIgualTK	{
+
+	}
+	| mayorIgualTK	{
+
+	}
+	| igualTK		{
+
+	}
+	| distintoTK	{
+
+	}
 	;
 
 operando:
