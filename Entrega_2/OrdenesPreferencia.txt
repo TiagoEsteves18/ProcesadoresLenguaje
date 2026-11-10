@@ -1,0 +1,23 @@
+/* Ordenes de menos prioritario al más prioritario */
+
+/* and y or tienen ascociatividad por la izquierda */
+%left oTK
+%left yTK
+
+/* La negación tiene ascociatividad por la derecha */
+%right noTK
+
+/* Los operadores relacionales no son asociatovios */
+%nonassoc igualTK distintoTK menorTK mayorTK menorIgualTK mayorIgualTK
+
+/* Los operadores + y - son asociatovios por la izquierda */
+%left masTK menosTK
+
+/* Los operadores *, /, // y % son asociatovios por la izquierda */
+%left porTK divisionTK modTK divEnteraTK
+
+/* El símbolo de negativo, es decir, -a, es ascociativio por la derecha*/
+%right MENOS_UNIT
+
+/* El acceso a las partes de una variable tiene ascociatividad por la izquierda. v.[i] */
+%left puntoTK corcheteAbreTK refTK

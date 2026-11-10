@@ -96,6 +96,30 @@
 %token subrangoTK
 %token sinoSiTK
 
+/* Ordenes de menos prioritario al más prioritario */
+
+/* and y or tienen ascociatividad por la izquierda */
+%left oTK
+%left yTK
+
+/* La negación tiene ascociatividad por la derecha */
+%right noTK
+
+/* Los operadores relacionales no son asociatovios */
+%nonassoc igualTK distintoTK menorTK mayorTK menorIgualTK mayorIgualTK
+
+/* Los operadores + y - son asociatovios por la izquierda */
+%left masTK menosTK
+
+/* Los operadores *, /, // y % son asociatovios por la izquierda */
+%left porTK divisionTK modTK divEnteraTK
+
+/* El símbolo de negativo o positivo, es decir, -a o +a, es ascociativio por la derecha*/
+%right SIGNAL
+
+/* El acceso a las partes de una variable tiene ascociatividad por la izquierda. v.[i] */
+%left puntoTK corcheteAbreTK refTK
+
 %%
 /* ====================================================
    2. REGLAS GRAMATICALES
@@ -291,10 +315,11 @@ decl_sal: salidaTK lista_d_var {
 
 /* 
 	PREGUNTAR: Se puede hacer algo con esta parte? Ideas que se nos ocurrierion:
-	- Juntar expresion, exp_a y exp_b. Problema --> No se puede diferenciar cuando es una expresion relacional
+	- Juntar expresion, exp_a y exp_b. Esto al final no, da problema ya que no se puede diferenciar cuando es una expresion relacional (Creo)
 	- Meter en expresion operando y parentesisAbreTK expresion parentesisCierraTK (y quitar eso de exp_a y exp_b). 
-		Además crear exp_rel para diferenciar entre expresiones de suma y así con las realcionales.
-		En exp_a y exp_b usar expresion¿?
+		Además crear exp_rel para diferenciar entre expresiones aritmáticas con las realcionales.
+		En exp_a y exp_b usar expresion ¿?
+		Diferenciar una expresion aritmética de una expresion relacional
  */
 
 expresion:
@@ -305,6 +330,12 @@ expresion:
 
 	}
 	| funcion_ll	{
+
+	}
+	| operando 		{
+
+	}
+	| parentesisAbreTK expresion parentesisCierraTK	{
 
 	}
 	;
@@ -328,22 +359,16 @@ exp_a:
 	| exp_a divEnteraTK exp_a					{
 
 	}
-	| parentesisAbreTK exp_a parentesisCierraTK	{
-
-	}
-	| operando									{
-
-	}
 	| literalEnteroTK							{
 
 	}
 	| literalRealTK								{
 
 	}
-	| menosTK exp_a								{
+	| menosTK exp_a	%prec SIGNAL				{
 
 	}
-	| masTK exp_a								{
+	| masTK exp_a	%prec SIGNAL				{
 
 	}
 	;
@@ -355,19 +380,13 @@ exp_b:
 	| exp_b oTK exp_b							{
 
 	}
-	| noTK exp_b								{
-
-	}
-	| operando									{
+	| noTK exp_b 								{
 
 	}
 	| literalBooleanoTK							{
 
 	}
 	| expresion oprel expresion					{
-
-	}
-	| parentesisAbreTK exp_b parentesisCierraTK	{
 
 	}
 	;
