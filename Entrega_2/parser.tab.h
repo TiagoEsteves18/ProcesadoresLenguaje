@@ -39,7 +39,7 @@
 # define YY_YY_PARSER_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
-# define YYDEBUG 1
+# define YYDEBUG 0
 #endif
 #if YYDEBUG
 extern int yydebug;
@@ -130,8 +130,7 @@ extern int yydebug;
     dobleComillaTK = 331,          /* dobleComillaTK  */
     comillaSimpleTK = 332,         /* comillaSimpleTK  */
     subrangoTK = 333,              /* subrangoTK  */
-    sinoSiTK = 334,                /* sinoSiTK  */
-    UMENOS = 335                   /* UMENOS  */
+    sinoSiTK = 334                 /* sinoSiTK  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif

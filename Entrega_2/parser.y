@@ -96,15 +96,6 @@
 %token subrangoTK
 %token sinoSiTK
 
-%left oTK
-%left yTK
-%right noTK
-%nonassoc igualTK distintoTK menorTK mayorTK menorIgualTK mayorIgualTK
-%left masTK menosTK
-%left porTK divisionTK modTK divEnteraTK
-%right UMENOS
-%left puntoTK corcheteAbreTK refTK
-
 %%
 /* ====================================================
    2. REGLAS GRAMATICALES
@@ -238,7 +229,7 @@ expresion_t:
 	expresion			{
 
 	}
-	| literalCaracterDR {
+	| literalCaracterTK {
 
 	}
 	;
@@ -349,10 +340,10 @@ exp_a:
 	| literalRealTK								{
 
 	}
-	| menosTK exp_a %prec UMENOS				{
+	| menosTK exp_a								{
 
 	}
-	| masTK exp_a %prec UMENOS					{
+	| masTK exp_a								{
 
 	}
 	;

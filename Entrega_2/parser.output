@@ -9,6 +9,28 @@ Terminals unused in grammar
     comillaSimpleTK
 
 
+Rules useless in parser due to conflicts
+
+   69 exp_b: operando
+
+
+State 96 conflicts: 2 shift/reduce
+State 97 conflicts: 24 reduce/reduce
+State 129 conflicts: 2 shift/reduce, 6 reduce/reduce
+State 132 conflicts: 6 shift/reduce
+State 134 conflicts: 6 shift/reduce
+State 163 conflicts: 3 shift/reduce
+State 184 conflicts: 6 shift/reduce
+State 185 conflicts: 6 shift/reduce
+State 186 conflicts: 6 shift/reduce
+State 187 conflicts: 6 shift/reduce
+State 188 conflicts: 6 shift/reduce
+State 189 conflicts: 6 shift/reduce
+State 190 conflicts: 6 shift/reduce
+State 191 conflicts: 2 shift/reduce, 6 reduce/reduce
+State 192 conflicts: 2 shift/reduce, 6 reduce/reduce
+
+
 Grammar
 
     0 $accept: desc_algoritmo $end
@@ -63,102 +85,109 @@ Grammar
    35       | tipo_base
 
    36 expresion_t: expresion
+   37            | literalCaracterTK
 
-   37 lista_campos: identificadorTK dosPuntosTK d_tipo puntoYComaTK lista_campos
-   38             | ε
+   38 lista_campos: identificadorTK dosPuntosTK d_tipo puntoYComaTK lista_campos
+   39             | ε
 
-   39 lista_d_cte: identificadorTK igualTK literal puntoYComaTK lista_d_cte
-   40            | ε
+   40 lista_d_cte: identificadorTK igualTK literal puntoYComaTK lista_d_cte
+   41            | ε
 
-   41 lista_d_var: lista_id dosPuntosTK d_tipo puntoYComaTK lista_d_var
-   42            | ε
+   42 lista_d_var: lista_id dosPuntosTK d_tipo puntoYComaTK lista_d_var
+   43            | ε
 
-   43 lista_id: identificadorTK comaTK lista_id
-   44         | identificadorTK
+   44 lista_id: identificadorTK comaTK lista_id
+   45         | identificadorTK
 
-   45 decl_ent_sal: decl_ent
-   46             | decl_ent decl_sal
-   47             | decl_sal
+   46 decl_ent_sal: decl_ent
+   47             | decl_ent decl_sal
+   48             | decl_sal
 
-   48 decl_ent: entradaTK lista_d_var
+   49 decl_ent: entradaTK lista_d_var
 
-   49 decl_sal: salidaTK lista_d_var
+   50 decl_sal: salidaTK lista_d_var
 
-   50 expresion: expresion masTK expresion
-   51          | expresion menosTK expresion
-   52          | expresion porTK expresion
-   53          | expresion divisionTK expresion
-   54          | expresion modTK expresion
-   55          | expresion divEnteraTK expresion
-   56          | menosTK expresion
-   57          | masTK expresion
-   58          | expresion yTK expresion
-   59          | expresion oTK expresion
-   60          | noTK expresion
-   61          | expresion menorTK expresion
-   62          | expresion mayorTK expresion
-   63          | expresion menorIgualTK expresion
-   64          | expresion mayorIgualTK expresion
-   65          | expresion igualTK expresion
-   66          | expresion distintoTK expresion
-   67          | parentesisAbreTK expresion parentesisCierraTK
-   68          | operando
-   69          | literalEnteroTK
-   70          | literalRealTK
-   71          | literalCaracterTK
-   72          | literalCadenaTK
-   73          | literalBooleanoTK
-   74          | funcion_ll
+   51 expresion: exp_a
+   52          | exp_b
+   53          | funcion_ll
 
-   75 operando: identificadorTK
-   76         | operando puntoTK identificadorTK
-   77         | operando corcheteAbreTK expresion corcheteCierraTK
-   78         | operando refTK
+   54 exp_a: exp_a masTK exp_a
+   55      | exp_a menosTK exp_a
+   56      | exp_a porTK exp_a
+   57      | exp_a divisionTK exp_a
+   58      | exp_a modTK exp_a
+   59      | exp_a divEnteraTK exp_a
+   60      | parentesisAbreTK exp_a parentesisCierraTK
+   61      | operando
+   62      | literalEnteroTK
+   63      | literalRealTK
+   64      | menosTK exp_a
+   65      | masTK exp_a
 
-   79 instrucciones: instruccion puntoYComaTK instrucciones
-   80              | instruccion
+   66 exp_b: exp_b yTK exp_b
+   67      | exp_b oTK exp_b
+   68      | noTK exp_b
+   69      | operando
+   70      | literalBooleanoTK
+   71      | expresion oprel expresion
+   72      | parentesisAbreTK exp_b parentesisCierraTK
 
-   81 instruccion: continuarTK
-   82            | asignacion
-   83            | alternativa
-   84            | iteracion
-   85            | accion_ll
+   73 oprel: menorTK
+   74      | mayorTK
+   75      | menorIgualTK
+   76      | mayorIgualTK
+   77      | igualTK
+   78      | distintoTK
 
-   86 asignacion: operando asignacionTK expresion
+   79 operando: identificadorTK
+   80         | operando puntoTK operando
+   81         | operando corcheteAbreTK expresion corcheteCierraTK
+   82         | operando refTK
 
-   87 alternativa: siTK expresion entoncesTK instrucciones lista_opciones fsiTK
+   83 instrucciones: instruccion puntoYComaTK instrucciones
+   84              | instruccion
 
-   88 lista_opciones: sinoSiTK expresion entoncesTK instrucciones lista_opciones
-   89               | ε
+   85 instruccion: continuarTK
+   86            | asignacion
+   87            | alternativa
+   88            | iteracion
+   89            | accion_ll
 
-   90 iteracion: it_cota_fija
-   91          | it_cota_exp
+   90 asignacion: operando asignacionTK expresion
 
-   92 it_cota_exp: inicioMientrasTK expresion hacerTK instrucciones finMientrasTK
+   91 alternativa: siTK expresion entoncesTK instrucciones lista_opciones fsiTK
 
-   93 it_cota_fija: paraTK identificadorTK asignacionTK expresion hastaTK expresion hacerTK instrucciones fparaTK
+   92 lista_opciones: sinoSiTK expresion entoncesTK instrucciones lista_opciones
+   93               | ε
 
-   94 accion_d: accionTK a_cabecera bloque faccionTK
+   94 iteracion: it_cota_fija
+   95          | it_cota_exp
 
-   95 funcion_d: funcionTK f_cabecera bloque devTK expresion ffuncionTK
+   96 it_cota_exp: inicioMientrasTK expresion hacerTK instrucciones finMientrasTK
 
-   96 a_cabecera: identificadorTK parentesisAbreTK d_par_form parentesisCierraTK puntoYComaTK
+   97 it_cota_fija: paraTK identificadorTK asignacionTK expresion hastaTK expresion hacerTK instrucciones fparaTK
 
-   97 f_cabecera: identificadorTK parentesisAbreTK lista_d_var parentesisCierraTK devTK d_tipo puntoYComaTK
+   98 accion_d: accionTK a_cabecera bloque faccionTK
 
-   98 d_par_form: d_p_form puntoYComaTK d_par_form
-   99           | ε
+   99 funcion_d: funcionTK f_cabecera bloque devTK expresion ffuncionTK
 
-  100 d_p_form: entradaTK lista_id dosPuntosTK d_tipo
-  101         | salidaTK lista_id dosPuntosTK d_tipo
-  102         | entradaSalidaTK lista_id dosPuntosTK d_tipo
+  100 a_cabecera: identificadorTK parentesisAbreTK d_par_form parentesisCierraTK puntoYComaTK
 
-  103 accion_ll: identificadorTK parentesisAbreTK l_ll parentesisCierraTK
+  101 f_cabecera: identificadorTK parentesisAbreTK lista_d_var parentesisCierraTK devTK d_tipo puntoYComaTK
 
-  104 funcion_ll: identificadorTK parentesisAbreTK l_ll parentesisCierraTK
+  102 d_par_form: d_p_form puntoYComaTK d_par_form
+  103           | ε
 
-  105 l_ll: expresion comaTK l_ll
-  106     | expresion
+  104 d_p_form: entradaTK lista_id dosPuntosTK d_tipo
+  105         | salidaTK lista_id dosPuntosTK d_tipo
+  106         | entradaSalidaTK lista_id dosPuntosTK d_tipo
+
+  107 accion_ll: identificadorTK parentesisAbreTK l_ll parentesisCierraTK
+
+  108 funcion_ll: identificadorTK parentesisAbreTK l_ll parentesisCierraTK
+
+  109 l_ll: expresion comaTK l_ll
+  110     | expresion
 
 
 Terminals, with rules where they appear
@@ -167,211 +196,219 @@ Terminals, with rules where they appear
     error (256)
     letraTK (258)
     cifraTK (259)
-    identificadorTK (260) 1 18 32 37 39 43 44 75 76 93 96 97 103 104
+    identificadorTK (260) 1 18 32 38 40 44 45 79 97 100 101 107 108
     comentarioTK (261)
     comentarioPreTK (262) 2
     comentarioPostTK (263) 3
-    literalEnteroTK (264) 22 69
-    literalRealTK (265) 23 70
-    literalCaracterTK (266) 21 71
-    literalCadenaTK (267) 20 72
-    literalBooleanoTK (268) 24 73
+    literalEnteroTK (264) 22 62
+    literalRealTK (265) 23 63
+    literalCaracterTK (266) 21 37
+    literalCadenaTK (267) 20
+    literalBooleanoTK (268) 24 70
     algoritmoTK (269) 1
     falgoritmoTK (270) 1
-    siTK (271) 87
-    fsiTK (272) 87
+    siTK (271) 91
+    fsiTK (272) 91
     verdaderoTK (273)
     falsoTK (274)
-    entradaTK (275) 48 100
-    salidaTK (276) 49 101
+    entradaTK (275) 49 104
+    salidaTK (276) 50 105
     enteroTK (277) 25
     inicioVariablesTK (278) 17
     finVariablesTK (279) 17
     inicioConstantesTK (280) 16
     finalConstantesTK (281) 16
-    inicioMientrasTK (282) 92
-    finMientrasTK (283) 92
-    accionTK (284) 94
-    faccionTK (285) 94
-    funcionTK (286) 95
-    ffuncionTK (287) 95
-    devTK (288) 95 97
-    entradaSalidaTK (289) 102
+    inicioMientrasTK (282) 96
+    finMientrasTK (283) 96
+    accionTK (284) 98
+    faccionTK (285) 98
+    funcionTK (286) 99
+    ffuncionTK (287) 99
+    devTK (288) 99 101
+    entradaSalidaTK (289) 106
     inicioTipoTK (290) 15
     finTipoTK (291) 15
     tuplaTK (292) 30
     ftuplaTK (293) 30
     tablaTK (294) 31
     deTK (295) 31
-    refTK (296) 34 78
+    refTK (296) 34 82
     realTK (297) 26
     booleanoTK (298) 27
     caracterTK (299) 28
     cadenaTK (300) 29
-    paraTK (301) 93
-    fparaTK (302) 93
-    hastaTK (303) 93
-    hacerTK (304) 92 93
-    continuarTK (305) 81
-    divEnteraTK (306) 55
-    modTK (307) 54
-    yTK (308) 58
-    oTK (309) 59
-    noTK (310) 60
-    asignacionTK (311) 86 93
-    entoncesTK (312) 87 88
-    menorIgualTK (313) 63
-    mayorIgualTK (314) 64
-    distintoTK (315) 66
-    igualTK (316) 18 39 65
-    menorTK (317) 61
-    mayorTK (318) 62
-    masTK (319) 50 57
-    menosTK (320) 51 56
-    porTK (321) 52
-    divisionTK (322) 53
-    puntoYComaTK (323) 1 15 16 17 18 37 39 41 79 96 97 98
-    comaTK (324) 43 105
-    puntoTK (325) 1 76
-    dosPuntosTK (326) 37 41 100 101 102
-    parentesisAbreTK (327) 67 96 97 103 104
-    parentesisCierraTK (328) 67 96 97 103 104
-    corcheteAbreTK (329) 31 77
-    corcheteCierraTK (330) 31 77
+    paraTK (301) 97
+    fparaTK (302) 97
+    hastaTK (303) 97
+    hacerTK (304) 96 97
+    continuarTK (305) 85
+    divEnteraTK (306) 59
+    modTK (307) 58
+    yTK (308) 66
+    oTK (309) 67
+    noTK (310) 68
+    asignacionTK (311) 90 97
+    entoncesTK (312) 91 92
+    menorIgualTK (313) 75
+    mayorIgualTK (314) 76
+    distintoTK (315) 78
+    igualTK (316) 18 40 77
+    menorTK (317) 73
+    mayorTK (318) 74
+    masTK (319) 54 65
+    menosTK (320) 55 64
+    porTK (321) 56
+    divisionTK (322) 57
+    puntoYComaTK (323) 1 15 16 17 18 38 40 42 83 100 101 102
+    comaTK (324) 44 109
+    puntoTK (325) 1 80
+    dosPuntosTK (326) 38 42 104 105 106
+    parentesisAbreTK (327) 60 72 100 101 107 108
+    parentesisCierraTK (328) 60 72 100 101 107 108
+    corcheteAbreTK (329) 31 81
+    corcheteCierraTK (330) 31 81
     dobleComillaTK (331)
     comillaSimpleTK (332)
     subrangoTK (333) 31 33
-    sinoSiTK (334) 88
-    UMENOS (335)
+    sinoSiTK (334) 92
 
 
 Nonterminals, with rules where they appear
 
-    $accept (81)
+    $accept (80)
         on left: 0
-    desc_algoritmo (82)
+    desc_algoritmo (81)
         on left: 1
         on right: 0
-    cabecera_alg (83)
+    cabecera_alg (82)
         on left: 2
         on right: 1
-    bloque_alg (84)
+    bloque_alg (83)
         on left: 3
         on right: 1
-    decl_globales (85)
+    decl_globales (84)
         on left: 4 5 6
         on right: 2 4 5
-    decl_a_f (86)
+    decl_a_f (85)
         on left: 7 8 9
         on right: 2 7 8
-    bloque (87)
+    bloque (86)
         on left: 10
-        on right: 3 94 95
-    declaraciones (88)
+        on right: 3 98 99
+    declaraciones (87)
         on left: 11 12 13 14
         on right: 10 11 12 13
-    declaracion_tipo (89)
+    declaracion_tipo (88)
         on left: 15
         on right: 4 11
-    declaracion_const (90)
+    declaracion_const (89)
         on left: 16
         on right: 5 12
-    declaracion_var (91)
+    declaracion_var (90)
         on left: 17
         on right: 13
-    lista_d_tipo (92)
+    lista_d_tipo (91)
         on left: 18 19
         on right: 15 18
-    literal (93)
+    literal (92)
         on left: 20 21 22 23 24
-        on right: 39
-    tipo_base (94)
+        on right: 40
+    tipo_base (93)
         on left: 25 26 27 28 29
         on right: 35
-    d_tipo (95)
+    d_tipo (94)
         on left: 30 31 32 33 34 35
-        on right: 18 31 34 37 41 97 100 101 102
-    expresion_t (96)
-        on left: 36
+        on right: 18 31 34 38 42 101 104 105 106
+    expresion_t (95)
+        on left: 36 37
         on right: 31 33
-    lista_campos (97)
-        on left: 37 38
-        on right: 30 37
-    lista_d_cte (98)
-        on left: 39 40
-        on right: 16 39
-    lista_d_var (99)
-        on left: 41 42
-        on right: 17 41 48 49 97
-    lista_id (100)
-        on left: 43 44
-        on right: 41 43 100 101 102
-    decl_ent_sal (101)
-        on left: 45 46 47
+    lista_campos (96)
+        on left: 38 39
+        on right: 30 38
+    lista_d_cte (97)
+        on left: 40 41
+        on right: 16 40
+    lista_d_var (98)
+        on left: 42 43
+        on right: 17 42 49 50 101
+    lista_id (99)
+        on left: 44 45
+        on right: 42 44 104 105 106
+    decl_ent_sal (100)
+        on left: 46 47 48
         on right: 2
-    decl_ent (102)
-        on left: 48
-        on right: 45 46
-    decl_sal (103)
+    decl_ent (101)
         on left: 49
         on right: 46 47
-    expresion (104)
-        on left: 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74
-        on right: 36 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 77 86 87 88 92 93 95 105 106
-    operando (105)
-        on left: 75 76 77 78
-        on right: 68 76 77 78 86
-    instrucciones (106)
-        on left: 79 80
-        on right: 10 79 87 88 92 93
-    instruccion (107)
-        on left: 81 82 83 84 85
-        on right: 79 80
-    asignacion (108)
-        on left: 86
-        on right: 82
-    alternativa (109)
-        on left: 87
-        on right: 83
-    lista_opciones (110)
-        on left: 88 89
-        on right: 87 88
-    iteracion (111)
-        on left: 90 91
-        on right: 84
-    it_cota_exp (112)
-        on left: 92
-        on right: 91
-    it_cota_fija (113)
-        on left: 93
-        on right: 90
-    accion_d (114)
-        on left: 94
-        on right: 7
-    funcion_d (115)
-        on left: 95
-        on right: 8
-    a_cabecera (116)
+    decl_sal (102)
+        on left: 50
+        on right: 47 48
+    expresion (103)
+        on left: 51 52 53
+        on right: 36 71 81 90 91 92 96 97 99 109 110
+    exp_a (104)
+        on left: 54 55 56 57 58 59 60 61 62 63 64 65
+        on right: 51 54 55 56 57 58 59 60 64 65
+    exp_b (105)
+        on left: 66 67 68 69 70 71 72
+        on right: 52 66 67 68 72
+    oprel (106)
+        on left: 73 74 75 76 77 78
+        on right: 71
+    operando (107)
+        on left: 79 80 81 82
+        on right: 61 69 80 81 82 90
+    instrucciones (108)
+        on left: 83 84
+        on right: 10 83 91 92 96 97
+    instruccion (109)
+        on left: 85 86 87 88 89
+        on right: 83 84
+    asignacion (110)
+        on left: 90
+        on right: 86
+    alternativa (111)
+        on left: 91
+        on right: 87
+    lista_opciones (112)
+        on left: 92 93
+        on right: 91 92
+    iteracion (113)
+        on left: 94 95
+        on right: 88
+    it_cota_exp (114)
         on left: 96
-        on right: 94
-    f_cabecera (117)
-        on left: 97
         on right: 95
-    d_par_form (118)
-        on left: 98 99
-        on right: 96 98
-    d_p_form (119)
-        on left: 100 101 102
+    it_cota_fija (115)
+        on left: 97
+        on right: 94
+    accion_d (116)
+        on left: 98
+        on right: 7
+    funcion_d (117)
+        on left: 99
+        on right: 8
+    a_cabecera (118)
+        on left: 100
         on right: 98
-    accion_ll (120)
-        on left: 103
-        on right: 85
-    funcion_ll (121)
-        on left: 104
-        on right: 74
-    l_ll (122)
-        on left: 105 106
-        on right: 103 104 105
+    f_cabecera (119)
+        on left: 101
+        on right: 99
+    d_par_form (120)
+        on left: 102 103
+        on right: 100 102
+    d_p_form (121)
+        on left: 104 105 106
+        on right: 102
+    accion_ll (122)
+        on left: 107
+        on right: 89
+    funcion_ll (123)
+        on left: 108
+        on right: 53
+    l_ll (124)
+        on left: 109 110
+        on right: 107 108 109
 
 
 State 0
@@ -432,7 +469,7 @@ State 6
 
     identificadorTK  shift, and go to state 12
 
-    $default  reduce using rule 40 (lista_d_cte)
+    $default  reduce using rule 41 (lista_d_cte)
 
     lista_d_cte  go to state 13
 
@@ -510,7 +547,7 @@ State 11
 
 State 12
 
-   39 lista_d_cte: identificadorTK • igualTK literal puntoYComaTK lista_d_cte
+   40 lista_d_cte: identificadorTK • igualTK literal puntoYComaTK lista_d_cte
 
     igualTK  shift, and go to state 30
 
@@ -542,7 +579,7 @@ State 16
 
     identificadorTK  shift, and go to state 34
 
-    $default  reduce using rule 42 (lista_d_var)
+    $default  reduce using rule 43 (lista_d_var)
 
     lista_d_var  go to state 35
     lista_id     go to state 36
@@ -633,7 +670,7 @@ State 22
 
 State 23
 
-   94 accion_d: accionTK • a_cabecera bloque faccionTK
+   98 accion_d: accionTK • a_cabecera bloque faccionTK
 
     identificadorTK  shift, and go to state 56
 
@@ -642,7 +679,7 @@ State 23
 
 State 24
 
-   95 funcion_d: funcionTK • f_cabecera bloque devTK expresion ffuncionTK
+   99 funcion_d: funcionTK • f_cabecera bloque devTK expresion ffuncionTK
 
     identificadorTK  shift, and go to state 58
 
@@ -705,7 +742,7 @@ State 29
 
 State 30
 
-   39 lista_d_cte: identificadorTK igualTK • literal puntoYComaTK lista_d_cte
+   40 lista_d_cte: identificadorTK igualTK • literal puntoYComaTK lista_d_cte
 
     literalEnteroTK    shift, and go to state 67
     literalRealTK      shift, and go to state 68
@@ -731,65 +768,66 @@ State 32
     literalEnteroTK    shift, and go to state 75
     literalRealTK      shift, and go to state 76
     literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    enteroTK           shift, and go to state 80
-    tuplaTK            shift, and go to state 81
-    tablaTK            shift, and go to state 82
-    refTK              shift, and go to state 83
-    realTK             shift, and go to state 84
-    booleanoTK         shift, and go to state 85
-    caracterTK         shift, and go to state 86
-    cadenaTK           shift, and go to state 87
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
+    literalBooleanoTK  shift, and go to state 78
+    enteroTK           shift, and go to state 79
+    tuplaTK            shift, and go to state 80
+    tablaTK            shift, and go to state 81
+    refTK              shift, and go to state 82
+    realTK             shift, and go to state 83
+    booleanoTK         shift, and go to state 84
+    caracterTK         shift, and go to state 85
+    cadenaTK           shift, and go to state 86
+    noTK               shift, and go to state 87
+    masTK              shift, and go to state 88
+    menosTK            shift, and go to state 89
+    parentesisAbreTK   shift, and go to state 90
 
-    tipo_base    go to state 92
-    d_tipo       go to state 93
-    expresion_t  go to state 94
-    expresion    go to state 95
-    operando     go to state 96
-    funcion_ll   go to state 97
+    tipo_base    go to state 91
+    d_tipo       go to state 92
+    expresion_t  go to state 93
+    expresion    go to state 94
+    exp_a        go to state 95
+    exp_b        go to state 96
+    operando     go to state 97
+    funcion_ll   go to state 98
 
 
 State 33
 
    15 declaracion_tipo: inicioTipoTK lista_d_tipo finTipoTK • puntoYComaTK
 
-    puntoYComaTK  shift, and go to state 98
+    puntoYComaTK  shift, and go to state 99
 
 
 State 34
 
-   43 lista_id: identificadorTK • comaTK lista_id
-   44         | identificadorTK •
+   44 lista_id: identificadorTK • comaTK lista_id
+   45         | identificadorTK •
 
-    comaTK  shift, and go to state 99
+    comaTK  shift, and go to state 100
 
-    $default  reduce using rule 44 (lista_id)
+    $default  reduce using rule 45 (lista_id)
 
 
 State 35
 
    17 declaracion_var: inicioVariablesTK lista_d_var • finVariablesTK puntoYComaTK
 
-    finVariablesTK  shift, and go to state 100
+    finVariablesTK  shift, and go to state 101
 
 
 State 36
 
-   41 lista_d_var: lista_id • dosPuntosTK d_tipo puntoYComaTK lista_d_var
+   42 lista_d_var: lista_id • dosPuntosTK d_tipo puntoYComaTK lista_d_var
 
-    dosPuntosTK  shift, and go to state 101
+    dosPuntosTK  shift, and go to state 102
 
 
 State 37
 
     1 desc_algoritmo: algoritmoTK identificadorTK puntoYComaTK cabecera_alg bloque_alg falgoritmoTK • puntoTK
 
-    puntoTK  shift, and go to state 102
+    puntoTK  shift, and go to state 103
 
 
 State 38
@@ -801,79 +839,79 @@ State 38
 
 State 39
 
-   75 operando: identificadorTK •
-  103 accion_ll: identificadorTK • parentesisAbreTK l_ll parentesisCierraTK
+   79 operando: identificadorTK •
+  107 accion_ll: identificadorTK • parentesisAbreTK l_ll parentesisCierraTK
 
-    parentesisAbreTK  shift, and go to state 103
+    parentesisAbreTK  shift, and go to state 104
 
-    $default  reduce using rule 75 (operando)
+    $default  reduce using rule 79 (operando)
 
 
 State 40
 
-   87 alternativa: siTK • expresion entoncesTK instrucciones lista_opciones fsiTK
+   91 alternativa: siTK • expresion entoncesTK instrucciones lista_opciones fsiTK
 
-    identificadorTK    shift, and go to state 104
+    identificadorTK    shift, and go to state 105
     literalEnteroTK    shift, and go to state 75
     literalRealTK      shift, and go to state 76
-    literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
+    literalBooleanoTK  shift, and go to state 78
+    noTK               shift, and go to state 87
+    masTK              shift, and go to state 88
+    menosTK            shift, and go to state 89
+    parentesisAbreTK   shift, and go to state 90
 
-    expresion   go to state 105
-    operando    go to state 96
-    funcion_ll  go to state 97
+    expresion   go to state 106
+    exp_a       go to state 95
+    exp_b       go to state 96
+    operando    go to state 97
+    funcion_ll  go to state 98
 
 
 State 41
 
-   92 it_cota_exp: inicioMientrasTK • expresion hacerTK instrucciones finMientrasTK
+   96 it_cota_exp: inicioMientrasTK • expresion hacerTK instrucciones finMientrasTK
 
-    identificadorTK    shift, and go to state 104
+    identificadorTK    shift, and go to state 105
     literalEnteroTK    shift, and go to state 75
     literalRealTK      shift, and go to state 76
-    literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
+    literalBooleanoTK  shift, and go to state 78
+    noTK               shift, and go to state 87
+    masTK              shift, and go to state 88
+    menosTK            shift, and go to state 89
+    parentesisAbreTK   shift, and go to state 90
 
-    expresion   go to state 106
-    operando    go to state 96
-    funcion_ll  go to state 97
+    expresion   go to state 107
+    exp_a       go to state 95
+    exp_b       go to state 96
+    operando    go to state 97
+    funcion_ll  go to state 98
 
 
 State 42
 
-   93 it_cota_fija: paraTK • identificadorTK asignacionTK expresion hastaTK expresion hacerTK instrucciones fparaTK
+   97 it_cota_fija: paraTK • identificadorTK asignacionTK expresion hastaTK expresion hacerTK instrucciones fparaTK
 
-    identificadorTK  shift, and go to state 107
+    identificadorTK  shift, and go to state 108
 
 
 State 43
 
-   81 instruccion: continuarTK •
+   85 instruccion: continuarTK •
 
-    $default  reduce using rule 81 (instruccion)
+    $default  reduce using rule 85 (instruccion)
 
 
 State 44
 
-   76 operando: operando • puntoTK identificadorTK
-   77         | operando • corcheteAbreTK expresion corcheteCierraTK
-   78         | operando • refTK
-   86 asignacion: operando • asignacionTK expresion
+   80 operando: operando • puntoTK operando
+   81         | operando • corcheteAbreTK expresion corcheteCierraTK
+   82         | operando • refTK
+   90 asignacion: operando • asignacionTK expresion
 
-    refTK           shift, and go to state 108
-    asignacionTK    shift, and go to state 109
-    puntoTK         shift, and go to state 110
-    corcheteAbreTK  shift, and go to state 111
+    refTK           shift, and go to state 109
+    asignacionTK    shift, and go to state 110
+    puntoTK         shift, and go to state 111
+    corcheteAbreTK  shift, and go to state 112
 
 
 State 45
@@ -885,54 +923,54 @@ State 45
 
 State 46
 
-   79 instrucciones: instruccion • puntoYComaTK instrucciones
-   80              | instruccion •
+   83 instrucciones: instruccion • puntoYComaTK instrucciones
+   84              | instruccion •
 
-    puntoYComaTK  shift, and go to state 112
+    puntoYComaTK  shift, and go to state 113
 
-    $default  reduce using rule 80 (instrucciones)
+    $default  reduce using rule 84 (instrucciones)
 
 
 State 47
 
-   82 instruccion: asignacion •
+   86 instruccion: asignacion •
 
-    $default  reduce using rule 82 (instruccion)
+    $default  reduce using rule 86 (instruccion)
 
 
 State 48
 
-   83 instruccion: alternativa •
+   87 instruccion: alternativa •
 
-    $default  reduce using rule 83 (instruccion)
+    $default  reduce using rule 87 (instruccion)
 
 
 State 49
 
-   84 instruccion: iteracion •
+   88 instruccion: iteracion •
 
-    $default  reduce using rule 84 (instruccion)
+    $default  reduce using rule 88 (instruccion)
 
 
 State 50
 
-   91 iteracion: it_cota_exp •
+   95 iteracion: it_cota_exp •
 
-    $default  reduce using rule 91 (iteracion)
+    $default  reduce using rule 95 (iteracion)
 
 
 State 51
 
-   90 iteracion: it_cota_fija •
+   94 iteracion: it_cota_fija •
 
-    $default  reduce using rule 90 (iteracion)
+    $default  reduce using rule 94 (iteracion)
 
 
 State 52
 
-   85 instruccion: accion_ll •
+   89 instruccion: accion_ll •
 
-    $default  reduce using rule 85 (instruccion)
+    $default  reduce using rule 89 (instruccion)
 
 
 State 53
@@ -958,14 +996,14 @@ State 55
 
 State 56
 
-   96 a_cabecera: identificadorTK • parentesisAbreTK d_par_form parentesisCierraTK puntoYComaTK
+  100 a_cabecera: identificadorTK • parentesisAbreTK d_par_form parentesisCierraTK puntoYComaTK
 
-    parentesisAbreTK  shift, and go to state 113
+    parentesisAbreTK  shift, and go to state 114
 
 
 State 57
 
-   94 accion_d: accionTK a_cabecera • bloque faccionTK
+   98 accion_d: accionTK a_cabecera • bloque faccionTK
 
     inicioVariablesTK   shift, and go to state 16
     inicioConstantesTK  shift, and go to state 6
@@ -973,7 +1011,7 @@ State 57
 
     $default  reduce using rule 14 (declaraciones)
 
-    bloque             go to state 114
+    bloque             go to state 115
     declaraciones      go to state 19
     declaracion_tipo   go to state 20
     declaracion_const  go to state 21
@@ -982,14 +1020,14 @@ State 57
 
 State 58
 
-   97 f_cabecera: identificadorTK • parentesisAbreTK lista_d_var parentesisCierraTK devTK d_tipo puntoYComaTK
+  101 f_cabecera: identificadorTK • parentesisAbreTK lista_d_var parentesisCierraTK devTK d_tipo puntoYComaTK
 
-    parentesisAbreTK  shift, and go to state 115
+    parentesisAbreTK  shift, and go to state 116
 
 
 State 59
 
-   95 funcion_d: funcionTK f_cabecera • bloque devTK expresion ffuncionTK
+   99 funcion_d: funcionTK f_cabecera • bloque devTK expresion ffuncionTK
 
     inicioVariablesTK   shift, and go to state 16
     inicioConstantesTK  shift, and go to state 6
@@ -997,7 +1035,7 @@ State 59
 
     $default  reduce using rule 14 (declaraciones)
 
-    bloque             go to state 116
+    bloque             go to state 117
     declaraciones      go to state 19
     declaracion_tipo   go to state 20
     declaracion_const  go to state 21
@@ -1006,25 +1044,25 @@ State 59
 
 State 60
 
-   48 decl_ent: entradaTK • lista_d_var
+   49 decl_ent: entradaTK • lista_d_var
 
     identificadorTK  shift, and go to state 34
 
-    $default  reduce using rule 42 (lista_d_var)
+    $default  reduce using rule 43 (lista_d_var)
 
-    lista_d_var  go to state 117
+    lista_d_var  go to state 118
     lista_id     go to state 36
 
 
 State 61
 
-   49 decl_sal: salidaTK • lista_d_var
+   50 decl_sal: salidaTK • lista_d_var
 
     identificadorTK  shift, and go to state 34
 
-    $default  reduce using rule 42 (lista_d_var)
+    $default  reduce using rule 43 (lista_d_var)
 
-    lista_d_var  go to state 118
+    lista_d_var  go to state 119
     lista_id     go to state 36
 
 
@@ -1032,26 +1070,26 @@ State 62
 
     2 cabecera_alg: decl_globales decl_a_f decl_ent_sal • comentarioPreTK
 
-    comentarioPreTK  shift, and go to state 119
+    comentarioPreTK  shift, and go to state 120
 
 
 State 63
 
-   45 decl_ent_sal: decl_ent •
-   46             | decl_ent • decl_sal
+   46 decl_ent_sal: decl_ent •
+   47             | decl_ent • decl_sal
 
     salidaTK  shift, and go to state 61
 
-    $default  reduce using rule 45 (decl_ent_sal)
+    $default  reduce using rule 46 (decl_ent_sal)
 
-    decl_sal  go to state 120
+    decl_sal  go to state 121
 
 
 State 64
 
-   47 decl_ent_sal: decl_sal •
+   48 decl_ent_sal: decl_sal •
 
-    $default  reduce using rule 47 (decl_ent_sal)
+    $default  reduce using rule 48 (decl_ent_sal)
 
 
 State 65
@@ -1105,9 +1143,9 @@ State 71
 
 State 72
 
-   39 lista_d_cte: identificadorTK igualTK literal • puntoYComaTK lista_d_cte
+   40 lista_d_cte: identificadorTK igualTK literal • puntoYComaTK lista_d_cte
 
-    puntoYComaTK  shift, and go to state 121
+    puntoYComaTK  shift, and go to state 122
 
 
 State 73
@@ -1120,76 +1158,69 @@ State 73
 State 74
 
    32 d_tipo: identificadorTK •
-   75 operando: identificadorTK •
-  104 funcion_ll: identificadorTK • parentesisAbreTK l_ll parentesisCierraTK
+   79 operando: identificadorTK •
+  108 funcion_ll: identificadorTK • parentesisAbreTK l_ll parentesisCierraTK
 
-    parentesisAbreTK  shift, and go to state 122
+    parentesisAbreTK  shift, and go to state 123
 
     puntoYComaTK  reduce using rule 32 (d_tipo)
-    $default      reduce using rule 75 (operando)
+    $default      reduce using rule 79 (operando)
 
 
 State 75
 
-   69 expresion: literalEnteroTK •
+   62 exp_a: literalEnteroTK •
 
-    $default  reduce using rule 69 (expresion)
+    $default  reduce using rule 62 (exp_a)
 
 
 State 76
 
-   70 expresion: literalRealTK •
+   63 exp_a: literalRealTK •
 
-    $default  reduce using rule 70 (expresion)
+    $default  reduce using rule 63 (exp_a)
 
 
 State 77
 
-   71 expresion: literalCaracterTK •
+   37 expresion_t: literalCaracterTK •
 
-    $default  reduce using rule 71 (expresion)
+    $default  reduce using rule 37 (expresion_t)
 
 
 State 78
 
-   72 expresion: literalCadenaTK •
+   70 exp_b: literalBooleanoTK •
 
-    $default  reduce using rule 72 (expresion)
+    $default  reduce using rule 70 (exp_b)
 
 
 State 79
-
-   73 expresion: literalBooleanoTK •
-
-    $default  reduce using rule 73 (expresion)
-
-
-State 80
 
    25 tipo_base: enteroTK •
 
     $default  reduce using rule 25 (tipo_base)
 
 
-State 81
+State 80
 
    30 d_tipo: tuplaTK • lista_campos ftuplaTK
 
-    identificadorTK  shift, and go to state 123
+    identificadorTK  shift, and go to state 124
 
-    $default  reduce using rule 38 (lista_campos)
+    $default  reduce using rule 39 (lista_campos)
 
-    lista_campos  go to state 124
+    lista_campos  go to state 125
 
 
-State 82
+State 81
 
    31 d_tipo: tablaTK • corcheteAbreTK expresion_t subrangoTK expresion_t corcheteCierraTK deTK d_tipo
 
-    corcheteAbreTK  shift, and go to state 125
+    corcheteAbreTK  shift, and go to state 126
 
 
-State 83
+State 82
 
    34 d_tipo: refTK • d_tipo
 
@@ -1197,441 +1228,462 @@ State 83
     literalEnteroTK    shift, and go to state 75
     literalRealTK      shift, and go to state 76
     literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    enteroTK           shift, and go to state 80
-    tuplaTK            shift, and go to state 81
-    tablaTK            shift, and go to state 82
-    refTK              shift, and go to state 83
-    realTK             shift, and go to state 84
-    booleanoTK         shift, and go to state 85
-    caracterTK         shift, and go to state 86
-    cadenaTK           shift, and go to state 87
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
+    literalBooleanoTK  shift, and go to state 78
+    enteroTK           shift, and go to state 79
+    tuplaTK            shift, and go to state 80
+    tablaTK            shift, and go to state 81
+    refTK              shift, and go to state 82
+    realTK             shift, and go to state 83
+    booleanoTK         shift, and go to state 84
+    caracterTK         shift, and go to state 85
+    cadenaTK           shift, and go to state 86
+    noTK               shift, and go to state 87
+    masTK              shift, and go to state 88
+    menosTK            shift, and go to state 89
+    parentesisAbreTK   shift, and go to state 90
 
-    tipo_base    go to state 92
-    d_tipo       go to state 126
-    expresion_t  go to state 94
-    expresion    go to state 95
-    operando     go to state 96
-    funcion_ll   go to state 97
+    tipo_base    go to state 91
+    d_tipo       go to state 127
+    expresion_t  go to state 93
+    expresion    go to state 94
+    exp_a        go to state 95
+    exp_b        go to state 96
+    operando     go to state 97
+    funcion_ll   go to state 98
 
 
-State 84
+State 83
 
    26 tipo_base: realTK •
 
     $default  reduce using rule 26 (tipo_base)
 
 
-State 85
+State 84
 
    27 tipo_base: booleanoTK •
 
     $default  reduce using rule 27 (tipo_base)
 
 
-State 86
+State 85
 
    28 tipo_base: caracterTK •
 
     $default  reduce using rule 28 (tipo_base)
 
 
-State 87
+State 86
 
    29 tipo_base: cadenaTK •
 
     $default  reduce using rule 29 (tipo_base)
 
 
-State 88
+State 87
 
-   60 expresion: noTK • expresion
+   68 exp_b: noTK • exp_b
 
-    identificadorTK    shift, and go to state 104
+    identificadorTK    shift, and go to state 105
     literalEnteroTK    shift, and go to state 75
     literalRealTK      shift, and go to state 76
-    literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
+    literalBooleanoTK  shift, and go to state 78
+    noTK               shift, and go to state 87
+    masTK              shift, and go to state 88
+    menosTK            shift, and go to state 89
+    parentesisAbreTK   shift, and go to state 90
 
-    expresion   go to state 127
-    operando    go to state 96
-    funcion_ll  go to state 97
+    expresion   go to state 128
+    exp_a       go to state 95
+    exp_b       go to state 129
+    operando    go to state 97
+    funcion_ll  go to state 98
+
+
+State 88
+
+   65 exp_a: masTK • exp_a
+
+    identificadorTK   shift, and go to state 130
+    literalEnteroTK   shift, and go to state 75
+    literalRealTK     shift, and go to state 76
+    masTK             shift, and go to state 88
+    menosTK           shift, and go to state 89
+    parentesisAbreTK  shift, and go to state 131
+
+    exp_a     go to state 132
+    operando  go to state 133
 
 
 State 89
 
-   57 expresion: masTK • expresion
+   64 exp_a: menosTK • exp_a
 
-    identificadorTK    shift, and go to state 104
-    literalEnteroTK    shift, and go to state 75
-    literalRealTK      shift, and go to state 76
-    literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
+    identificadorTK   shift, and go to state 130
+    literalEnteroTK   shift, and go to state 75
+    literalRealTK     shift, and go to state 76
+    masTK             shift, and go to state 88
+    menosTK           shift, and go to state 89
+    parentesisAbreTK  shift, and go to state 131
 
-    expresion   go to state 128
-    operando    go to state 96
-    funcion_ll  go to state 97
+    exp_a     go to state 134
+    operando  go to state 133
 
 
 State 90
 
-   56 expresion: menosTK • expresion
+   60 exp_a: parentesisAbreTK • exp_a parentesisCierraTK
+   72 exp_b: parentesisAbreTK • exp_b parentesisCierraTK
 
-    identificadorTK    shift, and go to state 104
+    identificadorTK    shift, and go to state 105
     literalEnteroTK    shift, and go to state 75
     literalRealTK      shift, and go to state 76
-    literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
+    literalBooleanoTK  shift, and go to state 78
+    noTK               shift, and go to state 87
+    masTK              shift, and go to state 88
+    menosTK            shift, and go to state 89
+    parentesisAbreTK   shift, and go to state 90
 
-    expresion   go to state 129
-    operando    go to state 96
-    funcion_ll  go to state 97
+    expresion   go to state 128
+    exp_a       go to state 135
+    exp_b       go to state 136
+    operando    go to state 97
+    funcion_ll  go to state 98
 
 
 State 91
-
-   67 expresion: parentesisAbreTK • expresion parentesisCierraTK
-
-    identificadorTK    shift, and go to state 104
-    literalEnteroTK    shift, and go to state 75
-    literalRealTK      shift, and go to state 76
-    literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
-
-    expresion   go to state 130
-    operando    go to state 96
-    funcion_ll  go to state 97
-
-
-State 92
 
    35 d_tipo: tipo_base •
 
     $default  reduce using rule 35 (d_tipo)
 
 
-State 93
+State 92
 
    18 lista_d_tipo: identificadorTK igualTK d_tipo • puntoYComaTK lista_d_tipo
 
-    puntoYComaTK  shift, and go to state 131
+    puntoYComaTK  shift, and go to state 137
+
+
+State 93
+
+   33 d_tipo: expresion_t • subrangoTK expresion_t
+
+    subrangoTK  shift, and go to state 138
 
 
 State 94
 
-   33 d_tipo: expresion_t • subrangoTK expresion_t
+   36 expresion_t: expresion •
+   71 exp_b: expresion • oprel expresion
 
-    subrangoTK  shift, and go to state 132
+    menorIgualTK  shift, and go to state 139
+    mayorIgualTK  shift, and go to state 140
+    distintoTK    shift, and go to state 141
+    igualTK       shift, and go to state 142
+    menorTK       shift, and go to state 143
+    mayorTK       shift, and go to state 144
+
+    $default  reduce using rule 36 (expresion_t)
+
+    oprel  go to state 145
 
 
 State 95
 
-   36 expresion_t: expresion •
-   50 expresion: expresion • masTK expresion
-   51          | expresion • menosTK expresion
-   52          | expresion • porTK expresion
-   53          | expresion • divisionTK expresion
-   54          | expresion • modTK expresion
-   55          | expresion • divEnteraTK expresion
-   58          | expresion • yTK expresion
-   59          | expresion • oTK expresion
-   61          | expresion • menorTK expresion
-   62          | expresion • mayorTK expresion
-   63          | expresion • menorIgualTK expresion
-   64          | expresion • mayorIgualTK expresion
-   65          | expresion • igualTK expresion
-   66          | expresion • distintoTK expresion
+   51 expresion: exp_a •
+   54 exp_a: exp_a • masTK exp_a
+   55      | exp_a • menosTK exp_a
+   56      | exp_a • porTK exp_a
+   57      | exp_a • divisionTK exp_a
+   58      | exp_a • modTK exp_a
+   59      | exp_a • divEnteraTK exp_a
 
-    divEnteraTK   shift, and go to state 133
-    modTK         shift, and go to state 134
-    yTK           shift, and go to state 135
-    oTK           shift, and go to state 136
-    menorIgualTK  shift, and go to state 137
-    mayorIgualTK  shift, and go to state 138
-    distintoTK    shift, and go to state 139
-    igualTK       shift, and go to state 140
-    menorTK       shift, and go to state 141
-    mayorTK       shift, and go to state 142
-    masTK         shift, and go to state 143
-    menosTK       shift, and go to state 144
-    porTK         shift, and go to state 145
-    divisionTK    shift, and go to state 146
+    divEnteraTK  shift, and go to state 146
+    modTK        shift, and go to state 147
+    masTK        shift, and go to state 148
+    menosTK      shift, and go to state 149
+    porTK        shift, and go to state 150
+    divisionTK   shift, and go to state 151
 
-    $default  reduce using rule 36 (expresion_t)
+    $default  reduce using rule 51 (expresion)
 
 
 State 96
 
-   68 expresion: operando •
-   76 operando: operando • puntoTK identificadorTK
-   77         | operando • corcheteAbreTK expresion corcheteCierraTK
-   78         | operando • refTK
+   52 expresion: exp_b •
+   66 exp_b: exp_b • yTK exp_b
+   67      | exp_b • oTK exp_b
 
-    refTK           shift, and go to state 108
-    puntoTK         shift, and go to state 110
-    corcheteAbreTK  shift, and go to state 111
+    yTK  shift, and go to state 152
+    oTK  shift, and go to state 153
 
-    $default  reduce using rule 68 (expresion)
+    yTK       [reduce using rule 52 (expresion)]
+    oTK       [reduce using rule 52 (expresion)]
+    $default  reduce using rule 52 (expresion)
 
 
 State 97
 
-   74 expresion: funcion_ll •
+   61 exp_a: operando •
+   69 exp_b: operando •
+   80 operando: operando • puntoTK operando
+   81         | operando • corcheteAbreTK expresion corcheteCierraTK
+   82         | operando • refTK
 
-    $default  reduce using rule 74 (expresion)
+    refTK           shift, and go to state 109
+    puntoTK         shift, and go to state 111
+    corcheteAbreTK  shift, and go to state 112
+
+    comentarioPostTK    reduce using rule 61 (exp_a)
+    comentarioPostTK    [reduce using rule 69 (exp_b)]
+    fsiTK               reduce using rule 61 (exp_a)
+    fsiTK               [reduce using rule 69 (exp_b)]
+    finMientrasTK       reduce using rule 61 (exp_a)
+    finMientrasTK       [reduce using rule 69 (exp_b)]
+    faccionTK           reduce using rule 61 (exp_a)
+    faccionTK           [reduce using rule 69 (exp_b)]
+    ffuncionTK          reduce using rule 61 (exp_a)
+    ffuncionTK          [reduce using rule 69 (exp_b)]
+    devTK               reduce using rule 61 (exp_a)
+    devTK               [reduce using rule 69 (exp_b)]
+    fparaTK             reduce using rule 61 (exp_a)
+    fparaTK             [reduce using rule 69 (exp_b)]
+    hastaTK             reduce using rule 61 (exp_a)
+    hastaTK             [reduce using rule 69 (exp_b)]
+    hacerTK             reduce using rule 61 (exp_a)
+    hacerTK             [reduce using rule 69 (exp_b)]
+    yTK                 reduce using rule 61 (exp_a)
+    yTK                 [reduce using rule 69 (exp_b)]
+    oTK                 reduce using rule 61 (exp_a)
+    oTK                 [reduce using rule 69 (exp_b)]
+    entoncesTK          reduce using rule 61 (exp_a)
+    entoncesTK          [reduce using rule 69 (exp_b)]
+    menorIgualTK        reduce using rule 61 (exp_a)
+    menorIgualTK        [reduce using rule 69 (exp_b)]
+    mayorIgualTK        reduce using rule 61 (exp_a)
+    mayorIgualTK        [reduce using rule 69 (exp_b)]
+    distintoTK          reduce using rule 61 (exp_a)
+    distintoTK          [reduce using rule 69 (exp_b)]
+    igualTK             reduce using rule 61 (exp_a)
+    igualTK             [reduce using rule 69 (exp_b)]
+    menorTK             reduce using rule 61 (exp_a)
+    menorTK             [reduce using rule 69 (exp_b)]
+    mayorTK             reduce using rule 61 (exp_a)
+    mayorTK             [reduce using rule 69 (exp_b)]
+    puntoYComaTK        reduce using rule 61 (exp_a)
+    puntoYComaTK        [reduce using rule 69 (exp_b)]
+    comaTK              reduce using rule 61 (exp_a)
+    comaTK              [reduce using rule 69 (exp_b)]
+    parentesisCierraTK  reduce using rule 61 (exp_a)
+    parentesisCierraTK  [reduce using rule 69 (exp_b)]
+    corcheteCierraTK    reduce using rule 61 (exp_a)
+    corcheteCierraTK    [reduce using rule 69 (exp_b)]
+    subrangoTK          reduce using rule 61 (exp_a)
+    subrangoTK          [reduce using rule 69 (exp_b)]
+    sinoSiTK            reduce using rule 61 (exp_a)
+    sinoSiTK            [reduce using rule 69 (exp_b)]
+    $default            reduce using rule 61 (exp_a)
 
 
 State 98
+
+   53 expresion: funcion_ll •
+
+    $default  reduce using rule 53 (expresion)
+
+
+State 99
 
    15 declaracion_tipo: inicioTipoTK lista_d_tipo finTipoTK puntoYComaTK •
 
     $default  reduce using rule 15 (declaracion_tipo)
 
 
-State 99
+State 100
 
-   43 lista_id: identificadorTK comaTK • lista_id
+   44 lista_id: identificadorTK comaTK • lista_id
 
     identificadorTK  shift, and go to state 34
 
-    lista_id  go to state 147
-
-
-State 100
-
-   17 declaracion_var: inicioVariablesTK lista_d_var finVariablesTK • puntoYComaTK
-
-    puntoYComaTK  shift, and go to state 148
+    lista_id  go to state 154
 
 
 State 101
 
-   41 lista_d_var: lista_id dosPuntosTK • d_tipo puntoYComaTK lista_d_var
+   17 declaracion_var: inicioVariablesTK lista_d_var finVariablesTK • puntoYComaTK
+
+    puntoYComaTK  shift, and go to state 155
+
+
+State 102
+
+   42 lista_d_var: lista_id dosPuntosTK • d_tipo puntoYComaTK lista_d_var
 
     identificadorTK    shift, and go to state 74
     literalEnteroTK    shift, and go to state 75
     literalRealTK      shift, and go to state 76
     literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    enteroTK           shift, and go to state 80
-    tuplaTK            shift, and go to state 81
-    tablaTK            shift, and go to state 82
-    refTK              shift, and go to state 83
-    realTK             shift, and go to state 84
-    booleanoTK         shift, and go to state 85
-    caracterTK         shift, and go to state 86
-    cadenaTK           shift, and go to state 87
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
+    literalBooleanoTK  shift, and go to state 78
+    enteroTK           shift, and go to state 79
+    tuplaTK            shift, and go to state 80
+    tablaTK            shift, and go to state 81
+    refTK              shift, and go to state 82
+    realTK             shift, and go to state 83
+    booleanoTK         shift, and go to state 84
+    caracterTK         shift, and go to state 85
+    cadenaTK           shift, and go to state 86
+    noTK               shift, and go to state 87
+    masTK              shift, and go to state 88
+    menosTK            shift, and go to state 89
+    parentesisAbreTK   shift, and go to state 90
 
-    tipo_base    go to state 92
-    d_tipo       go to state 149
-    expresion_t  go to state 94
-    expresion    go to state 95
-    operando     go to state 96
-    funcion_ll   go to state 97
+    tipo_base    go to state 91
+    d_tipo       go to state 156
+    expresion_t  go to state 93
+    expresion    go to state 94
+    exp_a        go to state 95
+    exp_b        go to state 96
+    operando     go to state 97
+    funcion_ll   go to state 98
 
 
-State 102
+State 103
 
     1 desc_algoritmo: algoritmoTK identificadorTK puntoYComaTK cabecera_alg bloque_alg falgoritmoTK puntoTK •
 
     $default  reduce using rule 1 (desc_algoritmo)
 
 
-State 103
-
-  103 accion_ll: identificadorTK parentesisAbreTK • l_ll parentesisCierraTK
-
-    identificadorTK    shift, and go to state 104
-    literalEnteroTK    shift, and go to state 75
-    literalRealTK      shift, and go to state 76
-    literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
-
-    expresion   go to state 150
-    operando    go to state 96
-    funcion_ll  go to state 97
-    l_ll        go to state 151
-
-
 State 104
 
-   75 operando: identificadorTK •
-  104 funcion_ll: identificadorTK • parentesisAbreTK l_ll parentesisCierraTK
+  107 accion_ll: identificadorTK parentesisAbreTK • l_ll parentesisCierraTK
 
-    parentesisAbreTK  shift, and go to state 122
+    identificadorTK    shift, and go to state 105
+    literalEnteroTK    shift, and go to state 75
+    literalRealTK      shift, and go to state 76
+    literalBooleanoTK  shift, and go to state 78
+    noTK               shift, and go to state 87
+    masTK              shift, and go to state 88
+    menosTK            shift, and go to state 89
+    parentesisAbreTK   shift, and go to state 90
 
-    $default  reduce using rule 75 (operando)
+    expresion   go to state 157
+    exp_a       go to state 95
+    exp_b       go to state 96
+    operando    go to state 97
+    funcion_ll  go to state 98
+    l_ll        go to state 158
 
 
 State 105
 
-   50 expresion: expresion • masTK expresion
-   51          | expresion • menosTK expresion
-   52          | expresion • porTK expresion
-   53          | expresion • divisionTK expresion
-   54          | expresion • modTK expresion
-   55          | expresion • divEnteraTK expresion
-   58          | expresion • yTK expresion
-   59          | expresion • oTK expresion
-   61          | expresion • menorTK expresion
-   62          | expresion • mayorTK expresion
-   63          | expresion • menorIgualTK expresion
-   64          | expresion • mayorIgualTK expresion
-   65          | expresion • igualTK expresion
-   66          | expresion • distintoTK expresion
-   87 alternativa: siTK expresion • entoncesTK instrucciones lista_opciones fsiTK
+   79 operando: identificadorTK •
+  108 funcion_ll: identificadorTK • parentesisAbreTK l_ll parentesisCierraTK
 
-    divEnteraTK   shift, and go to state 133
-    modTK         shift, and go to state 134
-    yTK           shift, and go to state 135
-    oTK           shift, and go to state 136
-    entoncesTK    shift, and go to state 152
-    menorIgualTK  shift, and go to state 137
-    mayorIgualTK  shift, and go to state 138
-    distintoTK    shift, and go to state 139
-    igualTK       shift, and go to state 140
-    menorTK       shift, and go to state 141
-    mayorTK       shift, and go to state 142
-    masTK         shift, and go to state 143
-    menosTK       shift, and go to state 144
-    porTK         shift, and go to state 145
-    divisionTK    shift, and go to state 146
+    parentesisAbreTK  shift, and go to state 123
+
+    $default  reduce using rule 79 (operando)
 
 
 State 106
 
-   50 expresion: expresion • masTK expresion
-   51          | expresion • menosTK expresion
-   52          | expresion • porTK expresion
-   53          | expresion • divisionTK expresion
-   54          | expresion • modTK expresion
-   55          | expresion • divEnteraTK expresion
-   58          | expresion • yTK expresion
-   59          | expresion • oTK expresion
-   61          | expresion • menorTK expresion
-   62          | expresion • mayorTK expresion
-   63          | expresion • menorIgualTK expresion
-   64          | expresion • mayorIgualTK expresion
-   65          | expresion • igualTK expresion
-   66          | expresion • distintoTK expresion
-   92 it_cota_exp: inicioMientrasTK expresion • hacerTK instrucciones finMientrasTK
+   71 exp_b: expresion • oprel expresion
+   91 alternativa: siTK expresion • entoncesTK instrucciones lista_opciones fsiTK
 
-    hacerTK       shift, and go to state 153
-    divEnteraTK   shift, and go to state 133
-    modTK         shift, and go to state 134
-    yTK           shift, and go to state 135
-    oTK           shift, and go to state 136
-    menorIgualTK  shift, and go to state 137
-    mayorIgualTK  shift, and go to state 138
-    distintoTK    shift, and go to state 139
-    igualTK       shift, and go to state 140
-    menorTK       shift, and go to state 141
-    mayorTK       shift, and go to state 142
-    masTK         shift, and go to state 143
-    menosTK       shift, and go to state 144
-    porTK         shift, and go to state 145
-    divisionTK    shift, and go to state 146
+    entoncesTK    shift, and go to state 159
+    menorIgualTK  shift, and go to state 139
+    mayorIgualTK  shift, and go to state 140
+    distintoTK    shift, and go to state 141
+    igualTK       shift, and go to state 142
+    menorTK       shift, and go to state 143
+    mayorTK       shift, and go to state 144
+
+    oprel  go to state 145
 
 
 State 107
 
-   93 it_cota_fija: paraTK identificadorTK • asignacionTK expresion hastaTK expresion hacerTK instrucciones fparaTK
+   71 exp_b: expresion • oprel expresion
+   96 it_cota_exp: inicioMientrasTK expresion • hacerTK instrucciones finMientrasTK
 
-    asignacionTK  shift, and go to state 154
+    hacerTK       shift, and go to state 160
+    menorIgualTK  shift, and go to state 139
+    mayorIgualTK  shift, and go to state 140
+    distintoTK    shift, and go to state 141
+    igualTK       shift, and go to state 142
+    menorTK       shift, and go to state 143
+    mayorTK       shift, and go to state 144
+
+    oprel  go to state 145
 
 
 State 108
 
-   78 operando: operando refTK •
+   97 it_cota_fija: paraTK identificadorTK • asignacionTK expresion hastaTK expresion hacerTK instrucciones fparaTK
 
-    $default  reduce using rule 78 (operando)
+    asignacionTK  shift, and go to state 161
 
 
 State 109
 
-   86 asignacion: operando asignacionTK • expresion
+   82 operando: operando refTK •
 
-    identificadorTK    shift, and go to state 104
-    literalEnteroTK    shift, and go to state 75
-    literalRealTK      shift, and go to state 76
-    literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
-
-    expresion   go to state 155
-    operando    go to state 96
-    funcion_ll  go to state 97
+    $default  reduce using rule 82 (operando)
 
 
 State 110
 
-   76 operando: operando puntoTK • identificadorTK
+   90 asignacion: operando asignacionTK • expresion
 
-    identificadorTK  shift, and go to state 156
+    identificadorTK    shift, and go to state 105
+    literalEnteroTK    shift, and go to state 75
+    literalRealTK      shift, and go to state 76
+    literalBooleanoTK  shift, and go to state 78
+    noTK               shift, and go to state 87
+    masTK              shift, and go to state 88
+    menosTK            shift, and go to state 89
+    parentesisAbreTK   shift, and go to state 90
+
+    expresion   go to state 162
+    exp_a       go to state 95
+    exp_b       go to state 96
+    operando    go to state 97
+    funcion_ll  go to state 98
 
 
 State 111
 
-   77 operando: operando corcheteAbreTK • expresion corcheteCierraTK
+   80 operando: operando puntoTK • operando
 
-    identificadorTK    shift, and go to state 104
-    literalEnteroTK    shift, and go to state 75
-    literalRealTK      shift, and go to state 76
-    literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
+    identificadorTK  shift, and go to state 130
 
-    expresion   go to state 157
-    operando    go to state 96
-    funcion_ll  go to state 97
+    operando  go to state 163
 
 
 State 112
 
-   79 instrucciones: instruccion puntoYComaTK • instrucciones
+   81 operando: operando corcheteAbreTK • expresion corcheteCierraTK
+
+    identificadorTK    shift, and go to state 105
+    literalEnteroTK    shift, and go to state 75
+    literalRealTK      shift, and go to state 76
+    literalBooleanoTK  shift, and go to state 78
+    noTK               shift, and go to state 87
+    masTK              shift, and go to state 88
+    menosTK            shift, and go to state 89
+    parentesisAbreTK   shift, and go to state 90
+
+    expresion   go to state 164
+    exp_a       go to state 95
+    exp_b       go to state 96
+    operando    go to state 97
+    funcion_ll  go to state 98
+
+
+State 113
+
+   83 instrucciones: instruccion puntoYComaTK • instrucciones
 
     identificadorTK   shift, and go to state 39
     siTK              shift, and go to state 40
@@ -1640,7 +1692,7 @@ State 112
     continuarTK       shift, and go to state 43
 
     operando       go to state 44
-    instrucciones  go to state 158
+    instrucciones  go to state 165
     instruccion    go to state 46
     asignacion     go to state 47
     alternativa    go to state 48
@@ -1650,260 +1702,315 @@ State 112
     accion_ll      go to state 52
 
 
-State 113
-
-   96 a_cabecera: identificadorTK parentesisAbreTK • d_par_form parentesisCierraTK puntoYComaTK
-
-    entradaTK        shift, and go to state 159
-    salidaTK         shift, and go to state 160
-    entradaSalidaTK  shift, and go to state 161
-
-    $default  reduce using rule 99 (d_par_form)
-
-    d_par_form  go to state 162
-    d_p_form    go to state 163
-
-
 State 114
 
-   94 accion_d: accionTK a_cabecera bloque • faccionTK
+  100 a_cabecera: identificadorTK parentesisAbreTK • d_par_form parentesisCierraTK puntoYComaTK
 
-    faccionTK  shift, and go to state 164
+    entradaTK        shift, and go to state 166
+    salidaTK         shift, and go to state 167
+    entradaSalidaTK  shift, and go to state 168
+
+    $default  reduce using rule 103 (d_par_form)
+
+    d_par_form  go to state 169
+    d_p_form    go to state 170
 
 
 State 115
 
-   97 f_cabecera: identificadorTK parentesisAbreTK • lista_d_var parentesisCierraTK devTK d_tipo puntoYComaTK
+   98 accion_d: accionTK a_cabecera bloque • faccionTK
 
-    identificadorTK  shift, and go to state 34
-
-    $default  reduce using rule 42 (lista_d_var)
-
-    lista_d_var  go to state 165
-    lista_id     go to state 36
+    faccionTK  shift, and go to state 171
 
 
 State 116
 
-   95 funcion_d: funcionTK f_cabecera bloque • devTK expresion ffuncionTK
+  101 f_cabecera: identificadorTK parentesisAbreTK • lista_d_var parentesisCierraTK devTK d_tipo puntoYComaTK
 
-    devTK  shift, and go to state 166
+    identificadorTK  shift, and go to state 34
+
+    $default  reduce using rule 43 (lista_d_var)
+
+    lista_d_var  go to state 172
+    lista_id     go to state 36
 
 
 State 117
 
-   48 decl_ent: entradaTK lista_d_var •
+   99 funcion_d: funcionTK f_cabecera bloque • devTK expresion ffuncionTK
 
-    $default  reduce using rule 48 (decl_ent)
+    devTK  shift, and go to state 173
 
 
 State 118
 
-   49 decl_sal: salidaTK lista_d_var •
+   49 decl_ent: entradaTK lista_d_var •
 
-    $default  reduce using rule 49 (decl_sal)
+    $default  reduce using rule 49 (decl_ent)
 
 
 State 119
+
+   50 decl_sal: salidaTK lista_d_var •
+
+    $default  reduce using rule 50 (decl_sal)
+
+
+State 120
 
     2 cabecera_alg: decl_globales decl_a_f decl_ent_sal comentarioPreTK •
 
     $default  reduce using rule 2 (cabecera_alg)
 
 
-State 120
-
-   46 decl_ent_sal: decl_ent decl_sal •
-
-    $default  reduce using rule 46 (decl_ent_sal)
-
-
 State 121
 
-   39 lista_d_cte: identificadorTK igualTK literal puntoYComaTK • lista_d_cte
+   47 decl_ent_sal: decl_ent decl_sal •
 
-    identificadorTK  shift, and go to state 12
-
-    $default  reduce using rule 40 (lista_d_cte)
-
-    lista_d_cte  go to state 167
+    $default  reduce using rule 47 (decl_ent_sal)
 
 
 State 122
 
-  104 funcion_ll: identificadorTK parentesisAbreTK • l_ll parentesisCierraTK
+   40 lista_d_cte: identificadorTK igualTK literal puntoYComaTK • lista_d_cte
 
-    identificadorTK    shift, and go to state 104
-    literalEnteroTK    shift, and go to state 75
-    literalRealTK      shift, and go to state 76
-    literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
+    identificadorTK  shift, and go to state 12
 
-    expresion   go to state 150
-    operando    go to state 96
-    funcion_ll  go to state 97
-    l_ll        go to state 168
+    $default  reduce using rule 41 (lista_d_cte)
+
+    lista_d_cte  go to state 174
 
 
 State 123
 
-   37 lista_campos: identificadorTK • dosPuntosTK d_tipo puntoYComaTK lista_campos
+  108 funcion_ll: identificadorTK parentesisAbreTK • l_ll parentesisCierraTK
 
-    dosPuntosTK  shift, and go to state 169
+    identificadorTK    shift, and go to state 105
+    literalEnteroTK    shift, and go to state 75
+    literalRealTK      shift, and go to state 76
+    literalBooleanoTK  shift, and go to state 78
+    noTK               shift, and go to state 87
+    masTK              shift, and go to state 88
+    menosTK            shift, and go to state 89
+    parentesisAbreTK   shift, and go to state 90
+
+    expresion   go to state 157
+    exp_a       go to state 95
+    exp_b       go to state 96
+    operando    go to state 97
+    funcion_ll  go to state 98
+    l_ll        go to state 175
 
 
 State 124
 
-   30 d_tipo: tuplaTK lista_campos • ftuplaTK
+   38 lista_campos: identificadorTK • dosPuntosTK d_tipo puntoYComaTK lista_campos
 
-    ftuplaTK  shift, and go to state 170
+    dosPuntosTK  shift, and go to state 176
 
 
 State 125
 
-   31 d_tipo: tablaTK corcheteAbreTK • expresion_t subrangoTK expresion_t corcheteCierraTK deTK d_tipo
+   30 d_tipo: tuplaTK lista_campos • ftuplaTK
 
-    identificadorTK    shift, and go to state 104
-    literalEnteroTK    shift, and go to state 75
-    literalRealTK      shift, and go to state 76
-    literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
-
-    expresion_t  go to state 171
-    expresion    go to state 95
-    operando     go to state 96
-    funcion_ll   go to state 97
+    ftuplaTK  shift, and go to state 177
 
 
 State 126
+
+   31 d_tipo: tablaTK corcheteAbreTK • expresion_t subrangoTK expresion_t corcheteCierraTK deTK d_tipo
+
+    identificadorTK    shift, and go to state 105
+    literalEnteroTK    shift, and go to state 75
+    literalRealTK      shift, and go to state 76
+    literalCaracterTK  shift, and go to state 77
+    literalBooleanoTK  shift, and go to state 78
+    noTK               shift, and go to state 87
+    masTK              shift, and go to state 88
+    menosTK            shift, and go to state 89
+    parentesisAbreTK   shift, and go to state 90
+
+    expresion_t  go to state 178
+    expresion    go to state 94
+    exp_a        go to state 95
+    exp_b        go to state 96
+    operando     go to state 97
+    funcion_ll   go to state 98
+
+
+State 127
 
    34 d_tipo: refTK d_tipo •
 
     $default  reduce using rule 34 (d_tipo)
 
 
-State 127
-
-   50 expresion: expresion • masTK expresion
-   51          | expresion • menosTK expresion
-   52          | expresion • porTK expresion
-   53          | expresion • divisionTK expresion
-   54          | expresion • modTK expresion
-   55          | expresion • divEnteraTK expresion
-   58          | expresion • yTK expresion
-   59          | expresion • oTK expresion
-   60          | noTK expresion •
-   61          | expresion • menorTK expresion
-   62          | expresion • mayorTK expresion
-   63          | expresion • menorIgualTK expresion
-   64          | expresion • mayorIgualTK expresion
-   65          | expresion • igualTK expresion
-   66          | expresion • distintoTK expresion
-
-    divEnteraTK   shift, and go to state 133
-    modTK         shift, and go to state 134
-    menorIgualTK  shift, and go to state 137
-    mayorIgualTK  shift, and go to state 138
-    distintoTK    shift, and go to state 139
-    igualTK       shift, and go to state 140
-    menorTK       shift, and go to state 141
-    mayorTK       shift, and go to state 142
-    masTK         shift, and go to state 143
-    menosTK       shift, and go to state 144
-    porTK         shift, and go to state 145
-    divisionTK    shift, and go to state 146
-
-    $default  reduce using rule 60 (expresion)
-
-
 State 128
 
-   50 expresion: expresion • masTK expresion
-   51          | expresion • menosTK expresion
-   52          | expresion • porTK expresion
-   53          | expresion • divisionTK expresion
-   54          | expresion • modTK expresion
-   55          | expresion • divEnteraTK expresion
-   57          | masTK expresion •
-   58          | expresion • yTK expresion
-   59          | expresion • oTK expresion
-   61          | expresion • menorTK expresion
-   62          | expresion • mayorTK expresion
-   63          | expresion • menorIgualTK expresion
-   64          | expresion • mayorIgualTK expresion
-   65          | expresion • igualTK expresion
-   66          | expresion • distintoTK expresion
+   71 exp_b: expresion • oprel expresion
 
-    $default  reduce using rule 57 (expresion)
+    menorIgualTK  shift, and go to state 139
+    mayorIgualTK  shift, and go to state 140
+    distintoTK    shift, and go to state 141
+    igualTK       shift, and go to state 142
+    menorTK       shift, and go to state 143
+    mayorTK       shift, and go to state 144
+
+    oprel  go to state 145
 
 
 State 129
 
-   50 expresion: expresion • masTK expresion
-   51          | expresion • menosTK expresion
-   52          | expresion • porTK expresion
-   53          | expresion • divisionTK expresion
-   54          | expresion • modTK expresion
-   55          | expresion • divEnteraTK expresion
-   56          | menosTK expresion •
-   58          | expresion • yTK expresion
-   59          | expresion • oTK expresion
-   61          | expresion • menorTK expresion
-   62          | expresion • mayorTK expresion
-   63          | expresion • menorIgualTK expresion
-   64          | expresion • mayorIgualTK expresion
-   65          | expresion • igualTK expresion
-   66          | expresion • distintoTK expresion
+   52 expresion: exp_b •
+   66 exp_b: exp_b • yTK exp_b
+   67      | exp_b • oTK exp_b
+   68      | noTK exp_b •
 
-    $default  reduce using rule 56 (expresion)
+    yTK  shift, and go to state 152
+    oTK  shift, and go to state 153
+
+    yTK           [reduce using rule 68 (exp_b)]
+    oTK           [reduce using rule 68 (exp_b)]
+    menorIgualTK  reduce using rule 52 (expresion)
+    menorIgualTK  [reduce using rule 68 (exp_b)]
+    mayorIgualTK  reduce using rule 52 (expresion)
+    mayorIgualTK  [reduce using rule 68 (exp_b)]
+    distintoTK    reduce using rule 52 (expresion)
+    distintoTK    [reduce using rule 68 (exp_b)]
+    igualTK       reduce using rule 52 (expresion)
+    igualTK       [reduce using rule 68 (exp_b)]
+    menorTK       reduce using rule 52 (expresion)
+    menorTK       [reduce using rule 68 (exp_b)]
+    mayorTK       reduce using rule 52 (expresion)
+    mayorTK       [reduce using rule 68 (exp_b)]
+    $default      reduce using rule 68 (exp_b)
 
 
 State 130
 
-   50 expresion: expresion • masTK expresion
-   51          | expresion • menosTK expresion
-   52          | expresion • porTK expresion
-   53          | expresion • divisionTK expresion
-   54          | expresion • modTK expresion
-   55          | expresion • divEnteraTK expresion
-   58          | expresion • yTK expresion
-   59          | expresion • oTK expresion
-   61          | expresion • menorTK expresion
-   62          | expresion • mayorTK expresion
-   63          | expresion • menorIgualTK expresion
-   64          | expresion • mayorIgualTK expresion
-   65          | expresion • igualTK expresion
-   66          | expresion • distintoTK expresion
-   67          | parentesisAbreTK expresion • parentesisCierraTK
+   79 operando: identificadorTK •
 
-    divEnteraTK         shift, and go to state 133
-    modTK               shift, and go to state 134
-    yTK                 shift, and go to state 135
-    oTK                 shift, and go to state 136
-    menorIgualTK        shift, and go to state 137
-    mayorIgualTK        shift, and go to state 138
-    distintoTK          shift, and go to state 139
-    igualTK             shift, and go to state 140
-    menorTK             shift, and go to state 141
-    mayorTK             shift, and go to state 142
-    masTK               shift, and go to state 143
-    menosTK             shift, and go to state 144
-    porTK               shift, and go to state 145
-    divisionTK          shift, and go to state 146
-    parentesisCierraTK  shift, and go to state 172
+    $default  reduce using rule 79 (operando)
 
 
 State 131
+
+   60 exp_a: parentesisAbreTK • exp_a parentesisCierraTK
+
+    identificadorTK   shift, and go to state 130
+    literalEnteroTK   shift, and go to state 75
+    literalRealTK     shift, and go to state 76
+    masTK             shift, and go to state 88
+    menosTK           shift, and go to state 89
+    parentesisAbreTK  shift, and go to state 131
+
+    exp_a     go to state 179
+    operando  go to state 133
+
+
+State 132
+
+   54 exp_a: exp_a • masTK exp_a
+   55      | exp_a • menosTK exp_a
+   56      | exp_a • porTK exp_a
+   57      | exp_a • divisionTK exp_a
+   58      | exp_a • modTK exp_a
+   59      | exp_a • divEnteraTK exp_a
+   65      | masTK exp_a •
+
+    divEnteraTK  shift, and go to state 146
+    modTK        shift, and go to state 147
+    masTK        shift, and go to state 148
+    menosTK      shift, and go to state 149
+    porTK        shift, and go to state 150
+    divisionTK   shift, and go to state 151
+
+    divEnteraTK  [reduce using rule 65 (exp_a)]
+    modTK        [reduce using rule 65 (exp_a)]
+    masTK        [reduce using rule 65 (exp_a)]
+    menosTK      [reduce using rule 65 (exp_a)]
+    porTK        [reduce using rule 65 (exp_a)]
+    divisionTK   [reduce using rule 65 (exp_a)]
+    $default     reduce using rule 65 (exp_a)
+
+
+State 133
+
+   61 exp_a: operando •
+   80 operando: operando • puntoTK operando
+   81         | operando • corcheteAbreTK expresion corcheteCierraTK
+   82         | operando • refTK
+
+    refTK           shift, and go to state 109
+    puntoTK         shift, and go to state 111
+    corcheteAbreTK  shift, and go to state 112
+
+    $default  reduce using rule 61 (exp_a)
+
+
+State 134
+
+   54 exp_a: exp_a • masTK exp_a
+   55      | exp_a • menosTK exp_a
+   56      | exp_a • porTK exp_a
+   57      | exp_a • divisionTK exp_a
+   58      | exp_a • modTK exp_a
+   59      | exp_a • divEnteraTK exp_a
+   64      | menosTK exp_a •
+
+    divEnteraTK  shift, and go to state 146
+    modTK        shift, and go to state 147
+    masTK        shift, and go to state 148
+    menosTK      shift, and go to state 149
+    porTK        shift, and go to state 150
+    divisionTK   shift, and go to state 151
+
+    divEnteraTK  [reduce using rule 64 (exp_a)]
+    modTK        [reduce using rule 64 (exp_a)]
+    masTK        [reduce using rule 64 (exp_a)]
+    menosTK      [reduce using rule 64 (exp_a)]
+    porTK        [reduce using rule 64 (exp_a)]
+    divisionTK   [reduce using rule 64 (exp_a)]
+    $default     reduce using rule 64 (exp_a)
+
+
+State 135
+
+   51 expresion: exp_a •
+   54 exp_a: exp_a • masTK exp_a
+   55      | exp_a • menosTK exp_a
+   56      | exp_a • porTK exp_a
+   57      | exp_a • divisionTK exp_a
+   58      | exp_a • modTK exp_a
+   59      | exp_a • divEnteraTK exp_a
+   60      | parentesisAbreTK exp_a • parentesisCierraTK
+
+    divEnteraTK         shift, and go to state 146
+    modTK               shift, and go to state 147
+    masTK               shift, and go to state 148
+    menosTK             shift, and go to state 149
+    porTK               shift, and go to state 150
+    divisionTK          shift, and go to state 151
+    parentesisCierraTK  shift, and go to state 180
+
+    $default  reduce using rule 51 (expresion)
+
+
+State 136
+
+   52 expresion: exp_b •
+   66 exp_b: exp_b • yTK exp_b
+   67      | exp_b • oTK exp_b
+   72      | parentesisAbreTK exp_b • parentesisCierraTK
+
+    yTK                 shift, and go to state 152
+    oTK                 shift, and go to state 153
+    parentesisCierraTK  shift, and go to state 181
+
+    $default  reduce using rule 52 (expresion)
+
+
+State 137
 
    18 lista_d_tipo: identificadorTK igualTK d_tipo puntoYComaTK • lista_d_tipo
 
@@ -1911,1686 +2018,1305 @@ State 131
 
     $default  reduce using rule 19 (lista_d_tipo)
 
-    lista_d_tipo  go to state 173
-
-
-State 132
-
-   33 d_tipo: expresion_t subrangoTK • expresion_t
-
-    identificadorTK    shift, and go to state 104
-    literalEnteroTK    shift, and go to state 75
-    literalRealTK      shift, and go to state 76
-    literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
-
-    expresion_t  go to state 174
-    expresion    go to state 95
-    operando     go to state 96
-    funcion_ll   go to state 97
-
-
-State 133
-
-   55 expresion: expresion divEnteraTK • expresion
-
-    identificadorTK    shift, and go to state 104
-    literalEnteroTK    shift, and go to state 75
-    literalRealTK      shift, and go to state 76
-    literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
-
-    expresion   go to state 175
-    operando    go to state 96
-    funcion_ll  go to state 97
-
-
-State 134
-
-   54 expresion: expresion modTK • expresion
-
-    identificadorTK    shift, and go to state 104
-    literalEnteroTK    shift, and go to state 75
-    literalRealTK      shift, and go to state 76
-    literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
-
-    expresion   go to state 176
-    operando    go to state 96
-    funcion_ll  go to state 97
-
-
-State 135
-
-   58 expresion: expresion yTK • expresion
-
-    identificadorTK    shift, and go to state 104
-    literalEnteroTK    shift, and go to state 75
-    literalRealTK      shift, and go to state 76
-    literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
-
-    expresion   go to state 177
-    operando    go to state 96
-    funcion_ll  go to state 97
-
-
-State 136
-
-   59 expresion: expresion oTK • expresion
-
-    identificadorTK    shift, and go to state 104
-    literalEnteroTK    shift, and go to state 75
-    literalRealTK      shift, and go to state 76
-    literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
-
-    expresion   go to state 178
-    operando    go to state 96
-    funcion_ll  go to state 97
-
-
-State 137
-
-   63 expresion: expresion menorIgualTK • expresion
-
-    identificadorTK    shift, and go to state 104
-    literalEnteroTK    shift, and go to state 75
-    literalRealTK      shift, and go to state 76
-    literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
-
-    expresion   go to state 179
-    operando    go to state 96
-    funcion_ll  go to state 97
+    lista_d_tipo  go to state 182
 
 
 State 138
 
-   64 expresion: expresion mayorIgualTK • expresion
+   33 d_tipo: expresion_t subrangoTK • expresion_t
 
-    identificadorTK    shift, and go to state 104
+    identificadorTK    shift, and go to state 105
     literalEnteroTK    shift, and go to state 75
     literalRealTK      shift, and go to state 76
     literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
+    literalBooleanoTK  shift, and go to state 78
+    noTK               shift, and go to state 87
+    masTK              shift, and go to state 88
+    menosTK            shift, and go to state 89
+    parentesisAbreTK   shift, and go to state 90
 
-    expresion   go to state 180
-    operando    go to state 96
-    funcion_ll  go to state 97
+    expresion_t  go to state 183
+    expresion    go to state 94
+    exp_a        go to state 95
+    exp_b        go to state 96
+    operando     go to state 97
+    funcion_ll   go to state 98
 
 
 State 139
 
-   66 expresion: expresion distintoTK • expresion
+   75 oprel: menorIgualTK •
 
-    identificadorTK    shift, and go to state 104
-    literalEnteroTK    shift, and go to state 75
-    literalRealTK      shift, and go to state 76
-    literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
-
-    expresion   go to state 181
-    operando    go to state 96
-    funcion_ll  go to state 97
+    $default  reduce using rule 75 (oprel)
 
 
 State 140
 
-   65 expresion: expresion igualTK • expresion
+   76 oprel: mayorIgualTK •
 
-    identificadorTK    shift, and go to state 104
-    literalEnteroTK    shift, and go to state 75
-    literalRealTK      shift, and go to state 76
-    literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
-
-    expresion   go to state 182
-    operando    go to state 96
-    funcion_ll  go to state 97
+    $default  reduce using rule 76 (oprel)
 
 
 State 141
 
-   61 expresion: expresion menorTK • expresion
+   78 oprel: distintoTK •
 
-    identificadorTK    shift, and go to state 104
-    literalEnteroTK    shift, and go to state 75
-    literalRealTK      shift, and go to state 76
-    literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
-
-    expresion   go to state 183
-    operando    go to state 96
-    funcion_ll  go to state 97
+    $default  reduce using rule 78 (oprel)
 
 
 State 142
 
-   62 expresion: expresion mayorTK • expresion
+   77 oprel: igualTK •
 
-    identificadorTK    shift, and go to state 104
-    literalEnteroTK    shift, and go to state 75
-    literalRealTK      shift, and go to state 76
-    literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
-
-    expresion   go to state 184
-    operando    go to state 96
-    funcion_ll  go to state 97
+    $default  reduce using rule 77 (oprel)
 
 
 State 143
 
-   50 expresion: expresion masTK • expresion
+   73 oprel: menorTK •
 
-    identificadorTK    shift, and go to state 104
-    literalEnteroTK    shift, and go to state 75
-    literalRealTK      shift, and go to state 76
-    literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
-
-    expresion   go to state 185
-    operando    go to state 96
-    funcion_ll  go to state 97
+    $default  reduce using rule 73 (oprel)
 
 
 State 144
 
-   51 expresion: expresion menosTK • expresion
+   74 oprel: mayorTK •
 
-    identificadorTK    shift, and go to state 104
-    literalEnteroTK    shift, and go to state 75
-    literalRealTK      shift, and go to state 76
-    literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
-
-    expresion   go to state 186
-    operando    go to state 96
-    funcion_ll  go to state 97
+    $default  reduce using rule 74 (oprel)
 
 
 State 145
 
-   52 expresion: expresion porTK • expresion
+   71 exp_b: expresion oprel • expresion
 
-    identificadorTK    shift, and go to state 104
+    identificadorTK    shift, and go to state 105
     literalEnteroTK    shift, and go to state 75
     literalRealTK      shift, and go to state 76
-    literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
+    literalBooleanoTK  shift, and go to state 78
+    noTK               shift, and go to state 87
+    masTK              shift, and go to state 88
+    menosTK            shift, and go to state 89
+    parentesisAbreTK   shift, and go to state 90
 
-    expresion   go to state 187
-    operando    go to state 96
-    funcion_ll  go to state 97
+    expresion   go to state 184
+    exp_a       go to state 95
+    exp_b       go to state 96
+    operando    go to state 97
+    funcion_ll  go to state 98
 
 
 State 146
 
-   53 expresion: expresion divisionTK • expresion
+   59 exp_a: exp_a divEnteraTK • exp_a
 
-    identificadorTK    shift, and go to state 104
-    literalEnteroTK    shift, and go to state 75
-    literalRealTK      shift, and go to state 76
-    literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
+    identificadorTK   shift, and go to state 130
+    literalEnteroTK   shift, and go to state 75
+    literalRealTK     shift, and go to state 76
+    masTK             shift, and go to state 88
+    menosTK           shift, and go to state 89
+    parentesisAbreTK  shift, and go to state 131
 
-    expresion   go to state 188
-    operando    go to state 96
-    funcion_ll  go to state 97
+    exp_a     go to state 185
+    operando  go to state 133
 
 
 State 147
 
-   43 lista_id: identificadorTK comaTK lista_id •
+   58 exp_a: exp_a modTK • exp_a
 
-    $default  reduce using rule 43 (lista_id)
+    identificadorTK   shift, and go to state 130
+    literalEnteroTK   shift, and go to state 75
+    literalRealTK     shift, and go to state 76
+    masTK             shift, and go to state 88
+    menosTK           shift, and go to state 89
+    parentesisAbreTK  shift, and go to state 131
+
+    exp_a     go to state 186
+    operando  go to state 133
 
 
 State 148
+
+   54 exp_a: exp_a masTK • exp_a
+
+    identificadorTK   shift, and go to state 130
+    literalEnteroTK   shift, and go to state 75
+    literalRealTK     shift, and go to state 76
+    masTK             shift, and go to state 88
+    menosTK           shift, and go to state 89
+    parentesisAbreTK  shift, and go to state 131
+
+    exp_a     go to state 187
+    operando  go to state 133
+
+
+State 149
+
+   55 exp_a: exp_a menosTK • exp_a
+
+    identificadorTK   shift, and go to state 130
+    literalEnteroTK   shift, and go to state 75
+    literalRealTK     shift, and go to state 76
+    masTK             shift, and go to state 88
+    menosTK           shift, and go to state 89
+    parentesisAbreTK  shift, and go to state 131
+
+    exp_a     go to state 188
+    operando  go to state 133
+
+
+State 150
+
+   56 exp_a: exp_a porTK • exp_a
+
+    identificadorTK   shift, and go to state 130
+    literalEnteroTK   shift, and go to state 75
+    literalRealTK     shift, and go to state 76
+    masTK             shift, and go to state 88
+    menosTK           shift, and go to state 89
+    parentesisAbreTK  shift, and go to state 131
+
+    exp_a     go to state 189
+    operando  go to state 133
+
+
+State 151
+
+   57 exp_a: exp_a divisionTK • exp_a
+
+    identificadorTK   shift, and go to state 130
+    literalEnteroTK   shift, and go to state 75
+    literalRealTK     shift, and go to state 76
+    masTK             shift, and go to state 88
+    menosTK           shift, and go to state 89
+    parentesisAbreTK  shift, and go to state 131
+
+    exp_a     go to state 190
+    operando  go to state 133
+
+
+State 152
+
+   66 exp_b: exp_b yTK • exp_b
+
+    identificadorTK    shift, and go to state 105
+    literalEnteroTK    shift, and go to state 75
+    literalRealTK      shift, and go to state 76
+    literalBooleanoTK  shift, and go to state 78
+    noTK               shift, and go to state 87
+    masTK              shift, and go to state 88
+    menosTK            shift, and go to state 89
+    parentesisAbreTK   shift, and go to state 90
+
+    expresion   go to state 128
+    exp_a       go to state 95
+    exp_b       go to state 191
+    operando    go to state 97
+    funcion_ll  go to state 98
+
+
+State 153
+
+   67 exp_b: exp_b oTK • exp_b
+
+    identificadorTK    shift, and go to state 105
+    literalEnteroTK    shift, and go to state 75
+    literalRealTK      shift, and go to state 76
+    literalBooleanoTK  shift, and go to state 78
+    noTK               shift, and go to state 87
+    masTK              shift, and go to state 88
+    menosTK            shift, and go to state 89
+    parentesisAbreTK   shift, and go to state 90
+
+    expresion   go to state 128
+    exp_a       go to state 95
+    exp_b       go to state 192
+    operando    go to state 97
+    funcion_ll  go to state 98
+
+
+State 154
+
+   44 lista_id: identificadorTK comaTK lista_id •
+
+    $default  reduce using rule 44 (lista_id)
+
+
+State 155
 
    17 declaracion_var: inicioVariablesTK lista_d_var finVariablesTK puntoYComaTK •
 
     $default  reduce using rule 17 (declaracion_var)
 
 
-State 149
-
-   41 lista_d_var: lista_id dosPuntosTK d_tipo • puntoYComaTK lista_d_var
-
-    puntoYComaTK  shift, and go to state 189
-
-
-State 150
-
-   50 expresion: expresion • masTK expresion
-   51          | expresion • menosTK expresion
-   52          | expresion • porTK expresion
-   53          | expresion • divisionTK expresion
-   54          | expresion • modTK expresion
-   55          | expresion • divEnteraTK expresion
-   58          | expresion • yTK expresion
-   59          | expresion • oTK expresion
-   61          | expresion • menorTK expresion
-   62          | expresion • mayorTK expresion
-   63          | expresion • menorIgualTK expresion
-   64          | expresion • mayorIgualTK expresion
-   65          | expresion • igualTK expresion
-   66          | expresion • distintoTK expresion
-  105 l_ll: expresion • comaTK l_ll
-  106     | expresion •
-
-    divEnteraTK   shift, and go to state 133
-    modTK         shift, and go to state 134
-    yTK           shift, and go to state 135
-    oTK           shift, and go to state 136
-    menorIgualTK  shift, and go to state 137
-    mayorIgualTK  shift, and go to state 138
-    distintoTK    shift, and go to state 139
-    igualTK       shift, and go to state 140
-    menorTK       shift, and go to state 141
-    mayorTK       shift, and go to state 142
-    masTK         shift, and go to state 143
-    menosTK       shift, and go to state 144
-    porTK         shift, and go to state 145
-    divisionTK    shift, and go to state 146
-    comaTK        shift, and go to state 190
-
-    $default  reduce using rule 106 (l_ll)
-
-
-State 151
-
-  103 accion_ll: identificadorTK parentesisAbreTK l_ll • parentesisCierraTK
-
-    parentesisCierraTK  shift, and go to state 191
-
-
-State 152
-
-   87 alternativa: siTK expresion entoncesTK • instrucciones lista_opciones fsiTK
-
-    identificadorTK   shift, and go to state 39
-    siTK              shift, and go to state 40
-    inicioMientrasTK  shift, and go to state 41
-    paraTK            shift, and go to state 42
-    continuarTK       shift, and go to state 43
-
-    operando       go to state 44
-    instrucciones  go to state 192
-    instruccion    go to state 46
-    asignacion     go to state 47
-    alternativa    go to state 48
-    iteracion      go to state 49
-    it_cota_exp    go to state 50
-    it_cota_fija   go to state 51
-    accion_ll      go to state 52
-
-
-State 153
-
-   92 it_cota_exp: inicioMientrasTK expresion hacerTK • instrucciones finMientrasTK
-
-    identificadorTK   shift, and go to state 39
-    siTK              shift, and go to state 40
-    inicioMientrasTK  shift, and go to state 41
-    paraTK            shift, and go to state 42
-    continuarTK       shift, and go to state 43
-
-    operando       go to state 44
-    instrucciones  go to state 193
-    instruccion    go to state 46
-    asignacion     go to state 47
-    alternativa    go to state 48
-    iteracion      go to state 49
-    it_cota_exp    go to state 50
-    it_cota_fija   go to state 51
-    accion_ll      go to state 52
-
-
-State 154
-
-   93 it_cota_fija: paraTK identificadorTK asignacionTK • expresion hastaTK expresion hacerTK instrucciones fparaTK
-
-    identificadorTK    shift, and go to state 104
-    literalEnteroTK    shift, and go to state 75
-    literalRealTK      shift, and go to state 76
-    literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
-
-    expresion   go to state 194
-    operando    go to state 96
-    funcion_ll  go to state 97
-
-
-State 155
-
-   50 expresion: expresion • masTK expresion
-   51          | expresion • menosTK expresion
-   52          | expresion • porTK expresion
-   53          | expresion • divisionTK expresion
-   54          | expresion • modTK expresion
-   55          | expresion • divEnteraTK expresion
-   58          | expresion • yTK expresion
-   59          | expresion • oTK expresion
-   61          | expresion • menorTK expresion
-   62          | expresion • mayorTK expresion
-   63          | expresion • menorIgualTK expresion
-   64          | expresion • mayorIgualTK expresion
-   65          | expresion • igualTK expresion
-   66          | expresion • distintoTK expresion
-   86 asignacion: operando asignacionTK expresion •
-
-    divEnteraTK   shift, and go to state 133
-    modTK         shift, and go to state 134
-    yTK           shift, and go to state 135
-    oTK           shift, and go to state 136
-    menorIgualTK  shift, and go to state 137
-    mayorIgualTK  shift, and go to state 138
-    distintoTK    shift, and go to state 139
-    igualTK       shift, and go to state 140
-    menorTK       shift, and go to state 141
-    mayorTK       shift, and go to state 142
-    masTK         shift, and go to state 143
-    menosTK       shift, and go to state 144
-    porTK         shift, and go to state 145
-    divisionTK    shift, and go to state 146
-
-    $default  reduce using rule 86 (asignacion)
-
-
 State 156
 
-   76 operando: operando puntoTK identificadorTK •
+   42 lista_d_var: lista_id dosPuntosTK d_tipo • puntoYComaTK lista_d_var
 
-    $default  reduce using rule 76 (operando)
+    puntoYComaTK  shift, and go to state 193
 
 
 State 157
 
-   50 expresion: expresion • masTK expresion
-   51          | expresion • menosTK expresion
-   52          | expresion • porTK expresion
-   53          | expresion • divisionTK expresion
-   54          | expresion • modTK expresion
-   55          | expresion • divEnteraTK expresion
-   58          | expresion • yTK expresion
-   59          | expresion • oTK expresion
-   61          | expresion • menorTK expresion
-   62          | expresion • mayorTK expresion
-   63          | expresion • menorIgualTK expresion
-   64          | expresion • mayorIgualTK expresion
-   65          | expresion • igualTK expresion
-   66          | expresion • distintoTK expresion
-   77 operando: operando corcheteAbreTK expresion • corcheteCierraTK
+   71 exp_b: expresion • oprel expresion
+  109 l_ll: expresion • comaTK l_ll
+  110     | expresion •
 
-    divEnteraTK       shift, and go to state 133
-    modTK             shift, and go to state 134
-    yTK               shift, and go to state 135
-    oTK               shift, and go to state 136
-    menorIgualTK      shift, and go to state 137
-    mayorIgualTK      shift, and go to state 138
-    distintoTK        shift, and go to state 139
-    igualTK           shift, and go to state 140
-    menorTK           shift, and go to state 141
-    mayorTK           shift, and go to state 142
-    masTK             shift, and go to state 143
-    menosTK           shift, and go to state 144
-    porTK             shift, and go to state 145
-    divisionTK        shift, and go to state 146
-    corcheteCierraTK  shift, and go to state 195
+    menorIgualTK  shift, and go to state 139
+    mayorIgualTK  shift, and go to state 140
+    distintoTK    shift, and go to state 141
+    igualTK       shift, and go to state 142
+    menorTK       shift, and go to state 143
+    mayorTK       shift, and go to state 144
+    comaTK        shift, and go to state 194
+
+    $default  reduce using rule 110 (l_ll)
+
+    oprel  go to state 145
 
 
 State 158
 
-   79 instrucciones: instruccion puntoYComaTK instrucciones •
+  107 accion_ll: identificadorTK parentesisAbreTK l_ll • parentesisCierraTK
 
-    $default  reduce using rule 79 (instrucciones)
+    parentesisCierraTK  shift, and go to state 195
 
 
 State 159
 
-  100 d_p_form: entradaTK • lista_id dosPuntosTK d_tipo
+   91 alternativa: siTK expresion entoncesTK • instrucciones lista_opciones fsiTK
 
-    identificadorTK  shift, and go to state 34
+    identificadorTK   shift, and go to state 39
+    siTK              shift, and go to state 40
+    inicioMientrasTK  shift, and go to state 41
+    paraTK            shift, and go to state 42
+    continuarTK       shift, and go to state 43
 
-    lista_id  go to state 196
+    operando       go to state 44
+    instrucciones  go to state 196
+    instruccion    go to state 46
+    asignacion     go to state 47
+    alternativa    go to state 48
+    iteracion      go to state 49
+    it_cota_exp    go to state 50
+    it_cota_fija   go to state 51
+    accion_ll      go to state 52
 
 
 State 160
 
-  101 d_p_form: salidaTK • lista_id dosPuntosTK d_tipo
+   96 it_cota_exp: inicioMientrasTK expresion hacerTK • instrucciones finMientrasTK
 
-    identificadorTK  shift, and go to state 34
+    identificadorTK   shift, and go to state 39
+    siTK              shift, and go to state 40
+    inicioMientrasTK  shift, and go to state 41
+    paraTK            shift, and go to state 42
+    continuarTK       shift, and go to state 43
 
-    lista_id  go to state 197
+    operando       go to state 44
+    instrucciones  go to state 197
+    instruccion    go to state 46
+    asignacion     go to state 47
+    alternativa    go to state 48
+    iteracion      go to state 49
+    it_cota_exp    go to state 50
+    it_cota_fija   go to state 51
+    accion_ll      go to state 52
 
 
 State 161
 
-  102 d_p_form: entradaSalidaTK • lista_id dosPuntosTK d_tipo
+   97 it_cota_fija: paraTK identificadorTK asignacionTK • expresion hastaTK expresion hacerTK instrucciones fparaTK
 
-    identificadorTK  shift, and go to state 34
+    identificadorTK    shift, and go to state 105
+    literalEnteroTK    shift, and go to state 75
+    literalRealTK      shift, and go to state 76
+    literalBooleanoTK  shift, and go to state 78
+    noTK               shift, and go to state 87
+    masTK              shift, and go to state 88
+    menosTK            shift, and go to state 89
+    parentesisAbreTK   shift, and go to state 90
 
-    lista_id  go to state 198
+    expresion   go to state 198
+    exp_a       go to state 95
+    exp_b       go to state 96
+    operando    go to state 97
+    funcion_ll  go to state 98
 
 
 State 162
 
-   96 a_cabecera: identificadorTK parentesisAbreTK d_par_form • parentesisCierraTK puntoYComaTK
+   71 exp_b: expresion • oprel expresion
+   90 asignacion: operando asignacionTK expresion •
 
-    parentesisCierraTK  shift, and go to state 199
+    menorIgualTK  shift, and go to state 139
+    mayorIgualTK  shift, and go to state 140
+    distintoTK    shift, and go to state 141
+    igualTK       shift, and go to state 142
+    menorTK       shift, and go to state 143
+    mayorTK       shift, and go to state 144
+
+    $default  reduce using rule 90 (asignacion)
+
+    oprel  go to state 145
 
 
 State 163
 
-   98 d_par_form: d_p_form • puntoYComaTK d_par_form
+   80 operando: operando • puntoTK operando
+   80         | operando puntoTK operando •
+   81         | operando • corcheteAbreTK expresion corcheteCierraTK
+   82         | operando • refTK
 
-    puntoYComaTK  shift, and go to state 200
+    refTK           shift, and go to state 109
+    puntoTK         shift, and go to state 111
+    corcheteAbreTK  shift, and go to state 112
+
+    refTK           [reduce using rule 80 (operando)]
+    puntoTK         [reduce using rule 80 (operando)]
+    corcheteAbreTK  [reduce using rule 80 (operando)]
+    $default        reduce using rule 80 (operando)
 
 
 State 164
 
-   94 accion_d: accionTK a_cabecera bloque faccionTK •
+   71 exp_b: expresion • oprel expresion
+   81 operando: operando corcheteAbreTK expresion • corcheteCierraTK
 
-    $default  reduce using rule 94 (accion_d)
+    menorIgualTK      shift, and go to state 139
+    mayorIgualTK      shift, and go to state 140
+    distintoTK        shift, and go to state 141
+    igualTK           shift, and go to state 142
+    menorTK           shift, and go to state 143
+    mayorTK           shift, and go to state 144
+    corcheteCierraTK  shift, and go to state 199
+
+    oprel  go to state 145
 
 
 State 165
 
-   97 f_cabecera: identificadorTK parentesisAbreTK lista_d_var • parentesisCierraTK devTK d_tipo puntoYComaTK
+   83 instrucciones: instruccion puntoYComaTK instrucciones •
 
-    parentesisCierraTK  shift, and go to state 201
+    $default  reduce using rule 83 (instrucciones)
 
 
 State 166
 
-   95 funcion_d: funcionTK f_cabecera bloque devTK • expresion ffuncionTK
+  104 d_p_form: entradaTK • lista_id dosPuntosTK d_tipo
 
-    identificadorTK    shift, and go to state 104
-    literalEnteroTK    shift, and go to state 75
-    literalRealTK      shift, and go to state 76
-    literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
+    identificadorTK  shift, and go to state 34
 
-    expresion   go to state 202
-    operando    go to state 96
-    funcion_ll  go to state 97
+    lista_id  go to state 200
 
 
 State 167
 
-   39 lista_d_cte: identificadorTK igualTK literal puntoYComaTK lista_d_cte •
+  105 d_p_form: salidaTK • lista_id dosPuntosTK d_tipo
 
-    $default  reduce using rule 39 (lista_d_cte)
+    identificadorTK  shift, and go to state 34
+
+    lista_id  go to state 201
 
 
 State 168
 
-  104 funcion_ll: identificadorTK parentesisAbreTK l_ll • parentesisCierraTK
+  106 d_p_form: entradaSalidaTK • lista_id dosPuntosTK d_tipo
 
-    parentesisCierraTK  shift, and go to state 203
+    identificadorTK  shift, and go to state 34
+
+    lista_id  go to state 202
 
 
 State 169
 
-   37 lista_campos: identificadorTK dosPuntosTK • d_tipo puntoYComaTK lista_campos
+  100 a_cabecera: identificadorTK parentesisAbreTK d_par_form • parentesisCierraTK puntoYComaTK
+
+    parentesisCierraTK  shift, and go to state 203
+
+
+State 170
+
+  102 d_par_form: d_p_form • puntoYComaTK d_par_form
+
+    puntoYComaTK  shift, and go to state 204
+
+
+State 171
+
+   98 accion_d: accionTK a_cabecera bloque faccionTK •
+
+    $default  reduce using rule 98 (accion_d)
+
+
+State 172
+
+  101 f_cabecera: identificadorTK parentesisAbreTK lista_d_var • parentesisCierraTK devTK d_tipo puntoYComaTK
+
+    parentesisCierraTK  shift, and go to state 205
+
+
+State 173
+
+   99 funcion_d: funcionTK f_cabecera bloque devTK • expresion ffuncionTK
+
+    identificadorTK    shift, and go to state 105
+    literalEnteroTK    shift, and go to state 75
+    literalRealTK      shift, and go to state 76
+    literalBooleanoTK  shift, and go to state 78
+    noTK               shift, and go to state 87
+    masTK              shift, and go to state 88
+    menosTK            shift, and go to state 89
+    parentesisAbreTK   shift, and go to state 90
+
+    expresion   go to state 206
+    exp_a       go to state 95
+    exp_b       go to state 96
+    operando    go to state 97
+    funcion_ll  go to state 98
+
+
+State 174
+
+   40 lista_d_cte: identificadorTK igualTK literal puntoYComaTK lista_d_cte •
+
+    $default  reduce using rule 40 (lista_d_cte)
+
+
+State 175
+
+  108 funcion_ll: identificadorTK parentesisAbreTK l_ll • parentesisCierraTK
+
+    parentesisCierraTK  shift, and go to state 207
+
+
+State 176
+
+   38 lista_campos: identificadorTK dosPuntosTK • d_tipo puntoYComaTK lista_campos
 
     identificadorTK    shift, and go to state 74
     literalEnteroTK    shift, and go to state 75
     literalRealTK      shift, and go to state 76
     literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    enteroTK           shift, and go to state 80
-    tuplaTK            shift, and go to state 81
-    tablaTK            shift, and go to state 82
-    refTK              shift, and go to state 83
-    realTK             shift, and go to state 84
-    booleanoTK         shift, and go to state 85
-    caracterTK         shift, and go to state 86
-    cadenaTK           shift, and go to state 87
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
+    literalBooleanoTK  shift, and go to state 78
+    enteroTK           shift, and go to state 79
+    tuplaTK            shift, and go to state 80
+    tablaTK            shift, and go to state 81
+    refTK              shift, and go to state 82
+    realTK             shift, and go to state 83
+    booleanoTK         shift, and go to state 84
+    caracterTK         shift, and go to state 85
+    cadenaTK           shift, and go to state 86
+    noTK               shift, and go to state 87
+    masTK              shift, and go to state 88
+    menosTK            shift, and go to state 89
+    parentesisAbreTK   shift, and go to state 90
 
-    tipo_base    go to state 92
-    d_tipo       go to state 204
-    expresion_t  go to state 94
-    expresion    go to state 95
-    operando     go to state 96
-    funcion_ll   go to state 97
+    tipo_base    go to state 91
+    d_tipo       go to state 208
+    expresion_t  go to state 93
+    expresion    go to state 94
+    exp_a        go to state 95
+    exp_b        go to state 96
+    operando     go to state 97
+    funcion_ll   go to state 98
 
 
-State 170
+State 177
 
    30 d_tipo: tuplaTK lista_campos ftuplaTK •
 
     $default  reduce using rule 30 (d_tipo)
 
 
-State 171
+State 178
 
    31 d_tipo: tablaTK corcheteAbreTK expresion_t • subrangoTK expresion_t corcheteCierraTK deTK d_tipo
 
-    subrangoTK  shift, and go to state 205
+    subrangoTK  shift, and go to state 209
 
 
-State 172
+State 179
 
-   67 expresion: parentesisAbreTK expresion parentesisCierraTK •
+   54 exp_a: exp_a • masTK exp_a
+   55      | exp_a • menosTK exp_a
+   56      | exp_a • porTK exp_a
+   57      | exp_a • divisionTK exp_a
+   58      | exp_a • modTK exp_a
+   59      | exp_a • divEnteraTK exp_a
+   60      | parentesisAbreTK exp_a • parentesisCierraTK
 
-    $default  reduce using rule 67 (expresion)
+    divEnteraTK         shift, and go to state 146
+    modTK               shift, and go to state 147
+    masTK               shift, and go to state 148
+    menosTK             shift, and go to state 149
+    porTK               shift, and go to state 150
+    divisionTK          shift, and go to state 151
+    parentesisCierraTK  shift, and go to state 180
 
 
-State 173
+State 180
+
+   60 exp_a: parentesisAbreTK exp_a parentesisCierraTK •
+
+    $default  reduce using rule 60 (exp_a)
+
+
+State 181
+
+   72 exp_b: parentesisAbreTK exp_b parentesisCierraTK •
+
+    $default  reduce using rule 72 (exp_b)
+
+
+State 182
 
    18 lista_d_tipo: identificadorTK igualTK d_tipo puntoYComaTK lista_d_tipo •
 
     $default  reduce using rule 18 (lista_d_tipo)
 
 
-State 174
+State 183
 
    33 d_tipo: expresion_t subrangoTK expresion_t •
 
     $default  reduce using rule 33 (d_tipo)
 
 
-State 175
-
-   50 expresion: expresion • masTK expresion
-   51          | expresion • menosTK expresion
-   52          | expresion • porTK expresion
-   53          | expresion • divisionTK expresion
-   54          | expresion • modTK expresion
-   55          | expresion • divEnteraTK expresion
-   55          | expresion divEnteraTK expresion •
-   58          | expresion • yTK expresion
-   59          | expresion • oTK expresion
-   61          | expresion • menorTK expresion
-   62          | expresion • mayorTK expresion
-   63          | expresion • menorIgualTK expresion
-   64          | expresion • mayorIgualTK expresion
-   65          | expresion • igualTK expresion
-   66          | expresion • distintoTK expresion
-
-    $default  reduce using rule 55 (expresion)
-
-
-State 176
-
-   50 expresion: expresion • masTK expresion
-   51          | expresion • menosTK expresion
-   52          | expresion • porTK expresion
-   53          | expresion • divisionTK expresion
-   54          | expresion • modTK expresion
-   54          | expresion modTK expresion •
-   55          | expresion • divEnteraTK expresion
-   58          | expresion • yTK expresion
-   59          | expresion • oTK expresion
-   61          | expresion • menorTK expresion
-   62          | expresion • mayorTK expresion
-   63          | expresion • menorIgualTK expresion
-   64          | expresion • mayorIgualTK expresion
-   65          | expresion • igualTK expresion
-   66          | expresion • distintoTK expresion
-
-    $default  reduce using rule 54 (expresion)
-
-
-State 177
-
-   50 expresion: expresion • masTK expresion
-   51          | expresion • menosTK expresion
-   52          | expresion • porTK expresion
-   53          | expresion • divisionTK expresion
-   54          | expresion • modTK expresion
-   55          | expresion • divEnteraTK expresion
-   58          | expresion • yTK expresion
-   58          | expresion yTK expresion •
-   59          | expresion • oTK expresion
-   61          | expresion • menorTK expresion
-   62          | expresion • mayorTK expresion
-   63          | expresion • menorIgualTK expresion
-   64          | expresion • mayorIgualTK expresion
-   65          | expresion • igualTK expresion
-   66          | expresion • distintoTK expresion
-
-    divEnteraTK   shift, and go to state 133
-    modTK         shift, and go to state 134
-    menorIgualTK  shift, and go to state 137
-    mayorIgualTK  shift, and go to state 138
-    distintoTK    shift, and go to state 139
-    igualTK       shift, and go to state 140
-    menorTK       shift, and go to state 141
-    mayorTK       shift, and go to state 142
-    masTK         shift, and go to state 143
-    menosTK       shift, and go to state 144
-    porTK         shift, and go to state 145
-    divisionTK    shift, and go to state 146
-
-    $default  reduce using rule 58 (expresion)
-
-
-State 178
-
-   50 expresion: expresion • masTK expresion
-   51          | expresion • menosTK expresion
-   52          | expresion • porTK expresion
-   53          | expresion • divisionTK expresion
-   54          | expresion • modTK expresion
-   55          | expresion • divEnteraTK expresion
-   58          | expresion • yTK expresion
-   59          | expresion • oTK expresion
-   59          | expresion oTK expresion •
-   61          | expresion • menorTK expresion
-   62          | expresion • mayorTK expresion
-   63          | expresion • menorIgualTK expresion
-   64          | expresion • mayorIgualTK expresion
-   65          | expresion • igualTK expresion
-   66          | expresion • distintoTK expresion
-
-    divEnteraTK   shift, and go to state 133
-    modTK         shift, and go to state 134
-    yTK           shift, and go to state 135
-    menorIgualTK  shift, and go to state 137
-    mayorIgualTK  shift, and go to state 138
-    distintoTK    shift, and go to state 139
-    igualTK       shift, and go to state 140
-    menorTK       shift, and go to state 141
-    mayorTK       shift, and go to state 142
-    masTK         shift, and go to state 143
-    menosTK       shift, and go to state 144
-    porTK         shift, and go to state 145
-    divisionTK    shift, and go to state 146
-
-    $default  reduce using rule 59 (expresion)
-
-
-State 179
-
-   50 expresion: expresion • masTK expresion
-   51          | expresion • menosTK expresion
-   52          | expresion • porTK expresion
-   53          | expresion • divisionTK expresion
-   54          | expresion • modTK expresion
-   55          | expresion • divEnteraTK expresion
-   58          | expresion • yTK expresion
-   59          | expresion • oTK expresion
-   61          | expresion • menorTK expresion
-   62          | expresion • mayorTK expresion
-   63          | expresion • menorIgualTK expresion
-   63          | expresion menorIgualTK expresion •
-   64          | expresion • mayorIgualTK expresion
-   65          | expresion • igualTK expresion
-   66          | expresion • distintoTK expresion
-
-    divEnteraTK  shift, and go to state 133
-    modTK        shift, and go to state 134
-    masTK        shift, and go to state 143
-    menosTK      shift, and go to state 144
-    porTK        shift, and go to state 145
-    divisionTK   shift, and go to state 146
-
-    menorIgualTK  error (nonassociative)
-    mayorIgualTK  error (nonassociative)
-    distintoTK    error (nonassociative)
-    igualTK       error (nonassociative)
-    menorTK       error (nonassociative)
-    mayorTK       error (nonassociative)
-
-    $default  reduce using rule 63 (expresion)
-
-
-State 180
-
-   50 expresion: expresion • masTK expresion
-   51          | expresion • menosTK expresion
-   52          | expresion • porTK expresion
-   53          | expresion • divisionTK expresion
-   54          | expresion • modTK expresion
-   55          | expresion • divEnteraTK expresion
-   58          | expresion • yTK expresion
-   59          | expresion • oTK expresion
-   61          | expresion • menorTK expresion
-   62          | expresion • mayorTK expresion
-   63          | expresion • menorIgualTK expresion
-   64          | expresion • mayorIgualTK expresion
-   64          | expresion mayorIgualTK expresion •
-   65          | expresion • igualTK expresion
-   66          | expresion • distintoTK expresion
-
-    divEnteraTK  shift, and go to state 133
-    modTK        shift, and go to state 134
-    masTK        shift, and go to state 143
-    menosTK      shift, and go to state 144
-    porTK        shift, and go to state 145
-    divisionTK   shift, and go to state 146
-
-    menorIgualTK  error (nonassociative)
-    mayorIgualTK  error (nonassociative)
-    distintoTK    error (nonassociative)
-    igualTK       error (nonassociative)
-    menorTK       error (nonassociative)
-    mayorTK       error (nonassociative)
-
-    $default  reduce using rule 64 (expresion)
-
-
-State 181
-
-   50 expresion: expresion • masTK expresion
-   51          | expresion • menosTK expresion
-   52          | expresion • porTK expresion
-   53          | expresion • divisionTK expresion
-   54          | expresion • modTK expresion
-   55          | expresion • divEnteraTK expresion
-   58          | expresion • yTK expresion
-   59          | expresion • oTK expresion
-   61          | expresion • menorTK expresion
-   62          | expresion • mayorTK expresion
-   63          | expresion • menorIgualTK expresion
-   64          | expresion • mayorIgualTK expresion
-   65          | expresion • igualTK expresion
-   66          | expresion • distintoTK expresion
-   66          | expresion distintoTK expresion •
-
-    divEnteraTK  shift, and go to state 133
-    modTK        shift, and go to state 134
-    masTK        shift, and go to state 143
-    menosTK      shift, and go to state 144
-    porTK        shift, and go to state 145
-    divisionTK   shift, and go to state 146
-
-    menorIgualTK  error (nonassociative)
-    mayorIgualTK  error (nonassociative)
-    distintoTK    error (nonassociative)
-    igualTK       error (nonassociative)
-    menorTK       error (nonassociative)
-    mayorTK       error (nonassociative)
-
-    $default  reduce using rule 66 (expresion)
-
-
-State 182
-
-   50 expresion: expresion • masTK expresion
-   51          | expresion • menosTK expresion
-   52          | expresion • porTK expresion
-   53          | expresion • divisionTK expresion
-   54          | expresion • modTK expresion
-   55          | expresion • divEnteraTK expresion
-   58          | expresion • yTK expresion
-   59          | expresion • oTK expresion
-   61          | expresion • menorTK expresion
-   62          | expresion • mayorTK expresion
-   63          | expresion • menorIgualTK expresion
-   64          | expresion • mayorIgualTK expresion
-   65          | expresion • igualTK expresion
-   65          | expresion igualTK expresion •
-   66          | expresion • distintoTK expresion
-
-    divEnteraTK  shift, and go to state 133
-    modTK        shift, and go to state 134
-    masTK        shift, and go to state 143
-    menosTK      shift, and go to state 144
-    porTK        shift, and go to state 145
-    divisionTK   shift, and go to state 146
-
-    menorIgualTK  error (nonassociative)
-    mayorIgualTK  error (nonassociative)
-    distintoTK    error (nonassociative)
-    igualTK       error (nonassociative)
-    menorTK       error (nonassociative)
-    mayorTK       error (nonassociative)
-
-    $default  reduce using rule 65 (expresion)
-
-
-State 183
-
-   50 expresion: expresion • masTK expresion
-   51          | expresion • menosTK expresion
-   52          | expresion • porTK expresion
-   53          | expresion • divisionTK expresion
-   54          | expresion • modTK expresion
-   55          | expresion • divEnteraTK expresion
-   58          | expresion • yTK expresion
-   59          | expresion • oTK expresion
-   61          | expresion • menorTK expresion
-   61          | expresion menorTK expresion •
-   62          | expresion • mayorTK expresion
-   63          | expresion • menorIgualTK expresion
-   64          | expresion • mayorIgualTK expresion
-   65          | expresion • igualTK expresion
-   66          | expresion • distintoTK expresion
-
-    divEnteraTK  shift, and go to state 133
-    modTK        shift, and go to state 134
-    masTK        shift, and go to state 143
-    menosTK      shift, and go to state 144
-    porTK        shift, and go to state 145
-    divisionTK   shift, and go to state 146
-
-    menorIgualTK  error (nonassociative)
-    mayorIgualTK  error (nonassociative)
-    distintoTK    error (nonassociative)
-    igualTK       error (nonassociative)
-    menorTK       error (nonassociative)
-    mayorTK       error (nonassociative)
-
-    $default  reduce using rule 61 (expresion)
-
-
 State 184
 
-   50 expresion: expresion • masTK expresion
-   51          | expresion • menosTK expresion
-   52          | expresion • porTK expresion
-   53          | expresion • divisionTK expresion
-   54          | expresion • modTK expresion
-   55          | expresion • divEnteraTK expresion
-   58          | expresion • yTK expresion
-   59          | expresion • oTK expresion
-   61          | expresion • menorTK expresion
-   62          | expresion • mayorTK expresion
-   62          | expresion mayorTK expresion •
-   63          | expresion • menorIgualTK expresion
-   64          | expresion • mayorIgualTK expresion
-   65          | expresion • igualTK expresion
-   66          | expresion • distintoTK expresion
+   71 exp_b: expresion • oprel expresion
+   71      | expresion oprel expresion •
 
-    divEnteraTK  shift, and go to state 133
-    modTK        shift, and go to state 134
-    masTK        shift, and go to state 143
-    menosTK      shift, and go to state 144
-    porTK        shift, and go to state 145
-    divisionTK   shift, and go to state 146
+    menorIgualTK  shift, and go to state 139
+    mayorIgualTK  shift, and go to state 140
+    distintoTK    shift, and go to state 141
+    igualTK       shift, and go to state 142
+    menorTK       shift, and go to state 143
+    mayorTK       shift, and go to state 144
 
-    menorIgualTK  error (nonassociative)
-    mayorIgualTK  error (nonassociative)
-    distintoTK    error (nonassociative)
-    igualTK       error (nonassociative)
-    menorTK       error (nonassociative)
-    mayorTK       error (nonassociative)
+    menorIgualTK  [reduce using rule 71 (exp_b)]
+    mayorIgualTK  [reduce using rule 71 (exp_b)]
+    distintoTK    [reduce using rule 71 (exp_b)]
+    igualTK       [reduce using rule 71 (exp_b)]
+    menorTK       [reduce using rule 71 (exp_b)]
+    mayorTK       [reduce using rule 71 (exp_b)]
+    $default      reduce using rule 71 (exp_b)
 
-    $default  reduce using rule 62 (expresion)
+    oprel  go to state 145
 
 
 State 185
 
-   50 expresion: expresion • masTK expresion
-   50          | expresion masTK expresion •
-   51          | expresion • menosTK expresion
-   52          | expresion • porTK expresion
-   53          | expresion • divisionTK expresion
-   54          | expresion • modTK expresion
-   55          | expresion • divEnteraTK expresion
-   58          | expresion • yTK expresion
-   59          | expresion • oTK expresion
-   61          | expresion • menorTK expresion
-   62          | expresion • mayorTK expresion
-   63          | expresion • menorIgualTK expresion
-   64          | expresion • mayorIgualTK expresion
-   65          | expresion • igualTK expresion
-   66          | expresion • distintoTK expresion
+   54 exp_a: exp_a • masTK exp_a
+   55      | exp_a • menosTK exp_a
+   56      | exp_a • porTK exp_a
+   57      | exp_a • divisionTK exp_a
+   58      | exp_a • modTK exp_a
+   59      | exp_a • divEnteraTK exp_a
+   59      | exp_a divEnteraTK exp_a •
 
-    divEnteraTK  shift, and go to state 133
-    modTK        shift, and go to state 134
-    porTK        shift, and go to state 145
-    divisionTK   shift, and go to state 146
+    divEnteraTK  shift, and go to state 146
+    modTK        shift, and go to state 147
+    masTK        shift, and go to state 148
+    menosTK      shift, and go to state 149
+    porTK        shift, and go to state 150
+    divisionTK   shift, and go to state 151
 
-    $default  reduce using rule 50 (expresion)
+    divEnteraTK  [reduce using rule 59 (exp_a)]
+    modTK        [reduce using rule 59 (exp_a)]
+    masTK        [reduce using rule 59 (exp_a)]
+    menosTK      [reduce using rule 59 (exp_a)]
+    porTK        [reduce using rule 59 (exp_a)]
+    divisionTK   [reduce using rule 59 (exp_a)]
+    $default     reduce using rule 59 (exp_a)
 
 
 State 186
 
-   50 expresion: expresion • masTK expresion
-   51          | expresion • menosTK expresion
-   51          | expresion menosTK expresion •
-   52          | expresion • porTK expresion
-   53          | expresion • divisionTK expresion
-   54          | expresion • modTK expresion
-   55          | expresion • divEnteraTK expresion
-   58          | expresion • yTK expresion
-   59          | expresion • oTK expresion
-   61          | expresion • menorTK expresion
-   62          | expresion • mayorTK expresion
-   63          | expresion • menorIgualTK expresion
-   64          | expresion • mayorIgualTK expresion
-   65          | expresion • igualTK expresion
-   66          | expresion • distintoTK expresion
+   54 exp_a: exp_a • masTK exp_a
+   55      | exp_a • menosTK exp_a
+   56      | exp_a • porTK exp_a
+   57      | exp_a • divisionTK exp_a
+   58      | exp_a • modTK exp_a
+   58      | exp_a modTK exp_a •
+   59      | exp_a • divEnteraTK exp_a
 
-    divEnteraTK  shift, and go to state 133
-    modTK        shift, and go to state 134
-    porTK        shift, and go to state 145
-    divisionTK   shift, and go to state 146
+    divEnteraTK  shift, and go to state 146
+    modTK        shift, and go to state 147
+    masTK        shift, and go to state 148
+    menosTK      shift, and go to state 149
+    porTK        shift, and go to state 150
+    divisionTK   shift, and go to state 151
 
-    $default  reduce using rule 51 (expresion)
+    divEnteraTK  [reduce using rule 58 (exp_a)]
+    modTK        [reduce using rule 58 (exp_a)]
+    masTK        [reduce using rule 58 (exp_a)]
+    menosTK      [reduce using rule 58 (exp_a)]
+    porTK        [reduce using rule 58 (exp_a)]
+    divisionTK   [reduce using rule 58 (exp_a)]
+    $default     reduce using rule 58 (exp_a)
 
 
 State 187
 
-   50 expresion: expresion • masTK expresion
-   51          | expresion • menosTK expresion
-   52          | expresion • porTK expresion
-   52          | expresion porTK expresion •
-   53          | expresion • divisionTK expresion
-   54          | expresion • modTK expresion
-   55          | expresion • divEnteraTK expresion
-   58          | expresion • yTK expresion
-   59          | expresion • oTK expresion
-   61          | expresion • menorTK expresion
-   62          | expresion • mayorTK expresion
-   63          | expresion • menorIgualTK expresion
-   64          | expresion • mayorIgualTK expresion
-   65          | expresion • igualTK expresion
-   66          | expresion • distintoTK expresion
+   54 exp_a: exp_a • masTK exp_a
+   54      | exp_a masTK exp_a •
+   55      | exp_a • menosTK exp_a
+   56      | exp_a • porTK exp_a
+   57      | exp_a • divisionTK exp_a
+   58      | exp_a • modTK exp_a
+   59      | exp_a • divEnteraTK exp_a
 
-    $default  reduce using rule 52 (expresion)
+    divEnteraTK  shift, and go to state 146
+    modTK        shift, and go to state 147
+    masTK        shift, and go to state 148
+    menosTK      shift, and go to state 149
+    porTK        shift, and go to state 150
+    divisionTK   shift, and go to state 151
+
+    divEnteraTK  [reduce using rule 54 (exp_a)]
+    modTK        [reduce using rule 54 (exp_a)]
+    masTK        [reduce using rule 54 (exp_a)]
+    menosTK      [reduce using rule 54 (exp_a)]
+    porTK        [reduce using rule 54 (exp_a)]
+    divisionTK   [reduce using rule 54 (exp_a)]
+    $default     reduce using rule 54 (exp_a)
 
 
 State 188
 
-   50 expresion: expresion • masTK expresion
-   51          | expresion • menosTK expresion
-   52          | expresion • porTK expresion
-   53          | expresion • divisionTK expresion
-   53          | expresion divisionTK expresion •
-   54          | expresion • modTK expresion
-   55          | expresion • divEnteraTK expresion
-   58          | expresion • yTK expresion
-   59          | expresion • oTK expresion
-   61          | expresion • menorTK expresion
-   62          | expresion • mayorTK expresion
-   63          | expresion • menorIgualTK expresion
-   64          | expresion • mayorIgualTK expresion
-   65          | expresion • igualTK expresion
-   66          | expresion • distintoTK expresion
+   54 exp_a: exp_a • masTK exp_a
+   55      | exp_a • menosTK exp_a
+   55      | exp_a menosTK exp_a •
+   56      | exp_a • porTK exp_a
+   57      | exp_a • divisionTK exp_a
+   58      | exp_a • modTK exp_a
+   59      | exp_a • divEnteraTK exp_a
 
-    $default  reduce using rule 53 (expresion)
+    divEnteraTK  shift, and go to state 146
+    modTK        shift, and go to state 147
+    masTK        shift, and go to state 148
+    menosTK      shift, and go to state 149
+    porTK        shift, and go to state 150
+    divisionTK   shift, and go to state 151
+
+    divEnteraTK  [reduce using rule 55 (exp_a)]
+    modTK        [reduce using rule 55 (exp_a)]
+    masTK        [reduce using rule 55 (exp_a)]
+    menosTK      [reduce using rule 55 (exp_a)]
+    porTK        [reduce using rule 55 (exp_a)]
+    divisionTK   [reduce using rule 55 (exp_a)]
+    $default     reduce using rule 55 (exp_a)
 
 
 State 189
 
-   41 lista_d_var: lista_id dosPuntosTK d_tipo puntoYComaTK • lista_d_var
+   54 exp_a: exp_a • masTK exp_a
+   55      | exp_a • menosTK exp_a
+   56      | exp_a • porTK exp_a
+   56      | exp_a porTK exp_a •
+   57      | exp_a • divisionTK exp_a
+   58      | exp_a • modTK exp_a
+   59      | exp_a • divEnteraTK exp_a
 
-    identificadorTK  shift, and go to state 34
+    divEnteraTK  shift, and go to state 146
+    modTK        shift, and go to state 147
+    masTK        shift, and go to state 148
+    menosTK      shift, and go to state 149
+    porTK        shift, and go to state 150
+    divisionTK   shift, and go to state 151
 
-    $default  reduce using rule 42 (lista_d_var)
-
-    lista_d_var  go to state 206
-    lista_id     go to state 36
+    divEnteraTK  [reduce using rule 56 (exp_a)]
+    modTK        [reduce using rule 56 (exp_a)]
+    masTK        [reduce using rule 56 (exp_a)]
+    menosTK      [reduce using rule 56 (exp_a)]
+    porTK        [reduce using rule 56 (exp_a)]
+    divisionTK   [reduce using rule 56 (exp_a)]
+    $default     reduce using rule 56 (exp_a)
 
 
 State 190
 
-  105 l_ll: expresion comaTK • l_ll
+   54 exp_a: exp_a • masTK exp_a
+   55      | exp_a • menosTK exp_a
+   56      | exp_a • porTK exp_a
+   57      | exp_a • divisionTK exp_a
+   57      | exp_a divisionTK exp_a •
+   58      | exp_a • modTK exp_a
+   59      | exp_a • divEnteraTK exp_a
 
-    identificadorTK    shift, and go to state 104
-    literalEnteroTK    shift, and go to state 75
-    literalRealTK      shift, and go to state 76
-    literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
+    divEnteraTK  shift, and go to state 146
+    modTK        shift, and go to state 147
+    masTK        shift, and go to state 148
+    menosTK      shift, and go to state 149
+    porTK        shift, and go to state 150
+    divisionTK   shift, and go to state 151
 
-    expresion   go to state 150
-    operando    go to state 96
-    funcion_ll  go to state 97
-    l_ll        go to state 207
+    divEnteraTK  [reduce using rule 57 (exp_a)]
+    modTK        [reduce using rule 57 (exp_a)]
+    masTK        [reduce using rule 57 (exp_a)]
+    menosTK      [reduce using rule 57 (exp_a)]
+    porTK        [reduce using rule 57 (exp_a)]
+    divisionTK   [reduce using rule 57 (exp_a)]
+    $default     reduce using rule 57 (exp_a)
 
 
 State 191
 
-  103 accion_ll: identificadorTK parentesisAbreTK l_ll parentesisCierraTK •
+   52 expresion: exp_b •
+   66 exp_b: exp_b • yTK exp_b
+   66      | exp_b yTK exp_b •
+   67      | exp_b • oTK exp_b
 
-    $default  reduce using rule 103 (accion_ll)
+    yTK  shift, and go to state 152
+    oTK  shift, and go to state 153
+
+    yTK           [reduce using rule 66 (exp_b)]
+    oTK           [reduce using rule 66 (exp_b)]
+    menorIgualTK  reduce using rule 52 (expresion)
+    menorIgualTK  [reduce using rule 66 (exp_b)]
+    mayorIgualTK  reduce using rule 52 (expresion)
+    mayorIgualTK  [reduce using rule 66 (exp_b)]
+    distintoTK    reduce using rule 52 (expresion)
+    distintoTK    [reduce using rule 66 (exp_b)]
+    igualTK       reduce using rule 52 (expresion)
+    igualTK       [reduce using rule 66 (exp_b)]
+    menorTK       reduce using rule 52 (expresion)
+    menorTK       [reduce using rule 66 (exp_b)]
+    mayorTK       reduce using rule 52 (expresion)
+    mayorTK       [reduce using rule 66 (exp_b)]
+    $default      reduce using rule 66 (exp_b)
 
 
 State 192
 
-   87 alternativa: siTK expresion entoncesTK instrucciones • lista_opciones fsiTK
+   52 expresion: exp_b •
+   66 exp_b: exp_b • yTK exp_b
+   67      | exp_b • oTK exp_b
+   67      | exp_b oTK exp_b •
 
-    sinoSiTK  shift, and go to state 208
+    yTK  shift, and go to state 152
+    oTK  shift, and go to state 153
 
-    $default  reduce using rule 89 (lista_opciones)
-
-    lista_opciones  go to state 209
+    yTK           [reduce using rule 67 (exp_b)]
+    oTK           [reduce using rule 67 (exp_b)]
+    menorIgualTK  reduce using rule 52 (expresion)
+    menorIgualTK  [reduce using rule 67 (exp_b)]
+    mayorIgualTK  reduce using rule 52 (expresion)
+    mayorIgualTK  [reduce using rule 67 (exp_b)]
+    distintoTK    reduce using rule 52 (expresion)
+    distintoTK    [reduce using rule 67 (exp_b)]
+    igualTK       reduce using rule 52 (expresion)
+    igualTK       [reduce using rule 67 (exp_b)]
+    menorTK       reduce using rule 52 (expresion)
+    menorTK       [reduce using rule 67 (exp_b)]
+    mayorTK       reduce using rule 52 (expresion)
+    mayorTK       [reduce using rule 67 (exp_b)]
+    $default      reduce using rule 67 (exp_b)
 
 
 State 193
 
-   92 it_cota_exp: inicioMientrasTK expresion hacerTK instrucciones • finMientrasTK
+   42 lista_d_var: lista_id dosPuntosTK d_tipo puntoYComaTK • lista_d_var
 
-    finMientrasTK  shift, and go to state 210
+    identificadorTK  shift, and go to state 34
+
+    $default  reduce using rule 43 (lista_d_var)
+
+    lista_d_var  go to state 210
+    lista_id     go to state 36
 
 
 State 194
 
-   50 expresion: expresion • masTK expresion
-   51          | expresion • menosTK expresion
-   52          | expresion • porTK expresion
-   53          | expresion • divisionTK expresion
-   54          | expresion • modTK expresion
-   55          | expresion • divEnteraTK expresion
-   58          | expresion • yTK expresion
-   59          | expresion • oTK expresion
-   61          | expresion • menorTK expresion
-   62          | expresion • mayorTK expresion
-   63          | expresion • menorIgualTK expresion
-   64          | expresion • mayorIgualTK expresion
-   65          | expresion • igualTK expresion
-   66          | expresion • distintoTK expresion
-   93 it_cota_fija: paraTK identificadorTK asignacionTK expresion • hastaTK expresion hacerTK instrucciones fparaTK
+  109 l_ll: expresion comaTK • l_ll
 
-    hastaTK       shift, and go to state 211
-    divEnteraTK   shift, and go to state 133
-    modTK         shift, and go to state 134
-    yTK           shift, and go to state 135
-    oTK           shift, and go to state 136
-    menorIgualTK  shift, and go to state 137
-    mayorIgualTK  shift, and go to state 138
-    distintoTK    shift, and go to state 139
-    igualTK       shift, and go to state 140
-    menorTK       shift, and go to state 141
-    mayorTK       shift, and go to state 142
-    masTK         shift, and go to state 143
-    menosTK       shift, and go to state 144
-    porTK         shift, and go to state 145
-    divisionTK    shift, and go to state 146
+    identificadorTK    shift, and go to state 105
+    literalEnteroTK    shift, and go to state 75
+    literalRealTK      shift, and go to state 76
+    literalBooleanoTK  shift, and go to state 78
+    noTK               shift, and go to state 87
+    masTK              shift, and go to state 88
+    menosTK            shift, and go to state 89
+    parentesisAbreTK   shift, and go to state 90
+
+    expresion   go to state 157
+    exp_a       go to state 95
+    exp_b       go to state 96
+    operando    go to state 97
+    funcion_ll  go to state 98
+    l_ll        go to state 211
 
 
 State 195
 
-   77 operando: operando corcheteAbreTK expresion corcheteCierraTK •
+  107 accion_ll: identificadorTK parentesisAbreTK l_ll parentesisCierraTK •
 
-    $default  reduce using rule 77 (operando)
+    $default  reduce using rule 107 (accion_ll)
 
 
 State 196
 
-  100 d_p_form: entradaTK lista_id • dosPuntosTK d_tipo
+   91 alternativa: siTK expresion entoncesTK instrucciones • lista_opciones fsiTK
 
-    dosPuntosTK  shift, and go to state 212
+    sinoSiTK  shift, and go to state 212
+
+    $default  reduce using rule 93 (lista_opciones)
+
+    lista_opciones  go to state 213
 
 
 State 197
 
-  101 d_p_form: salidaTK lista_id • dosPuntosTK d_tipo
+   96 it_cota_exp: inicioMientrasTK expresion hacerTK instrucciones • finMientrasTK
 
-    dosPuntosTK  shift, and go to state 213
+    finMientrasTK  shift, and go to state 214
 
 
 State 198
 
-  102 d_p_form: entradaSalidaTK lista_id • dosPuntosTK d_tipo
+   71 exp_b: expresion • oprel expresion
+   97 it_cota_fija: paraTK identificadorTK asignacionTK expresion • hastaTK expresion hacerTK instrucciones fparaTK
 
-    dosPuntosTK  shift, and go to state 214
+    hastaTK       shift, and go to state 215
+    menorIgualTK  shift, and go to state 139
+    mayorIgualTK  shift, and go to state 140
+    distintoTK    shift, and go to state 141
+    igualTK       shift, and go to state 142
+    menorTK       shift, and go to state 143
+    mayorTK       shift, and go to state 144
+
+    oprel  go to state 145
 
 
 State 199
 
-   96 a_cabecera: identificadorTK parentesisAbreTK d_par_form parentesisCierraTK • puntoYComaTK
+   81 operando: operando corcheteAbreTK expresion corcheteCierraTK •
 
-    puntoYComaTK  shift, and go to state 215
+    $default  reduce using rule 81 (operando)
 
 
 State 200
 
-   98 d_par_form: d_p_form puntoYComaTK • d_par_form
+  104 d_p_form: entradaTK lista_id • dosPuntosTK d_tipo
 
-    entradaTK        shift, and go to state 159
-    salidaTK         shift, and go to state 160
-    entradaSalidaTK  shift, and go to state 161
-
-    $default  reduce using rule 99 (d_par_form)
-
-    d_par_form  go to state 216
-    d_p_form    go to state 163
+    dosPuntosTK  shift, and go to state 216
 
 
 State 201
 
-   97 f_cabecera: identificadorTK parentesisAbreTK lista_d_var parentesisCierraTK • devTK d_tipo puntoYComaTK
+  105 d_p_form: salidaTK lista_id • dosPuntosTK d_tipo
 
-    devTK  shift, and go to state 217
+    dosPuntosTK  shift, and go to state 217
 
 
 State 202
 
-   50 expresion: expresion • masTK expresion
-   51          | expresion • menosTK expresion
-   52          | expresion • porTK expresion
-   53          | expresion • divisionTK expresion
-   54          | expresion • modTK expresion
-   55          | expresion • divEnteraTK expresion
-   58          | expresion • yTK expresion
-   59          | expresion • oTK expresion
-   61          | expresion • menorTK expresion
-   62          | expresion • mayorTK expresion
-   63          | expresion • menorIgualTK expresion
-   64          | expresion • mayorIgualTK expresion
-   65          | expresion • igualTK expresion
-   66          | expresion • distintoTK expresion
-   95 funcion_d: funcionTK f_cabecera bloque devTK expresion • ffuncionTK
+  106 d_p_form: entradaSalidaTK lista_id • dosPuntosTK d_tipo
 
-    ffuncionTK    shift, and go to state 218
-    divEnteraTK   shift, and go to state 133
-    modTK         shift, and go to state 134
-    yTK           shift, and go to state 135
-    oTK           shift, and go to state 136
-    menorIgualTK  shift, and go to state 137
-    mayorIgualTK  shift, and go to state 138
-    distintoTK    shift, and go to state 139
-    igualTK       shift, and go to state 140
-    menorTK       shift, and go to state 141
-    mayorTK       shift, and go to state 142
-    masTK         shift, and go to state 143
-    menosTK       shift, and go to state 144
-    porTK         shift, and go to state 145
-    divisionTK    shift, and go to state 146
+    dosPuntosTK  shift, and go to state 218
 
 
 State 203
 
-  104 funcion_ll: identificadorTK parentesisAbreTK l_ll parentesisCierraTK •
-
-    $default  reduce using rule 104 (funcion_ll)
-
-
-State 204
-
-   37 lista_campos: identificadorTK dosPuntosTK d_tipo • puntoYComaTK lista_campos
+  100 a_cabecera: identificadorTK parentesisAbreTK d_par_form parentesisCierraTK • puntoYComaTK
 
     puntoYComaTK  shift, and go to state 219
 
 
+State 204
+
+  102 d_par_form: d_p_form puntoYComaTK • d_par_form
+
+    entradaTK        shift, and go to state 166
+    salidaTK         shift, and go to state 167
+    entradaSalidaTK  shift, and go to state 168
+
+    $default  reduce using rule 103 (d_par_form)
+
+    d_par_form  go to state 220
+    d_p_form    go to state 170
+
+
 State 205
 
-   31 d_tipo: tablaTK corcheteAbreTK expresion_t subrangoTK • expresion_t corcheteCierraTK deTK d_tipo
+  101 f_cabecera: identificadorTK parentesisAbreTK lista_d_var parentesisCierraTK • devTK d_tipo puntoYComaTK
 
-    identificadorTK    shift, and go to state 104
-    literalEnteroTK    shift, and go to state 75
-    literalRealTK      shift, and go to state 76
-    literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
-
-    expresion_t  go to state 220
-    expresion    go to state 95
-    operando     go to state 96
-    funcion_ll   go to state 97
+    devTK  shift, and go to state 221
 
 
 State 206
 
-   41 lista_d_var: lista_id dosPuntosTK d_tipo puntoYComaTK lista_d_var •
+   71 exp_b: expresion • oprel expresion
+   99 funcion_d: funcionTK f_cabecera bloque devTK expresion • ffuncionTK
 
-    $default  reduce using rule 41 (lista_d_var)
+    ffuncionTK    shift, and go to state 222
+    menorIgualTK  shift, and go to state 139
+    mayorIgualTK  shift, and go to state 140
+    distintoTK    shift, and go to state 141
+    igualTK       shift, and go to state 142
+    menorTK       shift, and go to state 143
+    mayorTK       shift, and go to state 144
+
+    oprel  go to state 145
 
 
 State 207
 
-  105 l_ll: expresion comaTK l_ll •
+  108 funcion_ll: identificadorTK parentesisAbreTK l_ll parentesisCierraTK •
 
-    $default  reduce using rule 105 (l_ll)
+    $default  reduce using rule 108 (funcion_ll)
 
 
 State 208
 
-   88 lista_opciones: sinoSiTK • expresion entoncesTK instrucciones lista_opciones
+   38 lista_campos: identificadorTK dosPuntosTK d_tipo • puntoYComaTK lista_campos
 
-    identificadorTK    shift, and go to state 104
-    literalEnteroTK    shift, and go to state 75
-    literalRealTK      shift, and go to state 76
-    literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
-
-    expresion   go to state 221
-    operando    go to state 96
-    funcion_ll  go to state 97
+    puntoYComaTK  shift, and go to state 223
 
 
 State 209
 
-   87 alternativa: siTK expresion entoncesTK instrucciones lista_opciones • fsiTK
+   31 d_tipo: tablaTK corcheteAbreTK expresion_t subrangoTK • expresion_t corcheteCierraTK deTK d_tipo
 
-    fsiTK  shift, and go to state 222
+    identificadorTK    shift, and go to state 105
+    literalEnteroTK    shift, and go to state 75
+    literalRealTK      shift, and go to state 76
+    literalCaracterTK  shift, and go to state 77
+    literalBooleanoTK  shift, and go to state 78
+    noTK               shift, and go to state 87
+    masTK              shift, and go to state 88
+    menosTK            shift, and go to state 89
+    parentesisAbreTK   shift, and go to state 90
+
+    expresion_t  go to state 224
+    expresion    go to state 94
+    exp_a        go to state 95
+    exp_b        go to state 96
+    operando     go to state 97
+    funcion_ll   go to state 98
 
 
 State 210
 
-   92 it_cota_exp: inicioMientrasTK expresion hacerTK instrucciones finMientrasTK •
+   42 lista_d_var: lista_id dosPuntosTK d_tipo puntoYComaTK lista_d_var •
 
-    $default  reduce using rule 92 (it_cota_exp)
+    $default  reduce using rule 42 (lista_d_var)
 
 
 State 211
 
-   93 it_cota_fija: paraTK identificadorTK asignacionTK expresion hastaTK • expresion hacerTK instrucciones fparaTK
+  109 l_ll: expresion comaTK l_ll •
 
-    identificadorTK    shift, and go to state 104
-    literalEnteroTK    shift, and go to state 75
-    literalRealTK      shift, and go to state 76
-    literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
-
-    expresion   go to state 223
-    operando    go to state 96
-    funcion_ll  go to state 97
+    $default  reduce using rule 109 (l_ll)
 
 
 State 212
 
-  100 d_p_form: entradaTK lista_id dosPuntosTK • d_tipo
+   92 lista_opciones: sinoSiTK • expresion entoncesTK instrucciones lista_opciones
 
-    identificadorTK    shift, and go to state 74
+    identificadorTK    shift, and go to state 105
     literalEnteroTK    shift, and go to state 75
     literalRealTK      shift, and go to state 76
-    literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    enteroTK           shift, and go to state 80
-    tuplaTK            shift, and go to state 81
-    tablaTK            shift, and go to state 82
-    refTK              shift, and go to state 83
-    realTK             shift, and go to state 84
-    booleanoTK         shift, and go to state 85
-    caracterTK         shift, and go to state 86
-    cadenaTK           shift, and go to state 87
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
+    literalBooleanoTK  shift, and go to state 78
+    noTK               shift, and go to state 87
+    masTK              shift, and go to state 88
+    menosTK            shift, and go to state 89
+    parentesisAbreTK   shift, and go to state 90
 
-    tipo_base    go to state 92
-    d_tipo       go to state 224
-    expresion_t  go to state 94
-    expresion    go to state 95
-    operando     go to state 96
-    funcion_ll   go to state 97
+    expresion   go to state 225
+    exp_a       go to state 95
+    exp_b       go to state 96
+    operando    go to state 97
+    funcion_ll  go to state 98
 
 
 State 213
 
-  101 d_p_form: salidaTK lista_id dosPuntosTK • d_tipo
+   91 alternativa: siTK expresion entoncesTK instrucciones lista_opciones • fsiTK
 
-    identificadorTK    shift, and go to state 74
-    literalEnteroTK    shift, and go to state 75
-    literalRealTK      shift, and go to state 76
-    literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    enteroTK           shift, and go to state 80
-    tuplaTK            shift, and go to state 81
-    tablaTK            shift, and go to state 82
-    refTK              shift, and go to state 83
-    realTK             shift, and go to state 84
-    booleanoTK         shift, and go to state 85
-    caracterTK         shift, and go to state 86
-    cadenaTK           shift, and go to state 87
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
-
-    tipo_base    go to state 92
-    d_tipo       go to state 225
-    expresion_t  go to state 94
-    expresion    go to state 95
-    operando     go to state 96
-    funcion_ll   go to state 97
+    fsiTK  shift, and go to state 226
 
 
 State 214
 
-  102 d_p_form: entradaSalidaTK lista_id dosPuntosTK • d_tipo
+   96 it_cota_exp: inicioMientrasTK expresion hacerTK instrucciones finMientrasTK •
 
-    identificadorTK    shift, and go to state 74
-    literalEnteroTK    shift, and go to state 75
-    literalRealTK      shift, and go to state 76
-    literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    enteroTK           shift, and go to state 80
-    tuplaTK            shift, and go to state 81
-    tablaTK            shift, and go to state 82
-    refTK              shift, and go to state 83
-    realTK             shift, and go to state 84
-    booleanoTK         shift, and go to state 85
-    caracterTK         shift, and go to state 86
-    cadenaTK           shift, and go to state 87
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
-
-    tipo_base    go to state 92
-    d_tipo       go to state 226
-    expresion_t  go to state 94
-    expresion    go to state 95
-    operando     go to state 96
-    funcion_ll   go to state 97
+    $default  reduce using rule 96 (it_cota_exp)
 
 
 State 215
 
-   96 a_cabecera: identificadorTK parentesisAbreTK d_par_form parentesisCierraTK puntoYComaTK •
+   97 it_cota_fija: paraTK identificadorTK asignacionTK expresion hastaTK • expresion hacerTK instrucciones fparaTK
 
-    $default  reduce using rule 96 (a_cabecera)
+    identificadorTK    shift, and go to state 105
+    literalEnteroTK    shift, and go to state 75
+    literalRealTK      shift, and go to state 76
+    literalBooleanoTK  shift, and go to state 78
+    noTK               shift, and go to state 87
+    masTK              shift, and go to state 88
+    menosTK            shift, and go to state 89
+    parentesisAbreTK   shift, and go to state 90
+
+    expresion   go to state 227
+    exp_a       go to state 95
+    exp_b       go to state 96
+    operando    go to state 97
+    funcion_ll  go to state 98
 
 
 State 216
 
-   98 d_par_form: d_p_form puntoYComaTK d_par_form •
-
-    $default  reduce using rule 98 (d_par_form)
-
-
-State 217
-
-   97 f_cabecera: identificadorTK parentesisAbreTK lista_d_var parentesisCierraTK devTK • d_tipo puntoYComaTK
+  104 d_p_form: entradaTK lista_id dosPuntosTK • d_tipo
 
     identificadorTK    shift, and go to state 74
     literalEnteroTK    shift, and go to state 75
     literalRealTK      shift, and go to state 76
     literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    enteroTK           shift, and go to state 80
-    tuplaTK            shift, and go to state 81
-    tablaTK            shift, and go to state 82
-    refTK              shift, and go to state 83
-    realTK             shift, and go to state 84
-    booleanoTK         shift, and go to state 85
-    caracterTK         shift, and go to state 86
-    cadenaTK           shift, and go to state 87
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
+    literalBooleanoTK  shift, and go to state 78
+    enteroTK           shift, and go to state 79
+    tuplaTK            shift, and go to state 80
+    tablaTK            shift, and go to state 81
+    refTK              shift, and go to state 82
+    realTK             shift, and go to state 83
+    booleanoTK         shift, and go to state 84
+    caracterTK         shift, and go to state 85
+    cadenaTK           shift, and go to state 86
+    noTK               shift, and go to state 87
+    masTK              shift, and go to state 88
+    menosTK            shift, and go to state 89
+    parentesisAbreTK   shift, and go to state 90
 
-    tipo_base    go to state 92
-    d_tipo       go to state 227
-    expresion_t  go to state 94
-    expresion    go to state 95
-    operando     go to state 96
-    funcion_ll   go to state 97
+    tipo_base    go to state 91
+    d_tipo       go to state 228
+    expresion_t  go to state 93
+    expresion    go to state 94
+    exp_a        go to state 95
+    exp_b        go to state 96
+    operando     go to state 97
+    funcion_ll   go to state 98
+
+
+State 217
+
+  105 d_p_form: salidaTK lista_id dosPuntosTK • d_tipo
+
+    identificadorTK    shift, and go to state 74
+    literalEnteroTK    shift, and go to state 75
+    literalRealTK      shift, and go to state 76
+    literalCaracterTK  shift, and go to state 77
+    literalBooleanoTK  shift, and go to state 78
+    enteroTK           shift, and go to state 79
+    tuplaTK            shift, and go to state 80
+    tablaTK            shift, and go to state 81
+    refTK              shift, and go to state 82
+    realTK             shift, and go to state 83
+    booleanoTK         shift, and go to state 84
+    caracterTK         shift, and go to state 85
+    cadenaTK           shift, and go to state 86
+    noTK               shift, and go to state 87
+    masTK              shift, and go to state 88
+    menosTK            shift, and go to state 89
+    parentesisAbreTK   shift, and go to state 90
+
+    tipo_base    go to state 91
+    d_tipo       go to state 229
+    expresion_t  go to state 93
+    expresion    go to state 94
+    exp_a        go to state 95
+    exp_b        go to state 96
+    operando     go to state 97
+    funcion_ll   go to state 98
 
 
 State 218
 
-   95 funcion_d: funcionTK f_cabecera bloque devTK expresion ffuncionTK •
+  106 d_p_form: entradaSalidaTK lista_id dosPuntosTK • d_tipo
 
-    $default  reduce using rule 95 (funcion_d)
+    identificadorTK    shift, and go to state 74
+    literalEnteroTK    shift, and go to state 75
+    literalRealTK      shift, and go to state 76
+    literalCaracterTK  shift, and go to state 77
+    literalBooleanoTK  shift, and go to state 78
+    enteroTK           shift, and go to state 79
+    tuplaTK            shift, and go to state 80
+    tablaTK            shift, and go to state 81
+    refTK              shift, and go to state 82
+    realTK             shift, and go to state 83
+    booleanoTK         shift, and go to state 84
+    caracterTK         shift, and go to state 85
+    cadenaTK           shift, and go to state 86
+    noTK               shift, and go to state 87
+    masTK              shift, and go to state 88
+    menosTK            shift, and go to state 89
+    parentesisAbreTK   shift, and go to state 90
+
+    tipo_base    go to state 91
+    d_tipo       go to state 230
+    expresion_t  go to state 93
+    expresion    go to state 94
+    exp_a        go to state 95
+    exp_b        go to state 96
+    operando     go to state 97
+    funcion_ll   go to state 98
 
 
 State 219
 
-   37 lista_campos: identificadorTK dosPuntosTK d_tipo puntoYComaTK • lista_campos
+  100 a_cabecera: identificadorTK parentesisAbreTK d_par_form parentesisCierraTK puntoYComaTK •
 
-    identificadorTK  shift, and go to state 123
-
-    $default  reduce using rule 38 (lista_campos)
-
-    lista_campos  go to state 228
+    $default  reduce using rule 100 (a_cabecera)
 
 
 State 220
 
-   31 d_tipo: tablaTK corcheteAbreTK expresion_t subrangoTK expresion_t • corcheteCierraTK deTK d_tipo
+  102 d_par_form: d_p_form puntoYComaTK d_par_form •
 
-    corcheteCierraTK  shift, and go to state 229
+    $default  reduce using rule 102 (d_par_form)
 
 
 State 221
 
-   50 expresion: expresion • masTK expresion
-   51          | expresion • menosTK expresion
-   52          | expresion • porTK expresion
-   53          | expresion • divisionTK expresion
-   54          | expresion • modTK expresion
-   55          | expresion • divEnteraTK expresion
-   58          | expresion • yTK expresion
-   59          | expresion • oTK expresion
-   61          | expresion • menorTK expresion
-   62          | expresion • mayorTK expresion
-   63          | expresion • menorIgualTK expresion
-   64          | expresion • mayorIgualTK expresion
-   65          | expresion • igualTK expresion
-   66          | expresion • distintoTK expresion
-   88 lista_opciones: sinoSiTK expresion • entoncesTK instrucciones lista_opciones
+  101 f_cabecera: identificadorTK parentesisAbreTK lista_d_var parentesisCierraTK devTK • d_tipo puntoYComaTK
 
-    divEnteraTK   shift, and go to state 133
-    modTK         shift, and go to state 134
-    yTK           shift, and go to state 135
-    oTK           shift, and go to state 136
-    entoncesTK    shift, and go to state 230
-    menorIgualTK  shift, and go to state 137
-    mayorIgualTK  shift, and go to state 138
-    distintoTK    shift, and go to state 139
-    igualTK       shift, and go to state 140
-    menorTK       shift, and go to state 141
-    mayorTK       shift, and go to state 142
-    masTK         shift, and go to state 143
-    menosTK       shift, and go to state 144
-    porTK         shift, and go to state 145
-    divisionTK    shift, and go to state 146
+    identificadorTK    shift, and go to state 74
+    literalEnteroTK    shift, and go to state 75
+    literalRealTK      shift, and go to state 76
+    literalCaracterTK  shift, and go to state 77
+    literalBooleanoTK  shift, and go to state 78
+    enteroTK           shift, and go to state 79
+    tuplaTK            shift, and go to state 80
+    tablaTK            shift, and go to state 81
+    refTK              shift, and go to state 82
+    realTK             shift, and go to state 83
+    booleanoTK         shift, and go to state 84
+    caracterTK         shift, and go to state 85
+    cadenaTK           shift, and go to state 86
+    noTK               shift, and go to state 87
+    masTK              shift, and go to state 88
+    menosTK            shift, and go to state 89
+    parentesisAbreTK   shift, and go to state 90
+
+    tipo_base    go to state 91
+    d_tipo       go to state 231
+    expresion_t  go to state 93
+    expresion    go to state 94
+    exp_a        go to state 95
+    exp_b        go to state 96
+    operando     go to state 97
+    funcion_ll   go to state 98
 
 
 State 222
 
-   87 alternativa: siTK expresion entoncesTK instrucciones lista_opciones fsiTK •
+   99 funcion_d: funcionTK f_cabecera bloque devTK expresion ffuncionTK •
 
-    $default  reduce using rule 87 (alternativa)
+    $default  reduce using rule 99 (funcion_d)
 
 
 State 223
 
-   50 expresion: expresion • masTK expresion
-   51          | expresion • menosTK expresion
-   52          | expresion • porTK expresion
-   53          | expresion • divisionTK expresion
-   54          | expresion • modTK expresion
-   55          | expresion • divEnteraTK expresion
-   58          | expresion • yTK expresion
-   59          | expresion • oTK expresion
-   61          | expresion • menorTK expresion
-   62          | expresion • mayorTK expresion
-   63          | expresion • menorIgualTK expresion
-   64          | expresion • mayorIgualTK expresion
-   65          | expresion • igualTK expresion
-   66          | expresion • distintoTK expresion
-   93 it_cota_fija: paraTK identificadorTK asignacionTK expresion hastaTK expresion • hacerTK instrucciones fparaTK
+   38 lista_campos: identificadorTK dosPuntosTK d_tipo puntoYComaTK • lista_campos
 
-    hacerTK       shift, and go to state 231
-    divEnteraTK   shift, and go to state 133
-    modTK         shift, and go to state 134
-    yTK           shift, and go to state 135
-    oTK           shift, and go to state 136
-    menorIgualTK  shift, and go to state 137
-    mayorIgualTK  shift, and go to state 138
-    distintoTK    shift, and go to state 139
-    igualTK       shift, and go to state 140
-    menorTK       shift, and go to state 141
-    mayorTK       shift, and go to state 142
-    masTK         shift, and go to state 143
-    menosTK       shift, and go to state 144
-    porTK         shift, and go to state 145
-    divisionTK    shift, and go to state 146
+    identificadorTK  shift, and go to state 124
+
+    $default  reduce using rule 39 (lista_campos)
+
+    lista_campos  go to state 232
 
 
 State 224
 
-  100 d_p_form: entradaTK lista_id dosPuntosTK d_tipo •
+   31 d_tipo: tablaTK corcheteAbreTK expresion_t subrangoTK expresion_t • corcheteCierraTK deTK d_tipo
 
-    $default  reduce using rule 100 (d_p_form)
+    corcheteCierraTK  shift, and go to state 233
 
 
 State 225
 
-  101 d_p_form: salidaTK lista_id dosPuntosTK d_tipo •
+   71 exp_b: expresion • oprel expresion
+   92 lista_opciones: sinoSiTK expresion • entoncesTK instrucciones lista_opciones
 
-    $default  reduce using rule 101 (d_p_form)
+    entoncesTK    shift, and go to state 234
+    menorIgualTK  shift, and go to state 139
+    mayorIgualTK  shift, and go to state 140
+    distintoTK    shift, and go to state 141
+    igualTK       shift, and go to state 142
+    menorTK       shift, and go to state 143
+    mayorTK       shift, and go to state 144
+
+    oprel  go to state 145
 
 
 State 226
 
-  102 d_p_form: entradaSalidaTK lista_id dosPuntosTK d_tipo •
+   91 alternativa: siTK expresion entoncesTK instrucciones lista_opciones fsiTK •
 
-    $default  reduce using rule 102 (d_p_form)
+    $default  reduce using rule 91 (alternativa)
 
 
 State 227
 
-   97 f_cabecera: identificadorTK parentesisAbreTK lista_d_var parentesisCierraTK devTK d_tipo • puntoYComaTK
+   71 exp_b: expresion • oprel expresion
+   97 it_cota_fija: paraTK identificadorTK asignacionTK expresion hastaTK expresion • hacerTK instrucciones fparaTK
 
-    puntoYComaTK  shift, and go to state 232
+    hacerTK       shift, and go to state 235
+    menorIgualTK  shift, and go to state 139
+    mayorIgualTK  shift, and go to state 140
+    distintoTK    shift, and go to state 141
+    igualTK       shift, and go to state 142
+    menorTK       shift, and go to state 143
+    mayorTK       shift, and go to state 144
+
+    oprel  go to state 145
 
 
 State 228
 
-   37 lista_campos: identificadorTK dosPuntosTK d_tipo puntoYComaTK lista_campos •
+  104 d_p_form: entradaTK lista_id dosPuntosTK d_tipo •
 
-    $default  reduce using rule 37 (lista_campos)
+    $default  reduce using rule 104 (d_p_form)
 
 
 State 229
 
-   31 d_tipo: tablaTK corcheteAbreTK expresion_t subrangoTK expresion_t corcheteCierraTK • deTK d_tipo
+  105 d_p_form: salidaTK lista_id dosPuntosTK d_tipo •
 
-    deTK  shift, and go to state 233
+    $default  reduce using rule 105 (d_p_form)
 
 
 State 230
 
-   88 lista_opciones: sinoSiTK expresion entoncesTK • instrucciones lista_opciones
+  106 d_p_form: entradaSalidaTK lista_id dosPuntosTK d_tipo •
 
-    identificadorTK   shift, and go to state 39
-    siTK              shift, and go to state 40
-    inicioMientrasTK  shift, and go to state 41
-    paraTK            shift, and go to state 42
-    continuarTK       shift, and go to state 43
-
-    operando       go to state 44
-    instrucciones  go to state 234
-    instruccion    go to state 46
-    asignacion     go to state 47
-    alternativa    go to state 48
-    iteracion      go to state 49
-    it_cota_exp    go to state 50
-    it_cota_fija   go to state 51
-    accion_ll      go to state 52
+    $default  reduce using rule 106 (d_p_form)
 
 
 State 231
 
-   93 it_cota_fija: paraTK identificadorTK asignacionTK expresion hastaTK expresion hacerTK • instrucciones fparaTK
+  101 f_cabecera: identificadorTK parentesisAbreTK lista_d_var parentesisCierraTK devTK d_tipo • puntoYComaTK
+
+    puntoYComaTK  shift, and go to state 236
+
+
+State 232
+
+   38 lista_campos: identificadorTK dosPuntosTK d_tipo puntoYComaTK lista_campos •
+
+    $default  reduce using rule 38 (lista_campos)
+
+
+State 233
+
+   31 d_tipo: tablaTK corcheteAbreTK expresion_t subrangoTK expresion_t corcheteCierraTK • deTK d_tipo
+
+    deTK  shift, and go to state 237
+
+
+State 234
+
+   92 lista_opciones: sinoSiTK expresion entoncesTK • instrucciones lista_opciones
 
     identificadorTK   shift, and go to state 39
     siTK              shift, and go to state 40
@@ -3599,7 +3325,7 @@ State 231
     continuarTK       shift, and go to state 43
 
     operando       go to state 44
-    instrucciones  go to state 235
+    instrucciones  go to state 238
     instruccion    go to state 46
     asignacion     go to state 47
     alternativa    go to state 48
@@ -3609,14 +3335,35 @@ State 231
     accion_ll      go to state 52
 
 
-State 232
+State 235
 
-   97 f_cabecera: identificadorTK parentesisAbreTK lista_d_var parentesisCierraTK devTK d_tipo puntoYComaTK •
+   97 it_cota_fija: paraTK identificadorTK asignacionTK expresion hastaTK expresion hacerTK • instrucciones fparaTK
 
-    $default  reduce using rule 97 (f_cabecera)
+    identificadorTK   shift, and go to state 39
+    siTK              shift, and go to state 40
+    inicioMientrasTK  shift, and go to state 41
+    paraTK            shift, and go to state 42
+    continuarTK       shift, and go to state 43
+
+    operando       go to state 44
+    instrucciones  go to state 239
+    instruccion    go to state 46
+    asignacion     go to state 47
+    alternativa    go to state 48
+    iteracion      go to state 49
+    it_cota_exp    go to state 50
+    it_cota_fija   go to state 51
+    accion_ll      go to state 52
 
 
-State 233
+State 236
+
+  101 f_cabecera: identificadorTK parentesisAbreTK lista_d_var parentesisCierraTK devTK d_tipo puntoYComaTK •
+
+    $default  reduce using rule 101 (f_cabecera)
+
+
+State 237
 
    31 d_tipo: tablaTK corcheteAbreTK expresion_t subrangoTK expresion_t corcheteCierraTK deTK • d_tipo
 
@@ -3624,63 +3371,64 @@ State 233
     literalEnteroTK    shift, and go to state 75
     literalRealTK      shift, and go to state 76
     literalCaracterTK  shift, and go to state 77
-    literalCadenaTK    shift, and go to state 78
-    literalBooleanoTK  shift, and go to state 79
-    enteroTK           shift, and go to state 80
-    tuplaTK            shift, and go to state 81
-    tablaTK            shift, and go to state 82
-    refTK              shift, and go to state 83
-    realTK             shift, and go to state 84
-    booleanoTK         shift, and go to state 85
-    caracterTK         shift, and go to state 86
-    cadenaTK           shift, and go to state 87
-    noTK               shift, and go to state 88
-    masTK              shift, and go to state 89
-    menosTK            shift, and go to state 90
-    parentesisAbreTK   shift, and go to state 91
+    literalBooleanoTK  shift, and go to state 78
+    enteroTK           shift, and go to state 79
+    tuplaTK            shift, and go to state 80
+    tablaTK            shift, and go to state 81
+    refTK              shift, and go to state 82
+    realTK             shift, and go to state 83
+    booleanoTK         shift, and go to state 84
+    caracterTK         shift, and go to state 85
+    cadenaTK           shift, and go to state 86
+    noTK               shift, and go to state 87
+    masTK              shift, and go to state 88
+    menosTK            shift, and go to state 89
+    parentesisAbreTK   shift, and go to state 90
 
-    tipo_base    go to state 92
-    d_tipo       go to state 236
-    expresion_t  go to state 94
-    expresion    go to state 95
-    operando     go to state 96
-    funcion_ll   go to state 97
-
-
-State 234
-
-   88 lista_opciones: sinoSiTK expresion entoncesTK instrucciones • lista_opciones
-
-    sinoSiTK  shift, and go to state 208
-
-    $default  reduce using rule 89 (lista_opciones)
-
-    lista_opciones  go to state 237
+    tipo_base    go to state 91
+    d_tipo       go to state 240
+    expresion_t  go to state 93
+    expresion    go to state 94
+    exp_a        go to state 95
+    exp_b        go to state 96
+    operando     go to state 97
+    funcion_ll   go to state 98
 
 
-State 235
+State 238
 
-   93 it_cota_fija: paraTK identificadorTK asignacionTK expresion hastaTK expresion hacerTK instrucciones • fparaTK
+   92 lista_opciones: sinoSiTK expresion entoncesTK instrucciones • lista_opciones
 
-    fparaTK  shift, and go to state 238
+    sinoSiTK  shift, and go to state 212
+
+    $default  reduce using rule 93 (lista_opciones)
+
+    lista_opciones  go to state 241
 
 
-State 236
+State 239
+
+   97 it_cota_fija: paraTK identificadorTK asignacionTK expresion hastaTK expresion hacerTK instrucciones • fparaTK
+
+    fparaTK  shift, and go to state 242
+
+
+State 240
 
    31 d_tipo: tablaTK corcheteAbreTK expresion_t subrangoTK expresion_t corcheteCierraTK deTK d_tipo •
 
     $default  reduce using rule 31 (d_tipo)
 
 
-State 237
+State 241
 
-   88 lista_opciones: sinoSiTK expresion entoncesTK instrucciones lista_opciones •
+   92 lista_opciones: sinoSiTK expresion entoncesTK instrucciones lista_opciones •
 
-    $default  reduce using rule 88 (lista_opciones)
+    $default  reduce using rule 92 (lista_opciones)
 
 
-State 238
+State 242
 
-   93 it_cota_fija: paraTK identificadorTK asignacionTK expresion hastaTK expresion hacerTK instrucciones fparaTK •
+   97 it_cota_fija: paraTK identificadorTK asignacionTK expresion hastaTK expresion hacerTK instrucciones fparaTK •
 
-    $default  reduce using rule 93 (it_cota_fija)
+    $default  reduce using rule 97 (it_cota_fija)
