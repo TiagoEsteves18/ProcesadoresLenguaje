@@ -407,7 +407,7 @@ operando:
 	identificadorTK											{
 
 	}
-	| operando puntoTK operando						{
+	| operando puntoTK operando								{
 
 	}
 	| operando corcheteAbreTK expresion corcheteCierraTK	{
