@@ -126,7 +126,7 @@
    ==================================================== */
 
 desc_algoritmo: algoritmoTK identificadorTK puntoYComaTK cabecera_alg bloque_alg falgoritmoTK puntoTK {
-	printf("OK");
+	printf("\n\t-------------\n\t|Programa OK|\n\t-------------\n");
 };
 cabecera_alg: decl_globales decl_a_f decl_ent_sal comentarioPreTK {
 
@@ -341,52 +341,52 @@ expresion:
 	;
 
 exp_a:
-	exp_a masTK exp_a							{
+	expresion masTK expresion							{
 
 	}
-	| exp_a menosTK exp_a						{
+	| expresion menosTK expresion						{
 
 	}
-	| exp_a porTK exp_a							{
+	| expresion porTK expresion							{
 
 	}
-	| exp_a divisionTK exp_a					{
+	| expresion divisionTK expresion					{
 
 	}
-	| exp_a modTK exp_a							{
+	| expresion modTK expresion								{
 
 	}
-	| exp_a divEnteraTK exp_a					{
+	| expresion divEnteraTK expresion						{
 
 	}
-	| literalEnteroTK							{
+	| literalEnteroTK									{
 
 	}
-	| literalRealTK								{
+	| literalRealTK										{
 
 	}
-	| menosTK exp_a	%prec SIGNAL				{
+	| menosTK expresion	%prec SIGNAL					{
 
 	}
-	| masTK exp_a	%prec SIGNAL				{
+	| masTK expresion	%prec SIGNAL					{
 
 	}
 	;
 
 exp_b:
-	exp_b yTK exp_b								{
+	expresion yTK expresion								{
 
 	}
-	| exp_b oTK exp_b							{
+	| expresion oTK expresion							{
 
 	}
-	| noTK exp_b 								{
+	| noTK expresion 									{
 
 	}
-	| literalBooleanoTK							{
+	| literalBooleanoTK									{
 
 	}
-	| expresion oprel expresion					{
+	| expresion oprel expresion							{
 
 	}
 	;
