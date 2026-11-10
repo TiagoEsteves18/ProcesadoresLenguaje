@@ -487,7 +487,6 @@ it_cota_fija:
 	}
 	;
 
-/* ---------- 4.1.6 Acciones y funciones ---------- */
 accion_d:
 	accionTK a_cabecera bloque faccionTK	{
 
