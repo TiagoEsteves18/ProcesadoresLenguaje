@@ -238,6 +238,9 @@ expresion_t:
 	expresion			{
 
 	}
+	| literalCaracterDR {
+
+	}
 	;
 
 lista_campos:
@@ -295,6 +298,14 @@ decl_sal: salidaTK lista_d_var {
 
 };
 
+/* 
+	PREGUNTAR: Se puede hacer algo con esta parte? Ideas que se nos ocurrierion:
+	- Juntar expresion, exp_a y exp_b. Problema --> No se puede diferenciar cuando es una expresion relacional
+	- Meter en expresion operando y parentesisAbreTK expresion parentesisCierraTK (y quitar eso de exp_a y exp_b). 
+		Además crear exp_rel para diferenciar entre expresiones de suma y así con las realcionales.
+		En exp_a y exp_b usar expresion¿?
+ */
+
 expresion:
 	exp_a			{
 
@@ -345,7 +356,7 @@ exp_a:
 
 	}
 	;
-	
+
 exp_b:
 	exp_b yTK exp_b								{
 
@@ -391,11 +402,12 @@ oprel:
 	}
 	;
 
+/* PREGUNTAR: Cambiar operando puntoTK operando por operando puntoTK identificadorTK para quitar ambiguedad */
 operando:
 	identificadorTK											{
 
 	}
-	| operando puntoTK identificadorTK						{
+	| operando puntoTK operando						{
 
 	}
 	| operando corcheteAbreTK expresion corcheteCierraTK	{
