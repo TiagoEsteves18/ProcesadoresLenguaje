@@ -16,8 +16,8 @@
 /* Los operadores *, /, // y % son asociatovios por la izquierda */
 %left porTK divisionTK modTK divEnteraTK
 
-/* El símbolo de negativo, es decir, -a, es ascociativio por la derecha*/
-%right MENOS_UNIT
+/* El símbolo de negativo o positivo, es decir, -a o +a, es ascociativio por la derecha*/
+%right SIGNAL
 
 /* El acceso a las partes de una variable tiene ascociatividad por la izquierda. v.[i] */
 %left puntoTK corcheteAbreTK refTK

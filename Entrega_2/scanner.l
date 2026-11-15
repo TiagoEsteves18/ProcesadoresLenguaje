@@ -24,6 +24,7 @@
 	#include <stdio.h> //Para poder escribir en el terminal
 	#include <stdlib.h> //Para usar exit()
 	#include <strings.h> //Para trabajar con cadenas de caracteres
+	#include "literal.h"
 	#include "parser.tab.h"
 
 	void errorEnScanner(char*, char*); //prototipo necesario para compilar
@@ -129,8 +130,6 @@ sinoSiDR \[\]
 {falgoritmoDR} { return falgoritmoTK; } 
 {siDR} { return siTK; } 
 {fsiDR} { return fsiTK;  }
-{verdaderoDR} { return literalBooleanoTK; }
-{falsoDR} { return literalBooleanoTK; }
 {entradaDR} { return entradaTK; }
 {salidaDR} { return salidaTK; }
 {enteroDR} { return enteroTK; }
@@ -193,12 +192,37 @@ sinoSiDR \[\]
 {subrangoDR} { return subrangoTK; }
 {sinoSiDR} { return sinoSiTK; }
 
-{literalEnteroDR} { return literalEnteroTK; }
-{literalRealDR} { return literalRealTK; } 
-{literalCaracterDR} { return literalCaracterTK; } 
-{literalCadenaDR} { return literalCadenaTK; } 
+{literalEnteroDR} { 
+	yylval.literal = nuevoLiteralEntero(atoi(yytext)); 
+	return literalEnteroTK; 
+}
+{literalRealDR} { 
+	yylval.literal = nuevoLiteralReal(atof(yytext)); 
+	return literalRealTK; 
+}
+{literalCaracterDR} { 
+	yylval.literal = nuevoLiteralCaracter(yytext[1]); 
+	return literalCaracterTK;
+}
+{literalCadenaDR} {
+	// Quitar comillas
+	yytext[yyleng-1] = '\0';
+	yylval.literal = nuevoLiteralCadena(yytext+1);
+	return literalCadenaTK;
+}
+{verdaderoDR} { 
+	yylval.literal = nuevoLiteralBooleano(VERDADERO);
+	return literalBooleanoTK; 
+}
+{falsoDR} { 
+	yylval.literal = nuevoLiteralBooleano(FALSO);
+	return literalBooleanoTK; 
+}
 
-{identificadorDR} { return identificadorTK; }
+{identificadorDR} { 
+	yylval.cadena = strdup(yytext);
+	return identificadorTK;
+}
 
 [ \t\r\n]+ ;
 

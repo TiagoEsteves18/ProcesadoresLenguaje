@@ -29,8 +29,8 @@ bool insertaConstante(TablaDeConstantes * ptc, char * pnombre, LiteralT v){
 
 void imprimeTablaDeConstantes(TablaDeConstantes tc){
     Celda * aux = tc;
-    if (tc = NULL) 
-        printf("La tabla de constantes está vacía\n");
+    if (tc == NULL) 
+        printf("La tabla de constantes esta vacia\n");
     else {
         printf("El contenido de la tabla de constantes es.\n");
         printf("Nombre\t\tTipo\t\tValor\n");

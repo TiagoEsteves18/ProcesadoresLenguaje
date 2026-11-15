@@ -2,6 +2,7 @@
     #include <stdio.h>
 	#include "nombresDeTipos.h"
 	#include "literal.h"
+	#include "parser.tab.h"
 	#include "tablaDeConstantes.h"
 	int yylex(); // Usamos la funcion que se crea gracias a flex
 	void yyerror(char *); // Definicion de la funcion yyerror
@@ -13,20 +14,27 @@
 /* ====================================================
    1. DECLARACIONES DE BISON (Tokens y Tipos)
    ==================================================== */
+%union{
+	char* cadena;
+	LiteralT literal;
+	int entero;
+}
+
+%type <literal> literal
 
 %token letraTK
 %token cifraTK
-%token identificadorTK
+%token <cadena> identificadorTK
  
 %token comentarioTK 
 %token comentarioPreTK	
 %token comentarioPostTK	
  
-%token literalEnteroTK 
-%token literalRealTK  
-%token literalCaracterTK  
-%token literalCadenaTK
-%token literalBooleanoTK
+%token <literal> literalEnteroTK 
+%token <literal> literalRealTK  
+%token <literal> literalCaracterTK  
+%token <literal> literalCadenaTK
+%token <literal> literalBooleanoTK
 
 %token algoritmoTK 
 %token falgoritmoTK 
@@ -102,11 +110,9 @@
 %left oTK
 %left yTK
 
-/* La negación tiene ascociatividad por la derecha */
-%right noTK
-
 /* Los operadores relacionales no son asociatovios */
-%nonassoc igualTK distintoTK menorTK mayorTK menorIgualTK mayorIgualTK
+%left igualTK distintoTK
+%left menorTK mayorTK menorIgualTK mayorIgualTK
 
 /* Los operadores + y - son asociatovios por la izquierda */
 %left masTK menosTK
@@ -114,8 +120,8 @@
 /* Los operadores *, /, // y % son asociatovios por la izquierda */
 %left porTK divisionTK modTK divEnteraTK
 
-/* El símbolo de negativo o positivo, es decir, -a o +a, es ascociativio por la derecha*/
-%right SIGNAL
+/* El símbolo de negativo o positivo, es decir, -a o +a, y la negación de booleano es ascociativio por la derecha*/
+%right noTK SIGNAL
 
 /* El acceso a las partes de una variable tiene ascociatividad por la izquierda. v.[i] */
 %left puntoTK corcheteAbreTK refTK
@@ -126,7 +132,7 @@
    ==================================================== */
 
 desc_algoritmo: algoritmoTK identificadorTK puntoYComaTK cabecera_alg bloque_alg falgoritmoTK puntoTK {
-	printf("\n\t-------------\n\t|Programa OK|\n\t-------------\n");
+	printf("\n\t-------------\n\t|Programa OK|\n\t-------------\n\n");
 };
 cabecera_alg: decl_globales decl_a_f decl_ent_sal comentarioPreTK {
 
@@ -195,19 +201,19 @@ lista_d_tipo:
 
 literal:
 	literalCadenaTK		{
-		
+		$$ = $1;
 	}
 	| literalCaracterTK	{
-
+		$$ = $1;
 	}
 	| literalEnteroTK	{
-
+		$$ = $1;
 	}
 	| literalRealTK		{
-
+		$$ = $1;
 	}
 	| literalBooleanoTK	{
-
+		$$ = $1;
 	}
 	;
 
@@ -269,7 +275,7 @@ lista_campos:
 
 lista_d_cte: 
 	identificadorTK igualTK literal puntoYComaTK lista_d_cte	{
-
+		insertaConstante(&tc, $1, $3);
 	}
 	| /*empty*/	{
 
@@ -313,34 +319,7 @@ decl_sal: salidaTK lista_d_var {
 
 };
 
-/* 
-	PREGUNTAR: Se puede hacer algo con esta parte? Ideas que se nos ocurrierion:
-	- Juntar expresion, exp_a y exp_b. Esto al final no, da problema ya que no se puede diferenciar cuando es una expresion relacional (Creo)
-	- Meter en expresion operando y parentesisAbreTK expresion parentesisCierraTK (y quitar eso de exp_a y exp_b). 
-		Además crear exp_rel para diferenciar entre expresiones aritmáticas con las realcionales.
-		En exp_a y exp_b usar expresion ¿?
-		Diferenciar una expresion aritmética de una expresion relacional
- */
-
 expresion:
-	exp_a			{
-
-	}
-	| exp_b			{
-
-	}
-	| funcion_ll	{
-
-	}
-	| operando 		{
-
-	}
-	| parentesisAbreTK expresion parentesisCierraTK	{
-
-	}
-	;
-
-exp_a:
 	expresion masTK expresion							{
 
 	}
@@ -353,10 +332,10 @@ exp_a:
 	| expresion divisionTK expresion					{
 
 	}
-	| expresion modTK expresion								{
+	| expresion modTK expresion							{
 
 	}
-	| expresion divEnteraTK expresion						{
+	| expresion divEnteraTK expresion					{
 
 	}
 	| literalEnteroTK									{
@@ -371,10 +350,7 @@ exp_a:
 	| masTK expresion	%prec SIGNAL					{
 
 	}
-	;
-
-exp_b:
-	expresion yTK expresion								{
+	| expresion yTK expresion							{
 
 	}
 	| expresion oTK expresion							{
@@ -386,33 +362,35 @@ exp_b:
 	| literalBooleanoTK									{
 
 	}
-	| expresion oprel expresion							{
+	| funcion_ll										{
+
+	}
+	| operando 											{
+
+	}
+	| expresion menorTK expresion						{
+
+	}
+	| expresion mayorTK expresion						{
+
+	}
+	| expresion menorIgualTK expresion					{
+
+	}
+	| expresion mayorIgualTK expresion					{
+
+	}
+	| expresion igualTK expresion						{
+
+	}
+	| expresion distintoTK expresion					{
+
+	}
+	| parentesisAbreTK expresion parentesisCierraTK		{
 
 	}
 	;
 
-oprel:
-	menorTK			{
-
-	}
-	| mayorTK		{
-
-	}
-	| menorIgualTK	{
-
-	}
-	| mayorIgualTK	{
-
-	}
-	| igualTK		{
-
-	}
-	| distintoTK	{
-
-	}
-	;
-
-/* PREGUNTAR: Cambiar operando puntoTK operando por operando puntoTK identificadorTK para quitar ambiguedad */
 operando:
 	identificadorTK											{
 
@@ -569,7 +547,7 @@ l_ll:
    ==================================================== */
 int main(int argc, char **argv){
 	#if defined YYDEBUG
-	yydebug=1;
+	yydebug=0;
 	#endif
 	++argv, --argc;
 	if (argc > 0)
