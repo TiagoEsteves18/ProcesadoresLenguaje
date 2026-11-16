@@ -19,11 +19,11 @@
 %union{
 	char* cadena;
 	LiteralT literal;
-	int entero;
+	NombreDeTipoT tipo;
 }
 
 %type <literal> literal
-%type <entero> tipo_base d_tipo
+%type <tipo> tipo_base 
 
 %token letraTK
 %token cifraTK
