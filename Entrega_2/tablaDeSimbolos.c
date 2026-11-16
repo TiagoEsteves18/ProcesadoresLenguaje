@@ -4,24 +4,16 @@
 #include "tablaDeSimbolos.h"
 
 TablaDeSimbolos nuevaTablaDeSimbolos(void) {
-    return NULL;
+    TablaDeSimbolos tabla;
+    tabla.ultimo = 0;
+    return tabla;
 }
 
 bool insertar(TablaDeSimbolos *tabla, char *nombre,
               LiteralT literal, bool esConstante) {
 
-    for (CeldaSimbolo *celda = *tabla; celda != NULL; celda = celda->sig) {
-        if (strcmp(celda->nombre, nombre) == 0) {
-            if (!esConstante && !celda->esConstante &&
-                celda->valor.tipoDelValor == literal.tipoDelValor) {
-                return true;
-            }
-            fprintf(stderr, "Ya existe un elemento llamado %s en la tabla de simbolos\n",
-                    nombre);
-            return false;
-        }
-    }
-    CeldaSimbolo * celda;
+    CeldaSimbolo *celda = tabla->celdas[0];
+
     if ((celda = (CeldaSimbolo *) malloc(sizeof(CeldaSimbolo))) == NULL) {
             printf("No hay memoria para una celda de la tabla de simbolos");
             exit(1);
@@ -29,8 +21,9 @@ bool insertar(TablaDeSimbolos *tabla, char *nombre,
     celda->valor = literal;
     celda->nombre = nombre;
     celda->esConstante = esConstante;
-    celda->sig = *tabla;
-    *tabla = celda;
+    celda->sig = tabla->celdas;
+    tabla->celdas = celda;
+    tabla->ultimo++;
     return true;
 }
 

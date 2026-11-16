@@ -4,17 +4,23 @@
 #include <stdbool.h>
 #include "literal.h"
 
+#define MAX_CELDA 100
+
 typedef struct celdaSimbolo {
+    int sid;
     char *nombre;
     LiteralT valor;
     bool esConstante;
     struct celdaSimbolo *sig; 
 } CeldaSimbolo;
 
-typedef CeldaSimbolo *TablaDeSimbolos;
+typedef struct TablaDeSimbolos{
+    CeldaSimbolo celdas[MAX_CELDA];
+    int ultimo;
+} TablaDeSimbolos;
 
 TablaDeSimbolos nuevaTablaDeSimbolos(void);
-bool insertar(TablaDeSimbolos *tabla, char *nombre, LiteralT literal, bool esConstante);
-void imprimeTabla(TablaDeSimbolos tabla);
+bool insertarEnTablaDeSimbolos(TablaDeSimbolos *tabla, char *nombre, LiteralT literal, bool esConstante);
+void imprimeTablaDeSimbolos(TablaDeSimbolos tabla);
 
 #endif

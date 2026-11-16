@@ -1728,7 +1728,7 @@ yyreduce:
   case 43: /* lista_d_var: lista_id dosPuntosTK d_tipo puntoYComaTK lista_d_var  */
 #line 289 "parser.y"
                                                               {
-
+		
 	}
 #line 1734 "parser.tab.c"
     break;

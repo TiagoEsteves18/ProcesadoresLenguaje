@@ -278,7 +278,7 @@ lista_campos:
 
 lista_d_cte: 
 	identificadorTK igualTK literal puntoYComaTK lista_d_cte	{
-		insertar(&ts, $1, $3, true);
+		insertarEnTablaDeSimbolos(&ts, $1, $3, true);
 	}
 	| /*empty*/	{
 
@@ -287,7 +287,7 @@ lista_d_cte:
 
 lista_d_var:
 	lista_id dosPuntosTK d_tipo puntoYComaTK lista_d_var  {
-
+		
 	} 
 	| /*empty*/	{
 
@@ -557,7 +557,7 @@ int main(int argc, char **argv){
 		yyin = stdin;
 	ts = nuevaTablaDeSimbolos();
 	yyparse();
-	imprimeTabla(ts);
+	imprimeTablaDeSimbolos(ts);
 }
 
 void yyerror(char * s){
