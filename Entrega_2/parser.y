@@ -4,11 +4,11 @@
 	#include "nombresDeTipos.h"
 	#include "literal.h"
 	#include "parser.tab.h"
-	#include "tablaDeTipos.h"
+	#include "tablaDeSimbolos.h"
 	int yylex(); // Usamos la funcion que se crea gracias a flex
 	void yyerror(char *); // Definicion de la funcion yyerror
 	extern FILE* yyin; // Usamos la varible de Flex en la que viene la entrada
-	TablaDeTipos tt; //Es donde guardaremos los tipos
+	TablaDeSimbolos ts; //Es donde guardaremos los simbolos
 	#define YYDEBUG 1 //Permite activar el modo Debugg de Bison
 
 %}
@@ -278,7 +278,7 @@ lista_campos:
 
 lista_d_cte: 
 	identificadorTK igualTK literal puntoYComaTK lista_d_cte	{
-		insertar(&tt, $1, $3, true);
+		insertar(&ts, $1, $3, true);
 	}
 	| /*empty*/	{
 
@@ -555,9 +555,9 @@ int main(int argc, char **argv){
 		yyin = fopen(argv[0], "r");
 	else
 		yyin = stdin;
-	tt = nuevaTablaDeTipos();
+	ts = nuevaTablaDeSimbolos();
 	yyparse();
-	imprimeTabla(tt);
+	imprimeTabla(ts);
 }
 
 void yyerror(char * s){
