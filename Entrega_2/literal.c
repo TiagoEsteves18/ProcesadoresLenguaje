@@ -44,25 +44,11 @@ LiteralT nuevoLiteralReal(float valor){
 
 void escribeLiteral(LiteralT l){
     switch (l.tipoDelValor) {
-        case BOOLEANO: 
-            printf("Booleano\t");
-            if (l.valor.valorBooleano == VERDADERO)
-                printf("Verdadero\n");
-            else
-                printf("Falso\n");
-            break;
-        case CADENA: 
-            printf("Cadena\t\t%s\n",l.valor.valorCadena);
-            break;
-        case CARACTER: 
-            printf("Caracter\t%c\n",l.valor.valorCaracter);
-            break; 
-        case ENTERO: 
-            printf("Entero\t\t%d\n",l.valor.valorEntero);
-            break;
-        case REAL: 
-            printf("Real\t\t%lf\n",l.valor.valorReal);
-            break;
+        case ENTERO:   printf("%-15s %d\n", "Entero", l.valor.valorEntero); break;
+        case REAL:     printf("%-15s %f\n", "Real", l.valor.valorReal); break;
+        case CADENA:   printf("%-15s %s\n", "Cadena", l.valor.valorCadena); break;
+        case CARACTER: printf("%-15s %c\n", "Caracter", l.valor.valorCaracter); break;
+        case BOOLEANO: printf("%-15s %s\n", "Booleano", l.valor.valorBooleano ? "Verdadero" : "Falso"); break;
     }
 }
 

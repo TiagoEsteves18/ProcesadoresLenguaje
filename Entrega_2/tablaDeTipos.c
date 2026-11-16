@@ -23,7 +23,7 @@ bool insertar(TablaDeTipos *tabla, char *nombre,
     }
     CeldaTipo * celda;
     if ((celda = (CeldaTipo *) malloc(sizeof(CeldaTipo))) == NULL) {
-            printf("No hay memoria para una celda de la tabla de constantes");
+            printf("No hay memoria para una celda de la tabla de tipos");
             exit(1);
     }
     celda->valor = literal;
@@ -45,17 +45,19 @@ static const char *nombreTipo(NombreDeTipoT tipo) {
     return "Desconocido";
 }
 
-void imprimeTabla(TablaDeTipos tabla){
-    CeldaTipo * aux = tabla;
-    if (tabla == NULL) 
-        printf("La tabla de constantes est vaca\n");
-    else {
-        printf("El contenido de la tabla de constantes es.\n");
-        printf("Nombre\t\tTipo\t\tValor\n");
-        while (aux != NULL){
-            printf("%s\t\t", aux->nombre);
-            escribeLiteral(aux->valor);
-            aux = aux ->sig;
-        }
+void imprimeTabla(TablaDeTipos tabla) {
+    if (tabla == NULL) {
+        printf("La tabla de tipos esta vacia\n");
+        return;
     }
+    printf("=== CONTENIDO DE LA TABLA DE TIPOS ===\n");
+    printf("%-20s %-15s %s\n", "Nombre", "Tipo", "Valor");
+    printf("-----------------------------------------------\n");
+    CeldaTipo *aux = tabla;
+    while (aux != NULL) {
+        printf("%-20s ", aux->nombre);
+        escribeLiteral(aux->valor);
+        aux = aux->sig;
+    }
+    printf("===============================================\n");
 }
