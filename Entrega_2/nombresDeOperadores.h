@@ -2,8 +2,8 @@
 #define FFF_NOMBRESDEOPERADORES_H
 
 typedef enum nombreDeOperadores {
-	MAS,
-	MENOS,
+	SUMA,
+	RESTA,
 	POR,
 	DIVISION,
 	DIVISION_ENTERA,

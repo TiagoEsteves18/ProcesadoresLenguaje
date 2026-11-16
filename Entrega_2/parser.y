@@ -2,6 +2,7 @@
     #include <stdio.h>
 	#include <stdlib.h>
 	#include "nombresDeTipos.h"
+	#include "NombreDeOperadores.h"
 	#include "literal.h"
 	#include "parser.tab.h"
 	#include "tablaDeSimbolos.h"
@@ -20,6 +21,7 @@
 	char* cadena;
 	LiteralT literal;
 	NombreDeTipoT tipo;
+	NombreDeOperador operador;
 }
 
 %type <literal> literal
@@ -76,24 +78,24 @@
 %token hastaTK
 %token hacerTK
 %token continuarTK
-%token divEnteraTK
-%token modTK
-%token yTK
-%token oTK
-%token noTK
+%token <operador> divEnteraTK
+%token <operador> modTK
+%token <operador> yTK
+%token <operador> oTK
+%token <operador> noTK
 
 %token asignacionTK 
 %token entoncesTK 
-%token menorIgualTK 
-%token mayorIgualTK 
-%token distintoTK 
-%token igualTK 
-%token menorTK 
-%token mayorTK 
-%token masTK 
-%token menosTK 
-%token porTK 
-%token divisionTK 
+%token <operador> menorIgualTK 
+%token <operador> mayorIgualTK 
+%token <operador> distintoTK 
+%token <operador> igualTK 
+%token <operador> menorTK 
+%token <operador> mayorTK 
+%token <operador> masTK 
+%token <operador> menosTK 
+%token <operador> porTK 
+%token <operador> divisionTK 
 %token puntoYComaTK 
 %token comaTK 
 %token puntoTK 
@@ -287,7 +289,7 @@ lista_d_cte:
 
 lista_d_var:
 	lista_id dosPuntosTK d_tipo puntoYComaTK lista_d_var  {
-		
+		insertarEnTablaDeSimbolos(&ts, $1, $3, true);
 	} 
 	| /*empty*/	{
 
@@ -322,22 +324,22 @@ decl_sal: salidaTK lista_d_var {
 
 expresion:
 	expresion masTK expresion							{
-
+		insertarEnTablaDeCuadruplas(&tc, SUMA, $1, $3);
 	}
 	| expresion menosTK expresion						{
-
+		insertarEnTablaDeCuadruplas(&tc, RESTA, $1, $3);
 	}
 	| expresion porTK expresion							{
-
+		insertarEnTablaDeCuadruplas(&tc, POR, $1, $3);
 	}
 	| expresion divisionTK expresion					{
-
+		insertarEnTablaDeCuadruplas(&tc, DIVISION, $1, $3);
 	}
 	| expresion modTK expresion							{
-
+		insertarEnTablaDeCuadruplas(&tc, MODULO, $1, $3);
 	}
 	| expresion divEnteraTK expresion					{
-
+		insertarEnTablaDeCuadruplas(&tc, DIVISION_ENTERA, $1, $3);
 	}
 	| literalEnteroTK									{
 
@@ -346,19 +348,19 @@ expresion:
 
 	}
 	| menosTK expresion	%prec SIGNAL					{
-
+		insertarEnTablaDeCuadruplas(&tc, MENOS_UNIT, $1, $3);
 	}
 	| masTK expresion	%prec SIGNAL					{
-
+		insertarEnTablaDeCuadruplas(&tc, MAS_UNIT, $1, $3);
 	}
 	| expresion yTK expresion							{
-
+		insertarEnTablaDeCuadruplas(&tc, Y, $1, $3);
 	}
 	| expresion oTK expresion							{
-
+		insertarEnTablaDeCuadruplas(&tc, O, $1, $3);
 	}
 	| noTK expresion 									{
-
+		insertarEnTablaDeCuadruplas(&tc, NO, $1, $3);
 	}
 	| literalBooleanoTK									{
 
@@ -370,22 +372,22 @@ expresion:
 
 	}
 	| expresion menorTK expresion						{
-
+		insertarEnTablaDeCuadruplas(&tc, MENOR, $1, $3);
 	}
 	| expresion mayorTK expresion						{
-
+		insertarEnTablaDeCuadruplas(&tc, MAYOR, $1, $3);
 	}
 	| expresion menorIgualTK expresion					{
-
+		insertarEnTablaDeCuadruplas(&tc, MENOR_IGUAL, $1, $3);
 	}
 	| expresion mayorIgualTK expresion					{
-
+		insertarEnTablaDeCuadruplas(&tc, MAYOR_IGUAL, $1, $3);
 	}
 	| expresion igualTK expresion						{
-
+		insertarEnTablaDeCuadruplas(&tc, IGUAL, $1, $3);
 	}
 	| expresion distintoTK expresion					{
-
+		insertarEnTablaDeCuadruplas(&tc, DISTINTO, $1, $3);
 	}
 	| parentesisAbreTK expresion parentesisCierraTK		{
 
