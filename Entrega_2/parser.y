@@ -1,14 +1,16 @@
 %{
     #include <stdio.h>
+	#include <stdlib.h>
 	#include "nombresDeTipos.h"
 	#include "literal.h"
 	#include "parser.tab.h"
-	#include "tablaDeConstantes.h"
+	#include "tablaDeTipos.h"
 	int yylex(); // Usamos la funcion que se crea gracias a flex
 	void yyerror(char *); // Definicion de la funcion yyerror
 	extern FILE* yyin; // Usamos la varible de Flex en la que viene la entrada
-	TablaDeConstantes tc; //Es donde guardaremos las constantes
+	TablaDeTipos tt; //Es donde guardaremos los tipos
 	#define YYDEBUG 1 //Permite activar el modo Debugg de Bison
+
 %}
 
 /* ====================================================
@@ -21,6 +23,7 @@
 }
 
 %type <literal> literal
+%type <entero> tipo_base d_tipo
 
 %token letraTK
 %token cifraTK
@@ -219,25 +222,25 @@ literal:
 
 tipo_base: 
 	enteroTK { 
-
+		$$ = ENTERO;
 	} 
   	| realTK { 
-
+		$$ = REAL;
 	} 
 	| booleanoTK { 
-
+		$$ = BOOLEANO;
 	} 
 	| caracterTK { 
-
+		$$ = CARACTER;
 	} 
 	| cadenaTK { 
-
+		$$ = CADENA;
 	} ;
 
 d_tipo:
       tuplaTK lista_campos ftuplaTK			{
 
-	  }
+	}
     | tablaTK corcheteAbreTK expresion_t subrangoTK expresion_t corcheteCierraTK deTK d_tipo {
 
 	}
@@ -251,7 +254,7 @@ d_tipo:
 
 	}
 	| tipo_base								{
-
+	
 	}
     ;
 
@@ -275,7 +278,7 @@ lista_campos:
 
 lista_d_cte: 
 	identificadorTK igualTK literal puntoYComaTK lista_d_cte	{
-		insertaConstante(&tc, $1, $3);
+		insertar(&tt, $1, $3, true);
 	}
 	| /*empty*/	{
 
@@ -283,9 +286,9 @@ lista_d_cte:
 	;
 
 lista_d_var:
-	lista_id dosPuntosTK d_tipo puntoYComaTK lista_d_var	{
+	lista_id dosPuntosTK d_tipo puntoYComaTK lista_d_var  {
 
-	}
+	} 
 	| /*empty*/	{
 
 	}
@@ -293,10 +296,8 @@ lista_d_var:
 
 lista_id:
 	identificadorTK comaTK lista_id		{
-
 	}
 	| identificadorTK 					{
-
 	}
 	;
 
@@ -554,9 +555,9 @@ int main(int argc, char **argv){
 		yyin = fopen(argv[0], "r");
 	else
 		yyin = stdin;
-	tc = nuevaTablaDeConstantes();
+	tt = nuevaTablaDeTipos();
 	yyparse();
-	imprimeTablaDeConstantes(tc);
+	imprimeTabla(tt);
 }
 
 void yyerror(char * s){

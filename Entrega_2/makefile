@@ -1,19 +1,19 @@
-compilador: parser.tab.c lex.yy.o literal.o literal.h nombresDeTipos.h tablaDeConstantes.o tablaDeConstantes.h
-	gcc parser.tab.c lex.yy.o tablaDeConstantes.o literal.o -lfl
+compilador: parser.tab.c lex.yy.o literal.o literal.h nombresDeTipos.h tablaDeTipos.o tablaDeTipos.h
+	gcc parser.tab.c lex.yy.o tablaDeTipos.o literal.o -lfl
 	mv a.out compilador
 
-parser.tab.c parser.tab.h: parser.y literal.h nombresDeTipos.h tablaDeConstantes.h
+parser.tab.c parser.tab.h: parser.y literal.h nombresDeTipos.h tablaDeTipos.h
 	bison -d -v -t parser.y
 
-lex.yy.o: scanner.l parser.tab.h literal.h nombresDeTipos.h tablaDeConstantes.h
+lex.yy.o: scanner.l parser.tab.h literal.h nombresDeTipos.h
 	flex scanner.l
 	gcc -c lex.yy.c
 
 literal.o: literal.c
 	gcc -c literal.c
 
-tablaDeConstantes.o: tablaDeConstantes.c
-	gcc -c tablaDeConstantes.c
+tablaDeTipos.o: tablaDeTipos.c tablaDeTipos.h literal.h nombresDeTipos.h
+	gcc -c tablaDeTipos.c
 
 scanner: scannerBeta.l
 	flex scannerBeta.l
