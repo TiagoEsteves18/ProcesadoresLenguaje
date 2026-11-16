@@ -1,17 +1,29 @@
 #ifndef FFF_TABLA_DE_SIMBOLOS_H
 #define FFF_TABLA_DE_SIMBOLOS_H
 
+#include "nombresDeTipos.h"
 #include <stdbool.h>
 #include "literal.h"
 
 #define MAX_CELDA 100
 
+typedef enum tipoCelda {
+    CONSTANTE,
+    VARIABLE
+} TipoCelda;
+
+typedef union valorCelda {
+    int sid;
+    TiposCelda tipo;
+    LiteralT literal;
+    NombreDeTipoT tipo;
+} ValorCelda;
+
 typedef struct celdaSimbolo {
     int sid;
     char *nombre;
-    LiteralT valor;
-    bool esConstante;
-    struct celdaSimbolo *sig; 
+    ValorCelda valor;
+    TipoCelda tipo;
 } CeldaSimbolo;
 
 typedef struct TablaDeSimbolos{
@@ -20,7 +32,7 @@ typedef struct TablaDeSimbolos{
 } TablaDeSimbolos;
 
 TablaDeSimbolos nuevaTablaDeSimbolos(void);
-bool insertarEnTablaDeSimbolos(TablaDeSimbolos *tabla, char *nombre, LiteralT literal, bool esConstante);
+bool insertarEnTablaDeSimbolos(TablaDeSimbolos *tabla, char *nombre, ValorCelda valor, TipoCelda tipo);
 void imprimeTablaDeSimbolos(TablaDeSimbolos tabla);
 
 #endif

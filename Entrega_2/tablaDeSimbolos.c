@@ -9,37 +9,55 @@ TablaDeSimbolos nuevaTablaDeSimbolos(void) {
     return tabla;
 }
 
-bool insertar(TablaDeSimbolos *tabla, char *nombre,
-              LiteralT literal, bool esConstante) {
+bool insertarEnTablaDeSimbolos(TablaDeSimbolos *tabla, char *nombre,
+               ValorCelda valor, TipoCelda tipo) {
 
-    CeldaSimbolo *celda = tabla->celdas[0];
+    if(tabla->ultimo >= MAX_CELDA) {
+        printf("Error: la tabla de simbolos esta llena\n");
+        return false;
+    }
 
+    for (int i = 0; i < tabla->ultimo; i++) {
+        if (strcmp(tabla->celdas[i].nombre, nombre) == 0) {
+            printf("Error: el simbolo '%s' ya existe en la tabla de simbolos\n", nombre);
+            return false;
+        }
+    }
+
+    CeldaSimbolo *celda;
     if ((celda = (CeldaSimbolo *) malloc(sizeof(CeldaSimbolo))) == NULL) {
             printf("No hay memoria para una celda de la tabla de simbolos");
             exit(1);
     }
-    celda->valor = literal;
+    celda->valor = valor;
     celda->nombre = nombre;
-    celda->esConstante = esConstante;
-    celda->sig = tabla->celdas;
-    tabla->celdas = celda;
+    celda->tipo = tipo;
+    tabla->celdas[tabla->ultimo] = *celda;
     tabla->ultimo++;
     return true;
 }
 
-void imprimeTabla(TablaDeSimbolos tabla) {
-    if (tabla == NULL) {
+void escribeCelda(ValorCelda valor) {
+    if(valor.tipo == CONSTANTE) {
+        printf("%-15s ", "Constante");
+        escribeLiteral(valor.literal);
+    } else {
+        printf("%-15s ", "Variable");
+        
+    }
+}
+
+void imprimeTablaDeSimbolos(TablaDeSimbolos tabla) {
+    if (tabla.ultimo == 0) {
         printf("La tabla de simbolos esta vacia\n");
         return;
     }
     printf("=== CONTENIDO DE LA TABLA DE SIMBOLOS ===\n");
     printf("%-20s %-15s %s\n", "Nombre", "Tipo", "Valor");
     printf("-----------------------------------------------\n");
-    CeldaSimbolo *aux = tabla;
-    while (aux != NULL) {
-        printf("%-20s ", aux->nombre);
-        escribeLiteral(aux->valor);
-        aux = aux->sig;
+    for (int i = 0; i < tabla.ultimo; i++) {
+        printf("%-20s ", tabla.celdas[i].nombre);
+        escribeCelda(tabla.celdas[i].valor);
     }
     printf("===============================================\n");
 }

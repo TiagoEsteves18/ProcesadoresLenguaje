@@ -24,7 +24,7 @@
 	NombreDeOperador operador;
 }
 
-%type <literal> literal
+%type <literal> literal expresion
 %type <tipo> tipo_base 
 
 %token letraTK
@@ -280,7 +280,7 @@ lista_campos:
 
 lista_d_cte: 
 	identificadorTK igualTK literal puntoYComaTK lista_d_cte	{
-		insertarEnTablaDeSimbolos(&ts, $1, $3, true);
+		insertarEnTablaDeSimbolos(&ts, $1, $3, CONSTANTE);
 	}
 	| /*empty*/	{
 
@@ -289,7 +289,7 @@ lista_d_cte:
 
 lista_d_var:
 	lista_id dosPuntosTK d_tipo puntoYComaTK lista_d_var  {
-		insertarEnTablaDeSimbolos(&ts, $1, $3, true);
+		insertarEnTablaDeSimbolos(&ts, $1, $3, VARIABLE);
 	} 
 	| /*empty*/	{
 
@@ -348,10 +348,10 @@ expresion:
 
 	}
 	| menosTK expresion	%prec SIGNAL					{
-		insertarEnTablaDeCuadruplas(&tc, MENOS_UNIT, $1, $3);
+		insertarEnTablaDeCuadruplas(&tc, MENOS_UNIT, $2, {0});
 	}
 	| masTK expresion	%prec SIGNAL					{
-		insertarEnTablaDeCuadruplas(&tc, MAS_UNIT, $1, $3);
+		insertarEnTablaDeCuadruplas(&tc, MAS_UNIT, $2, {0});
 	}
 	| expresion yTK expresion							{
 		insertarEnTablaDeCuadruplas(&tc, Y, $1, $3);
@@ -360,7 +360,7 @@ expresion:
 		insertarEnTablaDeCuadruplas(&tc, O, $1, $3);
 	}
 	| noTK expresion 									{
-		insertarEnTablaDeCuadruplas(&tc, NO, $1, $3);
+		insertarEnTablaDeCuadruplas(&tc, NO, $2, {0});
 	}
 	| literalBooleanoTK									{
 
