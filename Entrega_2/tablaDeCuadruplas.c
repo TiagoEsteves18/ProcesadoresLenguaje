@@ -3,44 +3,44 @@
 #include <string.h>
 #include "tablaDeCuadruplas.h"
 
+#define ANCHO_LINEA 70
+
 TablaDeCuadruplas nuevaTablaDeCuadruplas(void){
     TablaDeCuadruplas tabla;
     tabla.siguiente = 0;
     return tabla;
 }
 
-bool insertarEnTablaDeCuadruplas(TablaDeCuadruplas *tabla, NombreDeOperador operador, LiteralT operando_1, LiteralT operando_2) {
-    return true
-}
-
-static char *nombreDeOperador(NombreDeOperador op) {
-    switch (op) {
-        case SUMA:            return "+";
-        case RESTA:           return "-";
-        case POR:             return "*";
-        case DIVISION:        return "/";
-        case DIVISION_ENTERA: return "div";
-        case MODULO:          return "mod";
-        case MAYOR:           return ">";
-        case MENOR:           return "<";
-        case IGUAL:           return "=";
-        case DISTINTO:        return "<>";
-        case MAYOR_IGUAL:     return ">=";
-        case MENOR_IGUAL:     return "<=";
-        case NO:              return "no";
-        case MAS_UNIT:        return "+ unit";
-        case MENOS_UNIT:      return "- unit";
-        case O:               return "o";
-        case Y:               return "y";
-        default:              return "?";
+int gen(TablaDeCuadruplas *tabla, char *operador, int operando1, int operando2, int resultado) {
+    if (tabla->siguiente >= MAX_CUADRUPLAS) {
+        printf("Error: la tabla de cuadruplas esta llena\n");
+        exit(1);
     }
+    CeldaCuadrupla *c = &tabla->cuadruplas[tabla->siguiente];
+    c->operador = operador;
+    c->operando_1 = operando1;
+    c->operando_2 = operando2;
+    c->resultado = resultado;
+    return tabla->siguiente++;
 }
 
+// Impresión de la tabla de cuadruplas
 static void escribeOperando(int sid, TablaDeSimbolos ts) {
     if (sid == VACIO)
-        printf("%-12s ", "-");
+        printf("%-15s ", "-");
     else
-        printf("%-12s ", ts.celdas[sid].nombre);
+        printf("%-15s ", ts.celdas[sid].nombre);
+}
+
+static void imprimeCentrado(char *texto) {
+    int espacios = (ANCHO_LINEA - (int) strlen(texto)) / 2;
+    printf("%*s%s\n", espacios, "", texto);
+}
+
+static void imprimeLinea(char c) {
+    for (int i = 0; i < ANCHO_LINEA; i++)
+        putchar(c);
+    putchar('\n');
 }
 
 void imprimeTablaDeCuadruplas(TablaDeCuadruplas tabla, TablaDeSimbolos ts) {
@@ -48,18 +48,18 @@ void imprimeTablaDeCuadruplas(TablaDeCuadruplas tabla, TablaDeSimbolos ts) {
         printf("La tabla de cuadruplas esta vacia\n");
         return;
     }
-    printf("=== CONTENIDO DE LA TABLA DE CUADRUPLAS ===\n");
-    printf("%-5s %-10s %-12s %-12s %s\n", "N", "Operador", "Operando 1", "Operando 2", "Resultado");
-    printf("-------------------------------------------------------\n");
+    imprimeCentrado("=== CONTENIDO DE LA TABLA DE CUADRUPLAS ===");
+    printf("%-5s %-10s %-15s %-15s %s\n", "N", "Operador", "Operando 1", "Operando 2", "Resultado");
+    imprimeLinea('-');
     for (int i = 0; i < tabla.siguiente; i++) {
-        Cuadrupla c = tabla.cuadruplas[i];
-        printf("%-5d %-10s ", i, nombreDeOperador(c.operador));
-        escribeOperando(c.operando1, ts);
-        escribeOperando(c.operando2, ts);
-        else if (c.resultado == VACIO){}
+        CeldaCuadrupla c = tabla.cuadruplas[i];
+        printf("%-5d %-10s ", i, c.operador);
+        escribeOperando(c.operando_1, ts);
+        escribeOperando(c.operando_2, ts);
+        if (c.resultado == VACIO)
             printf("-\n");
         else
             printf("%s\n", ts.celdas[c.resultado].nombre);
     }
-    printf("=======================================================\n");
+    imprimeLinea('=');
 }

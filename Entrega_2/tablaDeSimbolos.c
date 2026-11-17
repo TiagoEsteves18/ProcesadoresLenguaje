@@ -31,7 +31,8 @@ static int insertar(TablaDeSimbolos *tabla, char *nombre, TiposSimbolo tipoSimbo
     }
 
     if (buscarSimbolo(tabla, nombre) != -1) {
-        printf("Error: el simbolo '%s' ya existe en la tabla de simbolos\n", nombre);
+         extern int yylineno;
+        printf("Error en linea %d: el simbolo '%s' ya existe en la tabla de simbolos\n", yylineno, nombre);
         return -1;
     }
     CeldaSimbolo *celda = &tabla->celdas[tabla->ultimo];
@@ -99,11 +100,32 @@ bool valorEnteroDeSimbolo(TablaDeSimbolos *tabla, int sid, int *valor){
     return true;
 }
 
+// Crea una variable temporal nueva del tipo que se ponga y devuelve su sid
+int nuevoTemporal(TablaDeSimbolos *tabla, NombreDeTipoT tipo){
+    static int contador = 0;
+    char nombre[32];
+    sprintf(nombre, "t%d", contador++);
+    int sid = insertar(tabla, strdup(nombre), TEMPORAL);
+    if(sid != -1){
+        tabla->celdas[sid].valorCelda.variable.tipo = tipo;
+        tabla->celdas[sid].valorCelda.variable.tipoDeVariable = SIMPLE;
+    }
+    return sid;
+}
+
+// Devuelve el tipo de un simbolo
+NombreDeTipoT tipoDeSimbolo(TablaDeSimbolos *tabla, int sid){
+    if (tabla->celdas[sid].tipoSimbolo == CONSTANTE)
+        return tabla->celdas[sid].valorCelda.constante.tipoDelValor;
+    return tabla->celdas[sid].valorCelda.variable.tipo;
+}
+
 
 // -- Impresión de la tabla --
 static char *nombreDeClase(TiposSimbolo c) {
     switch (c) {
         case CONSTANTE: return "Constante";
+        case TEMPORAL:  return "Temporal";
         default:        return "Variable";
     }
 }
@@ -125,7 +147,7 @@ static void escribeCelda(CeldaSimbolo c) {
     char tipo[64];
     printf("%-5d %-15s %-12s ", c.sid, c.nombre, nombreDeClase(c.tipoSimbolo));
 
-    if (c.tipoSimbolo == VARIABLE) {
+    if (c.tipoSimbolo != CONSTANTE) {
         Variable v = c.valorCelda.variable;
         switch (v.tipoDeVariable) {
             case TABLA:

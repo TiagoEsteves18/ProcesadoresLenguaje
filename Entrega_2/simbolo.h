@@ -5,7 +5,8 @@
 
 typedef enum tiposSimbolo {
     VARIABLE,
-    CONSTANTE
+    CONSTANTE,
+    TEMPORAL
 } TiposSimbolo;
 
 typedef struct variable {

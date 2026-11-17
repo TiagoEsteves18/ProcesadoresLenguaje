@@ -1,5 +1,5 @@
-compilador: parser.tab.c lex.yy.o literal.o literal.h nombresDeTipos.h tablaDeSimbolos.o tablaDeSimbolos.h listaIdentificadores.o listaIdentificadores.h
-	gcc parser.tab.c lex.yy.o tablaDeSimbolos.o listaIdentificadores.o literal.o -lfl
+compilador: parser.tab.c lex.yy.o literal.o literal.h nombresDeTipos.h tablaDeSimbolos.o tablaDeSimbolos.h listaIdentificadores.o listaIdentificadores.h tablaDeCuadruplas.o tablaDeCuadruplas.h
+	gcc parser.tab.c lex.yy.o tablaDeSimbolos.o listaIdentificadores.o tablaDeCuadruplas.o literal.o -lfl
 	mv a.out compilador
 
 parser.tab.c parser.tab.h: parser.y literal.h nombresDeTipos.h tablaDeSimbolos.h
@@ -22,6 +22,9 @@ scanner: scannerBeta.l
 
 listaIdentificadores.o: listaIdentificadores.c listaIdentificadores.h
 	gcc -c listaIdentificadores.c
+
+tablaDeCuadruplas.o: tablaDeCuadruplas.c tablaDeCuadruplas.h tablaDeSimbolos.h
+	gcc -c tablaDeCuadruplas.c
 
 clean:
 	rm *.tab.* lex.yy.c *.o parser.output compilador

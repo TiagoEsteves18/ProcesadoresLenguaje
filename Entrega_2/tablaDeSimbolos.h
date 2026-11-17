@@ -35,6 +35,9 @@ bool valorEnteroDeSimbolo(TablaDeSimbolos *tabla, int sid, int *valor);
 
 int buscarSimbolo(TablaDeSimbolos *tabla, char *nombre);
 
+int nuevoTemporal(TablaDeSimbolos *tabla, NombreDeTipoT tipo);
+NombreDeTipoT tipoDeSimbolo(TablaDeSimbolos *tabla, int sid);
+
 void imprimeTablaDeSimbolos(TablaDeSimbolos tabla);
 
 #endif

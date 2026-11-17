@@ -6,10 +6,42 @@
 	#include "literal.h"
 	#include "tablaDeSimbolos.h"
 	#include "listaIdentificadores.h"
+	#include "tablaDeCuadruplas.h"
 	int yylex(); // Usamos la funcion que se crea gracias a flex
 	void yyerror(char *); // Definicion de la funcion yyerror
 	extern FILE* yyin; // Usamos la varible de Flex en la que viene la entrada
 	TablaDeSimbolos ts; //Es donde guardaremos los simbolos
+	TablaDeCuadruplas tc; //Es donde guardaremos las cuadruplas 
+
+	NombreDeTipoT tipoAritmetico(int sid1, int sid2) {
+		if (tipoDeSimbolo(&ts, sid1) == REAL || tipoDeSimbolo(&ts, sid2) == REAL)
+			return REAL;
+		return ENTERO;
+	}
+
+	int esNumerico(int sid) {
+		NombreDeTipoT t = tipoDeSimbolo(&ts, sid);
+		return t == ENTERO || t == REAL;
+	}
+
+	void errorDeTipos(char *operador) {
+		extern int yylineno;
+		printf("Error en linea %d: tipos incompatibles en '%s'\n", yylineno, operador);
+		exit(1);
+	}
+
+	int sonComparables(int sid1, int sid2){
+		if(esNumerico(sid1) && esNumerico(sid2))
+			return 1;
+		return tipoDeSimbolo(&ts, sid1) == tipoDeSimbolo(&ts, sid2); 
+	}
+
+	int esAsignable(int destino, int origen) {
+		NombreDeTipoT td = tipoDeSimbolo(&ts, destino);
+		NombreDeTipoT to = tipoDeSimbolo(&ts, origen);
+		return td == to || (td == REAL && to == ENTERO);
+	}
+
 	#define YYDEBUG 1 //Permite activar el modo Debugg de Bison
 
 %}
@@ -296,11 +328,15 @@ lista_campos:
 	}
 	;
 
+// PREGUNTAR: Cuando paramos ejecucion mostramos tablas (YYABORT) o no (exit(-1)) Ahora mismo está mezclado
+
 lista_d_cte: 
 	identificadorTK igualTK literal puntoYComaTK lista_d_cte	{
 		ValorCelda valorCelda;
 		valorCelda.constante = $3;
-		insertarConstanteTS(&ts, $1, valorCelda);
+		//PREGUNTAR: ¿Hace falta que paremos ejecucion si se repite la variable en la entrada y en la salida? Ejemplo, programa 1
+		if(insertarConstanteTS(&ts, $1, valorCelda) == -1)
+			YYABORT;
 	}
 	| /*empty*/	{
 
@@ -318,7 +354,9 @@ lista_d_var:
 
 linea_de_var: lista_id dosPuntosTK d_tipo puntoYComaTK {
 	for (NodoIdentificador *n = $1; n != NULL; n = n->sig)
-		insertarVariableTS(&ts, n->nombre, $3);
+	//PREGUNTAR: ¿Hace falta que paremos ejecucion si se repite la variable en la entrada y en la salida? Ejemplo, programa 1
+		if (insertarVariableTS(&ts, n->nombre, $3) == -1)
+			YYABORT;
 	liberaListaIdentificadores($1);
 };
 
@@ -351,22 +389,40 @@ decl_sal: salidaTK lista_d_var {
 
 expresion:
 	expresion masTK expresion							{
-		// insertarEnTablaDeCuadruplas(&tc, SUMA, $1, $3);
+		if (!esNumerico($1) || !esNumerico($3))
+			errorDeTipos("+");
+		$$ = nuevoTemporal(&ts, tipoAritmetico($1, $3));
+		gen(&tc, "+", $1, $3, $$);
 	}
 	| expresion menosTK expresion						{
-		// insertarEnTablaDeCuadruplas(&tc, RESTA, $1, $3);
+		if (!esNumerico($1) || !esNumerico($3))
+			errorDeTipos("-");
+		$$ = nuevoTemporal(&ts, tipoAritmetico($1, $3));
+		gen(&tc, "-", $1, $3, $$);
 	}
 	| expresion porTK expresion							{
-		// insertarEnTablaDeCuadruplas(&tc, POR, $1, $3);
+		if (!esNumerico($1) || !esNumerico($3))
+			errorDeTipos("*");
+		$$ = nuevoTemporal(&ts, tipoAritmetico($1, $3));
+		gen(&tc, "*", $1, $3, $$);
 	}
 	| expresion divisionTK expresion					{
-		// insertarEnTablaDeCuadruplas(&tc, DIVISION, $1, $3);
+		if (!esNumerico($1) || !esNumerico($3))
+			errorDeTipos("/");
+		$$ = nuevoTemporal(&ts, tipoAritmetico($1, $3));
+		gen(&tc, "/", $1, $3, $$);
 	}
 	| expresion modTK expresion							{
-		// insertarEnTablaDeCuadruplas(&tc, MODULO, $1, $3);
+		if (!esNumerico($1) || !esNumerico($3))
+			errorDeTipos("%");
+		$$ = nuevoTemporal(&ts, tipoAritmetico($1, $3));
+		gen(&tc, "%", $1, $3, $$);
 	}
 	| expresion divEnteraTK expresion					{
-		// insertarEnTablaDeCuadruplas(&tc, DIVISION_ENTERA, $1, $3);
+		if (!esNumerico($1) || !esNumerico($3))
+			errorDeTipos("//");
+		$$ = nuevoTemporal(&ts, tipoAritmetico($1, $3));
+		gen(&tc, "//", $1, $3, $$);
 	}
 	| literalEnteroTK									{
 		$$ = insertarLiteralTS(&ts, $1);
@@ -375,46 +431,79 @@ expresion:
 		$$ = insertarLiteralTS(&ts, $1);
 	}
 	| menosTK expresion	%prec SIGNAL					{
-		// insertarEnTablaDeCuadruplas(&tc, MENOS_UNIT, $2, {0});
+		if (!esNumerico($2))
+			errorDeTipos("- unit");
+		$$ = nuevoTemporal(&ts, tipoDeSimbolo(&ts, $2));
+		gen(&tc, "-u", $2, VACIO, $$);
 	}
 	| masTK expresion	%prec SIGNAL					{
-		// insertarEnTablaDeCuadruplas(&tc, MAS_UNIT, $2, {0});
+		if (!esNumerico($2))
+			errorDeTipos("+ unit");
+		$$ = nuevoTemporal(&ts, tipoDeSimbolo(&ts, $2));
+		gen(&tc, "+u", $2, VACIO, $$);
 	}
 	| expresion yTK expresion							{
-		// insertarEnTablaDeCuadruplas(&tc, Y, $1, $3);
+		if (tipoDeSimbolo(&ts, $1) != BOOLEANO || tipoDeSimbolo(&ts, $3) != BOOLEANO)
+			errorDeTipos("y");
+		$$ = nuevoTemporal(&ts, BOOLEANO);
+		gen(&tc, "y", $1, $3, $$);
 	}
 	| expresion oTK expresion							{
-		// insertarEnTablaDeCuadruplas(&tc, O, $1, $3);
+		if (tipoDeSimbolo(&ts, $1) != BOOLEANO || tipoDeSimbolo(&ts, $3) != BOOLEANO)
+			errorDeTipos("o");
+		$$ = nuevoTemporal(&ts, BOOLEANO);
+		gen(&tc, "o", $1, $3, $$);
 	}
 	| noTK expresion 									{
-		// insertarEnTablaDeCuadruplas(&tc, NO, $2, {0});
+		if (tipoDeSimbolo(&ts, $2) != BOOLEANO)
+			errorDeTipos("no");
+		$$ = nuevoTemporal(&ts, BOOLEANO);
+		gen(&tc, "no", $2, VACIO, $$);
 	}
 	| literalBooleanoTK									{
 		$$ = insertarLiteralTS(&ts, $1);
 	}
 	| funcion_ll										{
-		
+	
 	}
 	| operando 											{
 		$$ = $1;
 	}
 	| expresion menorTK expresion						{
-		// insertarEnTablaDeCuadruplas(&tc, MENOR, $1, $3);
+		if (!esNumerico($1) || !esNumerico($3))
+			errorDeTipos("<");
+		$$ = nuevoTemporal(&ts, BOOLEANO);
+		gen(&tc, "<", $1, $3, $$);
 	}
 	| expresion mayorTK expresion						{
-		// insertarEnTablaDeCuadruplas(&tc, MAYOR, $1, $3);
+		if (!esNumerico($1) || !esNumerico($3))
+			errorDeTipos(">");
+		$$ = nuevoTemporal(&ts, BOOLEANO);
+		gen(&tc, ">", $1, $3, $$);
 	}
 	| expresion menorIgualTK expresion					{
-		// insertarEnTablaDeCuadruplas(&tc, MENOR_IGUAL, $1, $3);
+		if (!esNumerico($1) || !esNumerico($3))
+			errorDeTipos("<=");
+		$$ = nuevoTemporal(&ts, BOOLEANO);
+		gen(&tc, "<=", $1, $3, $$);
 	}
 	| expresion mayorIgualTK expresion					{
-		// insertarEnTablaDeCuadruplas(&tc, MAYOR_IGUAL, $1, $3);
+		if (!esNumerico($1) || !esNumerico($3))
+			errorDeTipos(">=");
+		$$ = nuevoTemporal(&ts, BOOLEANO);
+		gen(&tc, ">=", $1, $3, $$);
 	}
 	| expresion igualTK expresion						{
-		// insertarEnTablaDeCuadruplas(&tc, IGUAL, $1, $3);
+		if (!sonComparables($1, $3))
+			errorDeTipos("=");
+		$$ = nuevoTemporal(&ts, BOOLEANO);
+		gen(&tc, "=", $1, $3, $$);
 	}
 	| expresion distintoTK expresion					{
-		// insertarEnTablaDeCuadruplas(&tc, DISTINTO, $1, $3);
+		if (!sonComparables($1, $3))
+			errorDeTipos("<>");
+		$$ = nuevoTemporal(&ts, BOOLEANO);
+		gen(&tc, "<>", $1, $3, $$);
 	}
 	| parentesisAbreTK expresion parentesisCierraTK		{
 		$$ = $2;
@@ -425,7 +514,8 @@ operando:
 	identificadorTK											{
 		$$ = buscarSimbolo(&ts, $1);
 		if ($$ == -1) {
-			printf("Error: '%s' no esta declarado\n", $1);
+			extern int yylineno;
+			printf("Error en linea %d: '%s' no esta declarado\n", yylineno, $1);
 			YYABORT;
 		}
 	}
@@ -469,7 +559,14 @@ instruccion:
 
 asignacion:
 	operando asignacionTK expresion	{
-
+		if (ts.celdas[$1].tipoSimbolo == CONSTANTE) {
+			extern int yylineno;
+			printf("Error en linea %d: no se puede asignar a la constante '%s'\n", yylineno, ts.celdas[$1].nombre);
+			exit(1);
+		}
+		if (!esAsignable($1, $3))
+			errorDeTipos(":=");
+		gen(&tc, ":=", $3, VACIO, $1);
 	}
 	;
 
@@ -589,8 +686,10 @@ int main(int argc, char **argv){
 	else
 		yyin = stdin;
 	ts = nuevaTablaDeSimbolos();
+	tc = nuevaTablaDeCuadruplas();
 	yyparse();
 	imprimeTablaDeSimbolos(ts);
+	imprimeTablaDeCuadruplas(tc, ts);
 }
 
 void yyerror(char * s){
