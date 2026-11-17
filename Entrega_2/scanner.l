@@ -28,6 +28,7 @@
 	#include "nombresDeOperadores.h"
 	#include "nombresDeTipos.h"
 	#include "tablaDeSimbolos.h"
+	#include "listaIdentificadores.h"
 	#include "parser.tab.h"
 
 	void errorEnScanner(char*, char*); //prototipo necesario para compilar

@@ -5,6 +5,7 @@
 	#include "nombresDeOperadores.h"
 	#include "literal.h"
 	#include "tablaDeSimbolos.h"
+	#include "listaIdentificadores.h"
 	int yylex(); // Usamos la funcion que se crea gracias a flex
 	void yyerror(char *); // Definicion de la funcion yyerror
 	extern FILE* yyin; // Usamos la varible de Flex en la que viene la entrada
@@ -23,11 +24,15 @@
 	LiteralT literal;
 	NombreDeOperador operador;
 	int entero;
+	ListaIdentificadores listaIds;
+	Variable variable;
 }
 
 %type <literal> literal
-%type <tipo> tipo_base d_tipo
-%type <entero> lista_id 
+%type <variable> d_tipo
+%type <tipo> tipo_base
+%type <listaIds> lista_id
+%type <entero> expresion expresion_t operando
 
 %token letraTK
 %token cifraTK
@@ -242,32 +247,43 @@ tipo_base:
 	} ;
 
 d_tipo:
-      tuplaTK lista_campos ftuplaTK			{
-
+    tuplaTK lista_campos ftuplaTK			{
+		$$.tipo = DESCONOCIDO;
+		$$.tipoDeVariable = TUPLA;
 	}
     | tablaTK corcheteAbreTK expresion_t subrangoTK expresion_t corcheteCierraTK deTK d_tipo {
+		$$.tipo = $8.tipo;
+		$$.tipoDeVariable = TABLA;
 
+		// Los limites deben ser enteros
+		if (!valorEnteroDeSimbolo(&ts, $3, &$$.limiteInferior) || !valorEnteroDeSimbolo(&ts, $5, &$$.limiteSuperior)) {
+			yyerror("los limites de una tabla deben ser enteros constantes");
+			YYABORT;
+		}
 	}
 	| identificadorTK						{
-
+		$$.tipo = DESCONOCIDO;
+		$$.tipoDeVariable = SIMPLE;
 	}
 	| expresion_t subrangoTK expresion_t	{
-
+		$$.tipo = ts.celdas[$1].valorCelda.constante.tipoDelValor;
+		$$.tipoDeVariable = SIMPLE;
 	}
 	| refTK d_tipo							{
-
+		$$ = $2;
 	}
 	| tipo_base								{
-	
+		$$.tipo = $1;
+		$$.tipoDeVariable = SIMPLE;
 	}
     ;
 
 expresion_t: 
 	expresion			{
-
+		$$ = $1;
 	}
 	| literalCaracterTK {
-
+		$$ = insertarLiteralTS(&ts, $1);
 	}
 	;
 
@@ -301,21 +317,17 @@ lista_d_var:
 	;
 
 linea_de_var: lista_id dosPuntosTK d_tipo puntoYComaTK {
-	// ToDo: guardar ts.ultimo en una traduccion !!!!!!!
-	for(int i = $1; i < ts.ultimo; i++){
-		ponerTipo(&ts, i, $3);
-		printf("Tipo de %s: %d\n", ts.celdas[i].nombre,$3);
-	}
+	for (NodoIdentificador *n = $1; n != NULL; n = n->sig)
+		insertarVariableTS(&ts, n->nombre, $3);
+	liberaListaIdentificadores($1);
 };
 
 lista_id:
 	identificadorTK comaTK lista_id		{
-		insertarVariableTS(&ts, $1, TIPO_PROVISIONAL);
-		$$ = $3;
+		$$ = anadirIdentificador($3, $1);
 	}
 	| identificadorTK 					{
-		$$ = ts.ultimo;
-		insertarVariableTS(&ts, $1, TIPO_PROVISIONAL);
+		$$ = nuevaListaIdentificadores($1);
 	}
 	;
 
@@ -357,10 +369,10 @@ expresion:
 		// insertarEnTablaDeCuadruplas(&tc, DIVISION_ENTERA, $1, $3);
 	}
 	| literalEnteroTK									{
-
+		$$ = insertarLiteralTS(&ts, $1);
 	}
 	| literalRealTK										{
-
+		$$ = insertarLiteralTS(&ts, $1);
 	}
 	| menosTK expresion	%prec SIGNAL					{
 		// insertarEnTablaDeCuadruplas(&tc, MENOS_UNIT, $2, {0});
@@ -378,13 +390,13 @@ expresion:
 		// insertarEnTablaDeCuadruplas(&tc, NO, $2, {0});
 	}
 	| literalBooleanoTK									{
-
+		$$ = insertarLiteralTS(&ts, $1);
 	}
 	| funcion_ll										{
-
+		
 	}
 	| operando 											{
-
+		$$ = $1;
 	}
 	| expresion menorTK expresion						{
 		// insertarEnTablaDeCuadruplas(&tc, MENOR, $1, $3);
@@ -405,22 +417,26 @@ expresion:
 		// insertarEnTablaDeCuadruplas(&tc, DISTINTO, $1, $3);
 	}
 	| parentesisAbreTK expresion parentesisCierraTK		{
-
+		$$ = $2;
 	}
 	;
 
 operando:
 	identificadorTK											{
-
+		$$ = buscarSimbolo(&ts, $1);
+		if ($$ == -1) {
+			printf("Error: '%s' no esta declarado\n", $1);
+			YYABORT;
+		}
 	}
 	| operando puntoTK operando								{
-
+		$$ = $1;
 	}
 	| operando corcheteAbreTK expresion corcheteCierraTK	{
-
+		$$ = $1;
 	}
 	| operando refTK										{
-
+		$$ = $1;
 	}
 	;
 

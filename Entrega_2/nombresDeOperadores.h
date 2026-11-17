@@ -1,8 +1,6 @@
 #ifndef FFF_NOMBRESDEOPERADORES_H
 #define FFF_NOMBRESDEOPERADORES_H
 
-// Preguntar a JP: Metemos asignacion y así? 
-
 typedef enum nombreDeOperadores {
 	SUMA,
 	RESTA,

@@ -3,6 +3,9 @@
 #include <string.h>
 #include "tablaDeSimbolos.h"
 
+#define ANCHO_TIPO 24
+#define ANCHO_LINEA 70
+
 TablaDeSimbolos nuevaTablaDeSimbolos(void) {
     TablaDeSimbolos tabla;
     tabla.ultimo = 0;
@@ -32,6 +35,7 @@ static int insertar(TablaDeSimbolos *tabla, char *nombre, TiposSimbolo tipoSimbo
         return -1;
     }
     CeldaSimbolo *celda = &tabla->celdas[tabla->ultimo];
+    celda->sid = tabla->ultimo;
     celda->nombre = nombre;
     celda->tipoSimbolo = tipoSimbolo;
     return tabla->ultimo++;
@@ -45,19 +49,54 @@ int insertarConstanteTS(TablaDeSimbolos *tabla, char *nombre, ValorCelda valorCe
     return sid;
 }
 
-int insertarVariableTS(TablaDeSimbolos *tabla, char *nombre, NombreDeTipoT tipo){
+int insertarVariableTS(TablaDeSimbolos *tabla, char *nombre, Variable variable){
     int sid = insertar(tabla, nombre, VARIABLE);
     if(sid != -1){
-        tabla->celdas[sid].valorCelda.variable = tipo;
+        tabla->celdas[sid].valorCelda.variable = variable;
     }   
     return sid;
 }
 
-// Por si hay una lista (creo que sirve, porque si está algo como: 
-// a,b: entero, solo se le puede asignar a a cuando lea entero, pero antes lee b)
-// NO ESTOY SEGURO DE QUE ESTO FUNCIONE ASÍ
-void  ponerTipo(TablaDeSimbolos *tabla, int sid, NombreDeTipoT tipo){
-    tabla->celdas[sid].valorCelda.variable = tipo;
+// Esta funcion sirve para que si lea tabla[1..10], cuando lea el 1 le asocie un sid y pueda funcionar
+int insertarLiteralTS(TablaDeSimbolos *tabla, LiteralT literal){
+    char texto[64];
+    switch (literal.tipoDelValor) {
+        case ENTERO:   
+            sprintf(texto, "%d", literal.valor.valorEntero); 
+            break;
+        case REAL:     
+            sprintf(texto, "%f", literal.valor.valorReal); 
+            break;
+        case CARACTER: 
+            sprintf(texto, "\"%c\"", literal.valor.valorCaracter);
+            break;
+        case CADENA:   
+            snprintf(texto, sizeof(texto), "'%s'", literal.valor.valorCadena);
+            break;
+        case BOOLEANO: 
+            sprintf(texto, "%s", literal.valor.valorBooleano == VERDADERO ? "verdadero" : "falso");
+            break;
+        default:       
+            sprintf(texto, "?");
+            break;
+    }
+    int sid = buscarSimbolo(tabla, texto);
+    if (sid != -1)
+        return sid;
+    ValorCelda valorCelda;
+    valorCelda.constante = literal;
+    return insertarConstanteTS(tabla, strdup(texto), valorCelda);
+}
+
+// Si el simbolo es una constante entera, deja su valor en la variable valor y devuelve true
+bool valorEnteroDeSimbolo(TablaDeSimbolos *tabla, int sid, int *valor){
+    if (sid < 0 || tabla->celdas[sid].tipoSimbolo != CONSTANTE)
+        return false;
+    LiteralT lit = tabla->celdas[sid].valorCelda.constante;
+    if (lit.tipoDelValor != ENTERO)
+        return false;
+    *valor = lit.valor.valorEntero;
+    return true;
 }
 
 
@@ -76,23 +115,34 @@ static char *nombreDeTipo(NombreDeTipoT t) {
         case CARACTER: return "Caracter";
         case ENTERO:   return "Entero";
         case REAL:     return "Real";
-        default:       return "Provisional";
+        default:       return "Desconocido";
     }
 }
 
+
+
 static void escribeCelda(CeldaSimbolo c) {
+    char tipo[64];
+    printf("%-5d %-15s %-12s ", c.sid, c.nombre, nombreDeClase(c.tipoSimbolo));
+
     if (c.tipoSimbolo == VARIABLE) {
-        printf("%-15s %-12s %-10s -\n",
-               c.nombre,
-               nombreDeClase(c.tipoSimbolo),
-               nombreDeTipo(c.valorCelda.variable));
+        Variable v = c.valorCelda.variable;
+        switch (v.tipoDeVariable) {
+            case TABLA:
+                snprintf(tipo, sizeof(tipo), "Tabla[%d..%d] de %s", v.limiteInferior, v.limiteSuperior, nombreDeTipo(v.tipo));
+                break;
+            case TUPLA:
+                snprintf(tipo, sizeof(tipo), "Tupla");
+                break;
+            default:
+                snprintf(tipo, sizeof(tipo), "%s", nombreDeTipo(v.tipo));
+                break;
+        }
+        printf("%-*s -\n", ANCHO_TIPO, tipo);
         return;
     }
     LiteralT lit = c.valorCelda.constante;
-    printf("%-15s %-12s %-10s ",
-           c.nombre,
-           nombreDeClase(c.tipoSimbolo),
-           nombreDeTipo(lit.tipoDelValor));
+    printf("%-*s ", ANCHO_TIPO, nombreDeTipo(lit.tipoDelValor));
     switch (lit.tipoDelValor) {
         case ENTERO:   printf("%d\n", lit.valor.valorEntero); break;
         case REAL:     printf("%f\n", lit.valor.valorReal); break;
@@ -103,17 +153,27 @@ static void escribeCelda(CeldaSimbolo c) {
     }
 }
 
+static void imprimeCentrado(char *texto) {
+    int espacios = (ANCHO_LINEA - (int) strlen(texto)) / 2;
+    printf("%*s%s\n", espacios, "", texto);
+}
+
+static void imprimeLinea(char c) {
+    for (int i = 0; i < ANCHO_LINEA; i++)
+        putchar(c);
+    putchar('\n');
+}
+
 void imprimeTablaDeSimbolos(TablaDeSimbolos tabla) {
     if (tabla.ultimo == 0) {
         printf("La tabla de simbolos esta vacia\n");
         return;
     }
-    printf("=== CONTENIDO DE LA TABLA DE SIMBOLOS ===\n");
-    printf("%-5s %-15s %-12s %-10s %s\n", "SID", "Nombre", "Clase", "Tipo", "Valor");
-    printf("-------------------------------------------------------\n");
+    imprimeCentrado("================ CONTENIDO DE LA TABLA DE SIMBOLOS ================");
+    printf("%-5s %-15s %-12s %-*s %s\n", "SID", "Nombre", "Clase", ANCHO_TIPO, "Tipo", "Valor");
+    imprimeLinea('-');
     for (int i = 0; i < tabla.ultimo; i++) {
-        printf("%-5d ", i);
         escribeCelda(tabla.celdas[i]);
     }
-    printf("=======================================================\n");
+    imprimeLinea('=');
 }

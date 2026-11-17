@@ -7,7 +7,7 @@ typedef enum nombreDeTipoT {
 	CARACTER,
 	ENTERO,
 	REAL,
-	TIPO_PROVISIONAL
+	DESCONOCIDO
 } NombreDeTipoT;
 
 #endif

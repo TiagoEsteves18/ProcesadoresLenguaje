@@ -1,5 +1,5 @@
 #include "literal.h" 
-#include "nombresDeTipos.h" //Para poder usar nobres de tipo
+#include "nombresDeTipos.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

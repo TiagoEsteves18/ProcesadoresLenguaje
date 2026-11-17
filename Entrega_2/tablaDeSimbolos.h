@@ -14,6 +14,7 @@ typedef union valorCelda {
 } ValorCelda;
 
 typedef struct celdaSimbolo {
+    int sid;
     char *nombre;
     TiposSimbolo tipoSimbolo;
     ValorCelda valorCelda;
@@ -25,10 +26,13 @@ typedef struct TablaDeSimbolos{
 } TablaDeSimbolos;
 
 TablaDeSimbolos nuevaTablaDeSimbolos(void);
-int insertarConstanteTS(TablaDeSimbolos *tabla, char *nombre, ValorCelda valorCelda);
-int insertarVariableTS(TablaDeSimbolos *tabla, char *nombre, NombreDeTipoT tipo);
 
-void ponerTipo(TablaDeSimbolos *tabla, int sid, NombreDeTipoT tipo);
+int insertarConstanteTS(TablaDeSimbolos *tabla, char *nombre, ValorCelda valorCelda);
+
+int insertarVariableTS(TablaDeSimbolos *tabla, char *nombre, Variable variable);
+int insertarLiteralTS(TablaDeSimbolos *tabla, LiteralT literal);
+bool valorEnteroDeSimbolo(TablaDeSimbolos *tabla, int sid, int *valor);
+
 int buscarSimbolo(TablaDeSimbolos *tabla, char *nombre);
 
 void imprimeTablaDeSimbolos(TablaDeSimbolos tabla);
