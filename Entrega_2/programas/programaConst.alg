@@ -6,15 +6,18 @@ const
 	INICIAL = "E";
 	DEPURAR = falso;
 fconst;
-	ent n: entero;
-	sal area: real; dentro: booleano;
+	ent 
+		n: entero;
+	sal 
+		area: real;
+		dentro: booleano;
 {Prec: n = N AND N >= 0}
 	const
 		MIN = 1;
 	fconst;
 	var
-		v: tabla[MIN..MAX] de entero;
-		i: entero;
+		i, a: entero;
+		b: real; 
 	fvar;
 	para i := MIN hasta MAX hacer
 		v[i] := i * n

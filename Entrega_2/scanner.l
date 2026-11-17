@@ -25,6 +25,9 @@
 	#include <stdlib.h> //Para usar exit()
 	#include <strings.h> //Para trabajar con cadenas de caracteres
 	#include "literal.h"
+	#include "nombresDeOperadores.h"
+	#include "nombresDeTipos.h"
+	#include "tablaDeSimbolos.h"
 	#include "parser.tab.h"
 
 	void errorEnScanner(char*, char*); //prototipo necesario para compilar

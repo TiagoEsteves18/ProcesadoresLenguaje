@@ -4,26 +4,19 @@
 #include "nombresDeTipos.h"
 #include <stdbool.h>
 #include "literal.h"
+#include "simbolo.h"
 
 #define MAX_CELDA 100
 
-typedef enum tipoCelda {
-    CONSTANTE,
-    VARIABLE
-} TipoCelda;
-
 typedef union valorCelda {
-    int sid;
-    TiposCelda tipo;
-    LiteralT literal;
-    NombreDeTipoT tipo;
+    Variable variable;
+    Constante constante;
 } ValorCelda;
 
 typedef struct celdaSimbolo {
-    int sid;
     char *nombre;
-    ValorCelda valor;
-    TipoCelda tipo;
+    TiposSimbolo tipoSimbolo;
+    ValorCelda valorCelda;
 } CeldaSimbolo;
 
 typedef struct TablaDeSimbolos{
@@ -32,7 +25,12 @@ typedef struct TablaDeSimbolos{
 } TablaDeSimbolos;
 
 TablaDeSimbolos nuevaTablaDeSimbolos(void);
-bool insertarEnTablaDeSimbolos(TablaDeSimbolos *tabla, char *nombre, ValorCelda valor, TipoCelda tipo);
+int insertarConstanteTS(TablaDeSimbolos *tabla, char *nombre, ValorCelda valorCelda);
+int insertarVariableTS(TablaDeSimbolos *tabla, char *nombre, NombreDeTipoT tipo);
+
+void ponerTipo(TablaDeSimbolos *tabla, int sid, NombreDeTipoT tipo);
+int buscarSimbolo(TablaDeSimbolos *tabla, char *nombre);
+
 void imprimeTablaDeSimbolos(TablaDeSimbolos tabla);
 
 #endif

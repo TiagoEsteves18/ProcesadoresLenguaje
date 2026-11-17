@@ -2,9 +2,8 @@
     #include <stdio.h>
 	#include <stdlib.h>
 	#include "nombresDeTipos.h"
-	#include "NombreDeOperadores.h"
+	#include "nombresDeOperadores.h"
 	#include "literal.h"
-	#include "parser.tab.h"
 	#include "tablaDeSimbolos.h"
 	int yylex(); // Usamos la funcion que se crea gracias a flex
 	void yyerror(char *); // Definicion de la funcion yyerror
@@ -19,13 +18,16 @@
    ==================================================== */
 %union{
 	char* cadena;
-	LiteralT literal;
+	ValorCelda valorCelda;
 	NombreDeTipoT tipo;
+	LiteralT literal;
 	NombreDeOperador operador;
+	int entero;
 }
 
-%type <literal> literal expresion
-%type <tipo> tipo_base 
+%type <literal> literal
+%type <tipo> tipo_base d_tipo
+%type <entero> lista_id 
 
 %token letraTK
 %token cifraTK
@@ -280,7 +282,9 @@ lista_campos:
 
 lista_d_cte: 
 	identificadorTK igualTK literal puntoYComaTK lista_d_cte	{
-		insertarEnTablaDeSimbolos(&ts, $1, $3, CONSTANTE);
+		ValorCelda valorCelda;
+		valorCelda.constante = $3;
+		insertarConstanteTS(&ts, $1, valorCelda);
 	}
 	| /*empty*/	{
 
@@ -288,18 +292,30 @@ lista_d_cte:
 	;
 
 lista_d_var:
-	lista_id dosPuntosTK d_tipo puntoYComaTK lista_d_var  {
-		insertarEnTablaDeSimbolos(&ts, $1, $3, VARIABLE);
+	linea_de_var lista_d_var  {
+
 	} 
 	| /*empty*/	{
 
 	}
 	;
 
+linea_de_var: lista_id dosPuntosTK d_tipo puntoYComaTK {
+	// ToDo: guardar ts.ultimo en una traduccion !!!!!!!
+	for(int i = $1; i < ts.ultimo; i++){
+		ponerTipo(&ts, i, $3);
+		printf("Tipo de %s: %d\n", ts.celdas[i].nombre,$3);
+	}
+};
+
 lista_id:
 	identificadorTK comaTK lista_id		{
+		insertarVariableTS(&ts, $1, TIPO_PROVISIONAL);
+		$$ = $3;
 	}
 	| identificadorTK 					{
+		$$ = ts.ultimo;
+		insertarVariableTS(&ts, $1, TIPO_PROVISIONAL);
 	}
 	;
 
@@ -312,11 +328,10 @@ decl_ent_sal:
 	}
 	| decl_sal				{
 
-	}
-	;
+	};
 
-decl_ent: entradaTK lista_d_var {
-
+decl_ent:entradaTK lista_d_var {
+	
 };
 decl_sal: salidaTK lista_d_var {
 
@@ -324,22 +339,22 @@ decl_sal: salidaTK lista_d_var {
 
 expresion:
 	expresion masTK expresion							{
-		insertarEnTablaDeCuadruplas(&tc, SUMA, $1, $3);
+		// insertarEnTablaDeCuadruplas(&tc, SUMA, $1, $3);
 	}
 	| expresion menosTK expresion						{
-		insertarEnTablaDeCuadruplas(&tc, RESTA, $1, $3);
+		// insertarEnTablaDeCuadruplas(&tc, RESTA, $1, $3);
 	}
 	| expresion porTK expresion							{
-		insertarEnTablaDeCuadruplas(&tc, POR, $1, $3);
+		// insertarEnTablaDeCuadruplas(&tc, POR, $1, $3);
 	}
 	| expresion divisionTK expresion					{
-		insertarEnTablaDeCuadruplas(&tc, DIVISION, $1, $3);
+		// insertarEnTablaDeCuadruplas(&tc, DIVISION, $1, $3);
 	}
 	| expresion modTK expresion							{
-		insertarEnTablaDeCuadruplas(&tc, MODULO, $1, $3);
+		// insertarEnTablaDeCuadruplas(&tc, MODULO, $1, $3);
 	}
 	| expresion divEnteraTK expresion					{
-		insertarEnTablaDeCuadruplas(&tc, DIVISION_ENTERA, $1, $3);
+		// insertarEnTablaDeCuadruplas(&tc, DIVISION_ENTERA, $1, $3);
 	}
 	| literalEnteroTK									{
 
@@ -348,19 +363,19 @@ expresion:
 
 	}
 	| menosTK expresion	%prec SIGNAL					{
-		insertarEnTablaDeCuadruplas(&tc, MENOS_UNIT, $2, {0});
+		// insertarEnTablaDeCuadruplas(&tc, MENOS_UNIT, $2, {0});
 	}
 	| masTK expresion	%prec SIGNAL					{
-		insertarEnTablaDeCuadruplas(&tc, MAS_UNIT, $2, {0});
+		// insertarEnTablaDeCuadruplas(&tc, MAS_UNIT, $2, {0});
 	}
 	| expresion yTK expresion							{
-		insertarEnTablaDeCuadruplas(&tc, Y, $1, $3);
+		// insertarEnTablaDeCuadruplas(&tc, Y, $1, $3);
 	}
 	| expresion oTK expresion							{
-		insertarEnTablaDeCuadruplas(&tc, O, $1, $3);
+		// insertarEnTablaDeCuadruplas(&tc, O, $1, $3);
 	}
 	| noTK expresion 									{
-		insertarEnTablaDeCuadruplas(&tc, NO, $2, {0});
+		// insertarEnTablaDeCuadruplas(&tc, NO, $2, {0});
 	}
 	| literalBooleanoTK									{
 
@@ -372,22 +387,22 @@ expresion:
 
 	}
 	| expresion menorTK expresion						{
-		insertarEnTablaDeCuadruplas(&tc, MENOR, $1, $3);
+		// insertarEnTablaDeCuadruplas(&tc, MENOR, $1, $3);
 	}
 	| expresion mayorTK expresion						{
-		insertarEnTablaDeCuadruplas(&tc, MAYOR, $1, $3);
+		// insertarEnTablaDeCuadruplas(&tc, MAYOR, $1, $3);
 	}
 	| expresion menorIgualTK expresion					{
-		insertarEnTablaDeCuadruplas(&tc, MENOR_IGUAL, $1, $3);
+		// insertarEnTablaDeCuadruplas(&tc, MENOR_IGUAL, $1, $3);
 	}
 	| expresion mayorIgualTK expresion					{
-		insertarEnTablaDeCuadruplas(&tc, MAYOR_IGUAL, $1, $3);
+		// insertarEnTablaDeCuadruplas(&tc, MAYOR_IGUAL, $1, $3);
 	}
 	| expresion igualTK expresion						{
-		insertarEnTablaDeCuadruplas(&tc, IGUAL, $1, $3);
+		// insertarEnTablaDeCuadruplas(&tc, IGUAL, $1, $3);
 	}
 	| expresion distintoTK expresion					{
-		insertarEnTablaDeCuadruplas(&tc, DISTINTO, $1, $3);
+		// insertarEnTablaDeCuadruplas(&tc, DISTINTO, $1, $3);
 	}
 	| parentesisAbreTK expresion parentesisCierraTK		{
 

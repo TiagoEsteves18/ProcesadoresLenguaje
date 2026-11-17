@@ -6,7 +6,8 @@ typedef enum nombreDeTipoT {
 	CADENA,
 	CARACTER,
 	ENTERO,
-	REAL
+	REAL,
+	TIPO_PROVISIONAL
 } NombreDeTipoT;
 
 #endif
