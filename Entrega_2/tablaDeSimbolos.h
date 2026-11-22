@@ -25,8 +25,8 @@ typedef struct TablaDeSimbolos{
 } TablaDeSimbolos;
 
 TablaDeSimbolos nuevaTablaDeSimbolos(void);
-int insertarConstanteTS(TablaDeSimbolos *tabla, char *nombre, ValorCelda valorCelda);
-int insertarVariableTS(TablaDeSimbolos *tabla, char *nombre, NombreDeTipoT tipo);
+void insertarConstanteTS(TablaDeSimbolos *tabla, char *nombre, ValorCelda valorCelda);
+void insertarVariableTS(TablaDeSimbolos *tabla, char *nombre, NombreDeTipoT tipo);
 
 void ponerTipo(TablaDeSimbolos *tabla, int sid, NombreDeTipoT tipo);
 int buscarSimbolo(TablaDeSimbolos *tabla, char *nombre);

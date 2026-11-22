@@ -11,4 +11,9 @@ typedef NombreDeTipoT Variable;
 
 typedef LiteralT Constante;
 
+typedef struct listaDeVariables  { 
+    int inicio;
+    int fin;
+} ListaDeVariables;
+
 #endif

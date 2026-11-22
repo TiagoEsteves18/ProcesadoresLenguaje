@@ -9,8 +9,8 @@ TablaDeCuadruplas nuevaTablaDeCuadruplas(void){
     return tabla;
 }
 
-bool insertarEnTablaDeCuadruplas(TablaDeCuadruplas *tabla, NombreDeOperador operador, LiteralT operando_1, LiteralT operando_2) {
-    return true
+void insertarEnTablaDeCuadruplas(TablaDeCuadruplas *tabla, NombreDeOperador operador, LiteralT operando_1, LiteralT operando_2) {
+    
 }
 
 static char *nombreDeOperador(NombreDeOperador op) {

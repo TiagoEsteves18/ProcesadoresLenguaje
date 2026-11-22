@@ -20,37 +20,39 @@ int buscarSimbolo(TablaDeSimbolos *tabla, char *nombre){
 }
 
 // Método general de inserción
-static int insertar(TablaDeSimbolos *tabla, char *nombre, TiposSimbolo tipoSimbolo) {
+static void insertar(TablaDeSimbolos *tabla, char *nombre, TiposSimbolo tipoSimbolo) {
 
     if(tabla->ultimo >= MAX_CELDA) {
         printf("Error: la tabla de simbolos esta llena\n");
-        return -1;
+        exit(1);
+        return;
     }
-
-    if (buscarSimbolo(tabla, nombre) != -1) {
+    int id = buscarSimbolo(tabla, nombre);
+    if (id != -1) {
+        if ( tipoSimbolo == VARIABLE && tabla->celdas[id].tipoSimbolo == VARIABLE) {
+            return;
+        }
         printf("Error: el simbolo '%s' ya existe en la tabla de simbolos\n", nombre);
-        return -1;
+        exit(1);
+        return;
     }
     CeldaSimbolo *celda = &tabla->celdas[tabla->ultimo];
     celda->nombre = nombre;
     celda->tipoSimbolo = tipoSimbolo;
-    return tabla->ultimo++;
+    tabla->ultimo++;
+    return;
 }
 
-int insertarConstanteTS(TablaDeSimbolos *tabla, char *nombre, ValorCelda valorCelda){
-    int sid = insertar(tabla, nombre, CONSTANTE);
-    if(sid != -1){
-        tabla->celdas[sid].valorCelda = valorCelda;
-    }   
-    return sid;
+void insertarConstanteTS(TablaDeSimbolos *tabla, char *nombre, ValorCelda valorCelda){
+    insertar(tabla, nombre, CONSTANTE);
+    tabla->celdas[tabla->ultimo - 1].valorCelda = valorCelda;
+    return;
 }
 
-int insertarVariableTS(TablaDeSimbolos *tabla, char *nombre, NombreDeTipoT tipo){
-    int sid = insertar(tabla, nombre, VARIABLE);
-    if(sid != -1){
-        tabla->celdas[sid].valorCelda.variable = tipo;
-    }   
-    return sid;
+void insertarVariableTS(TablaDeSimbolos *tabla, char *nombre, NombreDeTipoT tipo){
+    insertar(tabla, nombre, VARIABLE);
+    tabla->celdas[tabla->ultimo - 1].valorCelda.variable = tipo;
+    return;
 }
 
 // Por si hay una lista (creo que sirve, porque si está algo como: 
@@ -59,7 +61,6 @@ int insertarVariableTS(TablaDeSimbolos *tabla, char *nombre, NombreDeTipoT tipo)
 void  ponerTipo(TablaDeSimbolos *tabla, int sid, NombreDeTipoT tipo){
     tabla->celdas[sid].valorCelda.variable = tipo;
 }
-
 
 // -- Impresión de la tabla --
 static char *nombreDeClase(TiposSimbolo c) {

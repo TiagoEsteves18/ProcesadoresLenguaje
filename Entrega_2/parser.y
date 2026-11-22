@@ -22,12 +22,14 @@
 	NombreDeTipoT tipo;
 	LiteralT literal;
 	NombreDeOperador operador;
+	ListaDeVariables listaVar;
 	int entero;
 }
 
 %type <literal> literal
 %type <tipo> tipo_base d_tipo
-%type <entero> lista_id 
+/* %type <entero> lista_id */
+%type <listaVar> lista_id
 
 %token letraTK
 %token cifraTK
@@ -302,19 +304,22 @@ lista_d_var:
 
 linea_de_var: lista_id dosPuntosTK d_tipo puntoYComaTK {
 	// ToDo: guardar ts.ultimo en una traduccion !!!!!!!
-	for(int i = $1; i < ts.ultimo; i++){
+	for(int i = $1.inicio; i <= $1.fin; i++){
 		ponerTipo(&ts, i, $3);
-		printf("Tipo de %s: %d\n", ts.celdas[i].nombre,$3);
 	}
-};
+}; 
 
 lista_id:
 	identificadorTK comaTK lista_id		{
+		$3.fin = ts.ultimo;
 		insertarVariableTS(&ts, $1, TIPO_PROVISIONAL);
 		$$ = $3;
 	}
-	| identificadorTK 					{
-		$$ = ts.ultimo;
+	| identificadorTK 					{ 
+		ListaDeVariables lista;
+		lista.inicio = ts.ultimo;
+		lista.fin = ts.ultimo;
+		$$ = lista;
 		insertarVariableTS(&ts, $1, TIPO_PROVISIONAL);
 	}
 	;
