@@ -142,17 +142,27 @@ static char *nombreDeTipo(NombreDeTipoT t) {
 }
 
 void printTablaTupla(TablaDeSimbolos *ts, int sid) {
-    if (ts->celdas[sid].tipoSimbolo != VARIABLE || ts->celdas[sid].valorCelda.variable.tipoDeVariable != TUPLA) {
-        printf("Error: el simbolo con SID %d no es una tupla\n", sid);
-        return;
+    if(ts->celdas[sid].tipoSimbolo == VARIABLE && ts->celdas[sid].valorCelda.variable.tipoDeVariable == TUPLA) {
+        Tupla tupla = ts->celdas[sid].valorCelda.variable.info.tupla;
+        printf("Tupla con %d elementos:\n", tupla.cantidad);
+        for (int i = 0; i < tupla.cantidad; i++) {
+            int elemSid = tupla.nodos[i];
+            CeldaSimbolo elem = ts->celdas[elemSid];
+            printf("  Elemento %d: SID=%d, Nombre=%s, Tipo=%s\n", i, elem.sid, elem.nombre, nombreDeTipo(tipoDeSimbolo(ts, elemSid)));
+        }
+    }else if (ts->celdas[sid].tipoSimbolo == VARIABLE || ts->celdas[sid].valorCelda.variable.tipoDeVariable == TABLA)
+    {
+        Tabla tabla = ts->celdas[sid].valorCelda.variable.info.tabla;
+        printf("Tabla con %d elementos:\n", tabla.listaSID.cantidad);
+        for (int i = 0; i < tabla.listaSID.cantidad; i++) {
+            int elemSid = tabla.listaSID.nodos[i];
+            CeldaSimbolo elem = ts->celdas[elemSid];
+            printf("  Elemento %d: SID=%d, Nombre=%s, Tipo=%s\n", i, elem.sid, elem.nombre, nombreDeTipo(tipoDeSimbolo(ts, elemSid)));
+        }
+    }else{
+        printf("El SID %d no corresponde a una tupla o tabla.\n", sid);
     }
-    Tupla tupla = ts->celdas[sid].valorCelda.variable.info.tupla;
-    printf("Tupla con %d elementos:\n", tupla.cantidad);
-    for (int i = 0; i < tupla.cantidad; i++) {
-        int elemSid = tupla.nodos[i];
-        CeldaSimbolo elem = ts->celdas[elemSid];
-        printf("  Elemento %d: SID=%d, Nombre=%s, Tipo=%s\n", i, elem.sid, elem.nombre, nombreDeTipo(tipoDeSimbolo(ts, elemSid)));
-    }
+    
 }
 
 
