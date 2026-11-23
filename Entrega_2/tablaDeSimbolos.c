@@ -141,10 +141,25 @@ static char *nombreDeTipo(NombreDeTipoT t) {
     }
 }
 
+void printTablaTupla(TablaDeSimbolos *ts, int sid) {
+    if (ts->celdas[sid].tipoSimbolo != VARIABLE || ts->celdas[sid].valorCelda.variable.tipoDeVariable != TUPLA) {
+        printf("Error: el simbolo con SID %d no es una tupla\n", sid);
+        return;
+    }
+    Tupla tupla = ts->celdas[sid].valorCelda.variable.info.tupla;
+    printf("Tupla con %d elementos:\n", tupla.cantidad);
+    for (int i = 0; i < tupla.cantidad; i++) {
+        int elemSid = tupla.nodos[i];
+        CeldaSimbolo elem = ts->celdas[elemSid];
+        printf("  Elemento %d: SID=%d, Nombre=%s, Tipo=%s\n", i, elem.sid, elem.nombre, nombreDeTipo(tipoDeSimbolo(ts, elemSid)));
+    }
+}
+
 
 
 static void escribeCelda(CeldaSimbolo c) {
     char tipo[64];
+    char info[64];
     printf("%-5d %-15s %-12s ", c.sid, c.nombre, nombreDeClase(c.tipoSimbolo));
 
     if (c.tipoSimbolo != CONSTANTE) {
@@ -192,7 +207,7 @@ void imprimeTablaDeSimbolos(TablaDeSimbolos tabla) {
         return;
     }
     imprimeCentrado("================ CONTENIDO DE LA TABLA DE SIMBOLOS ================");
-    printf("%-5s %-15s %-12s %-*s %s\n", "SID", "Nombre", "Clase", ANCHO_TIPO, "Tipo", "Valor");
+    printf("%-5s %-15s %-12s %-*s %-s\n", "SID", "Nombre", "Clase", ANCHO_TIPO, "Tipo", "Valor");
     imprimeLinea('-');
     for (int i = 0; i < tabla.ultimo; i++) {
         escribeCelda(tabla.celdas[i]);

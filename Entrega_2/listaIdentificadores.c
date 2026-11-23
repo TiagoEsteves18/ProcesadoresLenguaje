@@ -3,24 +3,25 @@
 #include "listaIdentificadores.h"
 
 ListaIdentificadores nuevaListaIdentificadores(char *nombre) {
-    return anadirIdentificador(NULL, nombre);
+    ListaIdentificadores lista;
+    lista.cantidad = 0;
+    return anadirIdentificador(lista, nombre);
 }
 
 ListaIdentificadores anadirIdentificador(ListaIdentificadores lista, char *nombre) {
-    NodoIdentificador *nodo;
-    if ((nodo = (NodoIdentificador *) malloc(sizeof(NodoIdentificador))) == NULL) {
-        printf("No hay memoria para la lista de identificadores\n");
+    if (lista.cantidad >= MAX_IDENTIFICADORES) {
+        printf("No hay memoria para más identificadores\n");
         exit(1);
     }
-    nodo->nombre = nombre;
-    nodo->sig = lista;
-    return nodo;
+    lista.nodos[lista.cantidad] = nombre;
+    lista.cantidad++;
+    return lista;
 }
-
+/*
 void liberaListaIdentificadores(ListaIdentificadores lista) {
     while (lista != NULL) {
         NodoIdentificador *sig = lista->sig;
         free(lista);
         lista = sig;
     }
-}
+}*/

@@ -2,13 +2,18 @@
 #define FFF_TIPOS_H
 #include "nombresDeTipos.h"
 #include "tiposDeVariables.h"
-#include "listaIdentificadores.h"
-typedef struct tupla {
-    NombreDeTipoT tipo;
-    ListaIdentificadores listaDeIdentificadores;
-} Tupla;
 
-typedef struct tabla {
+#define MAX_SID 50
+
+typedef struct listaSID{
+    int nodos[MAX_SID];
+    int cantidad;
+} ListaSID;
+
+typedef ListaSID Tupla; 
+
+typedef struct tablas{
+    ListaSID listaSID;
     int limiteInferior;
     int limiteSuperior;
 } Tabla;

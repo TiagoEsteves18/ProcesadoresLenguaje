@@ -353,11 +353,11 @@ lista_d_var:
 	;
 
 linea_de_var: lista_id dosPuntosTK d_tipo puntoYComaTK {
-	for (NodoIdentificador *n = $1; n != NULL; n = n->sig)
+	for (int i = 0; i<$1.cantidad; i++)
 	//PREGUNTAR: ¿Hace falta que paremos ejecucion si se repite la variable en la entrada y en la salida? Ejemplo, programa 1
-		if (insertarVariableTS(&ts, n->nombre, $3) == -1)
+		if (insertarVariableTS(&ts, $1.nodos[i], $3) == -1)
 			YYABORT;
-	liberaListaIdentificadores($1);
+	//liberaListaIdentificadores($1);
 };
 
 lista_id:
