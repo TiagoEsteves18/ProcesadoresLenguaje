@@ -288,7 +288,7 @@ d_tipo:
 		$$.tipoDeVariable = TABLA;
 
 		// Los limites deben ser enteros
-		if (!valorEnteroDeSimbolo(&ts, $3, &$$.limiteInferior) || !valorEnteroDeSimbolo(&ts, $5, &$$.limiteSuperior)) {
+		if (!valorEnteroDeSimbolo(&ts, $3, &$$.info.tabla.limiteInferior) || !valorEnteroDeSimbolo(&ts, $5, &$$.info.tabla.limiteSuperior)) {
 			yyerror("los limites de una tabla deben ser enteros constantes");
 			YYABORT;
 		}

@@ -5,7 +5,7 @@
 #include "listaIdentificadores.h"
 typedef struct tupla {
     NombreDeTipoT tipo;
-    ListaIdentificadoresT listaDeIdentificadores;
+    ListaIdentificadores listaDeIdentificadores;
 } Tupla;
 
 typedef struct tabla {

@@ -151,7 +151,7 @@ static void escribeCelda(CeldaSimbolo c) {
         Variable v = c.valorCelda.variable;
         switch (v.tipoDeVariable) {
             case TABLA:
-                snprintf(tipo, sizeof(tipo), "Tabla[%d..%d] de %s", v.limiteInferior, v.limiteSuperior, nombreDeTipo(v.tipo));
+                snprintf(tipo, sizeof(tipo), "Tabla[%d..%d] de %s", v.info.tabla.limiteInferior, v.info.tabla.limiteSuperior, nombreDeTipo(v.tipo));
                 break;
             case TUPLA:
                 snprintf(tipo, sizeof(tipo), "Tupla");
