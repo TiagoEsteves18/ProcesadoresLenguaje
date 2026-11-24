@@ -167,10 +167,10 @@ void printTablaTupla(TablaDeSimbolos *ts, int sid) {
 
 
 
-static void escribeCelda(CeldaSimbolo c) {
+static void escribeCelda(FILE *f, CeldaSimbolo c) {
     char tipo[64];
     char info[64];
-    printf("%-5d %-15s %-12s ", c.sid, c.nombre, nombreDeClase(c.tipoSimbolo));
+    fprintf(f, "%-5d %-15s %-12s ", c.sid, c.nombre, nombreDeClase(c.tipoSimbolo));
 
     if (c.tipoSimbolo != CONSTANTE) {
         Variable v = c.valorCelda.variable;
@@ -185,42 +185,42 @@ static void escribeCelda(CeldaSimbolo c) {
                 snprintf(tipo, sizeof(tipo), "%s", nombreDeTipo(v.tipo));
                 break;
         }
-        printf("%-*s -\n", ANCHO_TIPO, tipo);
+        fprintf(f, "%-*s -\n", ANCHO_TIPO, tipo);
         return;
     }
     LiteralT lit = c.valorCelda.constante;
-    printf("%-*s ", ANCHO_TIPO, nombreDeTipo(lit.tipoDelValor));
+    fprintf(f, "%-*s ", ANCHO_TIPO, nombreDeTipo(lit.tipoDelValor));
     switch (lit.tipoDelValor) {
-        case ENTERO:   printf("%d\n", lit.valor.valorEntero); break;
-        case REAL:     printf("%f\n", lit.valor.valorReal); break;
-        case CADENA:   printf("%s\n", lit.valor.valorCadena); break;
-        case CARACTER: printf("%c\n", lit.valor.valorCaracter); break;
-        case BOOLEANO: printf("%s\n", lit.valor.valorBooleano == VERDADERO ? "Verdadero" : "Falso"); break;
-        default:       printf("?\n"); break;
+        case ENTERO:   fprintf(f, "%d\n", lit.valor.valorEntero); break;
+        case REAL:     fprintf(f, "%f\n", lit.valor.valorReal); break;
+        case CADENA:   fprintf(f, "%s\n", lit.valor.valorCadena); break;
+        case CARACTER: fprintf(f, "%c\n", lit.valor.valorCaracter); break;
+        case BOOLEANO: fprintf(f, "%s\n", lit.valor.valorBooleano == VERDADERO ? "Verdadero" : "Falso"); break;
+        default:       fprintf(f, "?\n"); break;
     }
 }
 
-static void imprimeCentrado(char *texto) {
+static void imprimeCentrado(FILE *f, char *texto) {
     int espacios = (ANCHO_LINEA - (int) strlen(texto)) / 2;
-    printf("%*s%s\n", espacios, "", texto);
+    fprintf(f, "%*s%s\n", espacios, "", texto);
 }
 
-static void imprimeLinea(char c) {
+static void imprimeLinea(FILE *f, char c) {
     for (int i = 0; i < ANCHO_LINEA; i++)
-        putchar(c);
-    putchar('\n');
+        fputc(c, f);
+    fputc('\n', f);
 }
 
-void imprimeTablaDeSimbolos(TablaDeSimbolos tabla) {
+void imprimeTablaDeSimbolos(FILE *f, TablaDeSimbolos tabla) {
     if (tabla.ultimo == 0) {
-        printf("La tabla de simbolos esta vacia\n");
+        fprintf(f, "La tabla de simbolos esta vacia\n");
         return;
     }
-    imprimeCentrado("================ CONTENIDO DE LA TABLA DE SIMBOLOS ================");
-    printf("%-5s %-15s %-12s %-*s %-s\n", "SID", "Nombre", "Clase", ANCHO_TIPO, "Tipo", "Valor");
-    imprimeLinea('-');
+    imprimeCentrado(f, "================ CONTENIDO DE LA TABLA DE SIMBOLOS ================");
+    fprintf(f, "%-5s %-15s %-12s %-*s %-s\n", "SID", "Nombre", "Clase", ANCHO_TIPO, "Tipo", "Valor");
+    imprimeLinea(f, '-');
     for (int i = 0; i < tabla.ultimo; i++) {
-        escribeCelda(tabla.celdas[i]);
+        escribeCelda(f, tabla.celdas[i]);
     }
-    imprimeLinea('=');
+    imprimeLinea(f, '=');
 }

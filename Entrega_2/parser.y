@@ -1,17 +1,25 @@
 %{
     #include <stdio.h>
 	#include <stdlib.h>
+	#include <string.h>
+	#include <sys/stat.h>
+	#include <errno.h>
+
 	#include "nombresDeTipos.h"
 	#include "nombresDeOperadores.h"
 	#include "literal.h"
 	#include "tablaDeSimbolos.h"
 	#include "listaIdentificadores.h"
 	#include "tablaDeCuadruplas.h"
+
 	int yylex(); // Usamos la funcion que se crea gracias a flex
 	void yyerror(char *); // Definicion de la funcion yyerror
 	extern FILE* yyin; // Usamos la varible de Flex en la que viene la entrada
 	TablaDeSimbolos ts; //Es donde guardaremos los simbolos
 	TablaDeCuadruplas tc; //Es donde guardaremos las cuadruplas 
+
+	#define YYDEBUG 1 //Permite activar el modo Debugg de Bison
+	#define CARPETA_SALIDA "data"
 
 	NombreDeTipoT tipoAritmetico(int sid1, int sid2) {
 		if (tipoDeSimbolo(&ts, sid1) == REAL || tipoDeSimbolo(&ts, sid2) == REAL)
@@ -42,7 +50,29 @@
 		return td == to || (td == REAL && to == ENTERO);
 	}
 
-	#define YYDEBUG 1 //Permite activar el modo Debugg de Bison
+	void nombreBase(const char *ruta, char *base, size_t tam) {
+		const char *inicio = strrchr(ruta, '/');
+		inicio = (inicio == NULL) ? ruta : inicio + 1;
+		snprintf(base, tam, "%s", inicio);
+		char *punto = strrchr(base, '.');
+		if (punto != NULL)
+			*punto = '\0';
+	}
+
+	int creaCarpetaSalida(const char *base, char *carpeta, size_t tam) {
+		if (mkdir(CARPETA_SALIDA, 0755) != 0 && errno != EEXIST)
+			return -1;
+		snprintf(carpeta, tam, CARPETA_SALIDA "/%s", base);
+		if (mkdir(carpeta, 0755) != 0 && errno != EEXIST)
+			return -1;
+		return 0;
+	}
+
+	FILE *abreFicheroSalida(const char *carpeta, const char *prefijo, const char *base) {
+		char ruta[512];
+		snprintf(ruta, sizeof(ruta), "%s/%s_%s.txt", carpeta, prefijo, base);
+		return fopen(ruta, "w");
+	}
 
 %}
 
@@ -572,7 +602,7 @@ asignacion:
 
 alternativa:
 	siTK expresion entoncesTK instrucciones lista_opciones fsiTK	{
-
+		
 	}
 	;
 
@@ -681,6 +711,7 @@ int main(int argc, char **argv){
 	yydebug=0;
 	#endif
 	++argv, --argc;
+	char *ruta = (argc > 0) ? argv[0] : "stdin";
 	if (argc > 0)
 		yyin = fopen(argv[0], "r");
 	else
@@ -688,8 +719,23 @@ int main(int argc, char **argv){
 	ts = nuevaTablaDeSimbolos();
 	tc = nuevaTablaDeCuadruplas();
 	yyparse();
-	imprimeTablaDeSimbolos(ts);
-	imprimeTablaDeCuadruplas(tc, ts);
+
+	/* Pantalla */
+	imprimeTablaDeSimbolos(stdout, ts);
+	escribeCodigoIntermedio(stdout, tc, ts);
+
+	/* Ficheros */
+	char base[256], carpeta[300];
+	nombreBase(ruta, base, sizeof(base));
+	if (creaCarpetaSalida(base, carpeta, sizeof(carpeta)) == 0) {
+		FILE *f = abreFicheroSalida(carpeta, "tabla_simbolos", base);
+		if (f != NULL) { imprimeTablaDeSimbolos(f, ts); fclose(f); }
+		f = abreFicheroSalida(carpeta, "codigo_intermedio", base);
+		if (f != NULL) { escribeCodigoIntermedio(f, tc, ts); fclose(f); }
+	} 
+	else {
+		printf("No se ha podido crear la carpeta %s\n", CARPETA_SALIDA);
+	}		
 }
 
 void yyerror(char * s){

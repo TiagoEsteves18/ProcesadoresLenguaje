@@ -26,5 +26,8 @@ listaIdentificadores.o: listaIdentificadores.c listaIdentificadores.h
 tablaDeCuadruplas.o: tablaDeCuadruplas.c tablaDeCuadruplas.h tablaDeSimbolos.h
 	gcc -c tablaDeCuadruplas.c
 
+run_all: compilador
+	for f in programas/*.alg; do echo "== $$f"; ./compilador "$$f"; clear; done
+
 clean:
 	rm *.tab.* lex.yy.c *.o parser.output compilador

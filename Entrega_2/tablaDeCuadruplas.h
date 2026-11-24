@@ -23,5 +23,7 @@ typedef struct tablaDeCuadruplas {
 TablaDeCuadruplas nuevaTablaDeCuadruplas(void);
 int gen(TablaDeCuadruplas *tabla, char *operador, int operando1, int operando2, int resultado);
 void imprimeTablaDeCuadruplas(TablaDeCuadruplas tabla, TablaDeSimbolos ts);
+void escribeCodigoIntermedio(FILE *f, TablaDeCuadruplas tabla, TablaDeSimbolos ts);
+void generarCodigoIntermedio(TablaDeCuadruplas tabla, TablaDeSimbolos ts);
 
 #endif

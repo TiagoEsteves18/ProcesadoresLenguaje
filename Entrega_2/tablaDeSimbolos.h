@@ -1,6 +1,8 @@
 #ifndef FFF_TABLA_DE_SIMBOLOS_H
 #define FFF_TABLA_DE_SIMBOLOS_H
 
+#include <stdio.h>
+
 #include "nombresDeTipos.h"
 #include <stdbool.h>
 #include "literal.h"
@@ -38,6 +40,6 @@ int buscarSimbolo(TablaDeSimbolos *tabla, char *nombre);
 int nuevoTemporal(TablaDeSimbolos *tabla, NombreDeTipoT tipo);
 NombreDeTipoT tipoDeSimbolo(TablaDeSimbolos *tabla, int sid);
 
-void imprimeTablaDeSimbolos(TablaDeSimbolos tabla);
+void imprimeTablaDeSimbolos(FILE *f, TablaDeSimbolos tabla);
 
 #endif
