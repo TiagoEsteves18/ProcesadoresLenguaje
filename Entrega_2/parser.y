@@ -87,6 +87,7 @@
 	NombreDeOperador operador;
 	int entero;
 	ListaIdentificadores listaIds;
+	ListaSID listaSID;
 	Variable variable;
 }
 
@@ -94,6 +95,7 @@
 %type <variable> d_tipo
 %type <tipo> tipo_base
 %type <listaIds> lista_id
+%type <listaSID> lista_d_var linea_de_var cabecera_alg decl_sal decl_ent_sal
 %type <entero> expresion expresion_t operando
 
 %token letraTK
@@ -206,10 +208,13 @@
    ==================================================== */
 
 desc_algoritmo: algoritmoTK identificadorTK puntoYComaTK cabecera_alg bloque_alg falgoritmoTK puntoTK {
+	for (int i = 0; i < $4.cantidad; i++) {
+    	gen(&tc, "output", VACIO, VACIO, $4.nodos[i]);
+	}
 	printf("\n\t-------------\n\t|Programa OK|\n\t-------------\n\n");
 };
 cabecera_alg: decl_globales decl_a_f decl_ent_sal comentarioPreTK {
-
+	$$ = $3;
 };
 bloque_alg: bloque comentarioPostTK {
 
@@ -375,18 +380,26 @@ lista_d_cte:
 
 lista_d_var:
 	linea_de_var lista_d_var  {
-
-	} 
+		$$ = $1;
+		for (int i = 0; i < $2.cantidad; i++) {
+            $$ = anadirSID($$, $2.nodos[i]);
+        }
+	}  
 	| /*empty*/	{
-
+		$$ = nuevaListaSID();
 	}
 	;
 
 linea_de_var: lista_id dosPuntosTK d_tipo puntoYComaTK {
-	for (int i = 0; i<$1.cantidad; i++)
-	//PREGUNTAR: ¿Hace falta que paremos ejecucion si se repite la variable en la entrada y en la salida? Ejemplo, programa 1
-		if (insertarVariableTS(&ts, $1.nodos[i], $3) == -1)
-			YYABORT;
+	ListaSID listaSID = nuevaListaSID();
+	for (int i = $1.cantidad - 1; i >= 0; i--) {
+		//PREGUNTAR: ¿Hace falta que paremos ejecucion si se repite la variable en la entrada y en la salida? Ejemplo, programa 1
+    	int sid = insertarVariableTS(&ts, $1.nodos[i], $3);
+    	if (sid == -1)
+        	YYABORT;
+    	listaSID = anadirSID(listaSID, sid);
+	}
+	$$ = listaSID;
 	//liberaListaIdentificadores($1);
 };
 
@@ -401,20 +414,21 @@ lista_id:
 
 decl_ent_sal:
 	decl_ent				{
-		
+		$$ = nuevaListaSID();
 	}
 	| decl_ent decl_sal		{
-
+		$$ = $2;
 	}
 	| decl_sal				{
-
+		$$ = $1;
 	};
 
-decl_ent:entradaTK lista_d_var {
-	
+decl_ent: entradaTK lista_d_var {
+	for (int i = 0; i<$2.cantidad; i++)
+		gen(&tc, "input", VACIO, VACIO, $2.nodos[i]);
 };
 decl_sal: salidaTK lista_d_var {
-
+	$$ = $2;
 };
 
 expresion:

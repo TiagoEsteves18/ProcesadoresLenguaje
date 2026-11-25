@@ -10,8 +10,16 @@ typedef struct listaIdentificadores{
     int cantidad;
 } ListaIdentificadores;
 
+typedef struct listaSID{
+    int nodos[MAX_IDENTIFICADORES];
+    int cantidad;
+} ListaSID;
+
 ListaIdentificadores nuevaListaIdentificadores(char *nombre);
 ListaIdentificadores anadirIdentificador(ListaIdentificadores lista, char *nombre);
 void liberaListaIdentificadores(ListaIdentificadores lista);
+
+ListaSID nuevaListaSID();
+ListaSID anadirSID(ListaSID lista, int sid);
 
 #endif

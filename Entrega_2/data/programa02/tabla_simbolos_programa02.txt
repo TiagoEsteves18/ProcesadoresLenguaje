@@ -1,0 +1,25 @@
+ ================ CONTENIDO DE LA TABLA DE SIMBOLOS ================
+SID   Nombre          Clase        Tipo                     Valor
+----------------------------------------------------------------------
+0     a               Variable     Entero                   -
+1     b               Variable     Entero                   -
+2     c               Variable     Entero                   -
+3     max             Variable     Entero                   -
+4     min             Variable     Entero                   -
+5     med             Variable     Entero                   -
+6     t0              Temporal     Booleano                 -
+7     t1              Temporal     Booleano                 -
+8     t2              Temporal     Booleano                 -
+9     t3              Temporal     Booleano                 -
+10    t4              Temporal     Booleano                 -
+11    t5              Temporal     Booleano                 -
+12    t6              Temporal     Booleano                 -
+13    t7              Temporal     Booleano                 -
+14    t8              Temporal     Booleano                 -
+15    t9              Temporal     Booleano                 -
+16    t10             Temporal     Booleano                 -
+17    t11             Temporal     Booleano                 -
+18    t12             Temporal     Booleano                 -
+19    t13             Temporal     Booleano                 -
+20    t14             Temporal     Booleano                 -
+======================================================================

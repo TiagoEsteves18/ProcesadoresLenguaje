@@ -17,6 +17,23 @@ ListaIdentificadores anadirIdentificador(ListaIdentificadores lista, char *nombr
     lista.cantidad++;
     return lista;
 }
+
+ListaSID nuevaListaSID() {
+    ListaSID lista;
+    lista.cantidad = 0;
+    return lista;
+}
+
+ListaSID anadirSID(ListaSID lista, int sid) {
+    if (lista.cantidad >= MAX_IDENTIFICADORES) {
+        printf("No hay memoria para más identificadores\n");
+        exit(1);
+    }
+    lista.nodos[lista.cantidad] = sid;
+    lista.cantidad++;
+    return lista;
+}
+
 /*
 void liberaListaIdentificadores(ListaIdentificadores lista) {
     while (lista != NULL) {

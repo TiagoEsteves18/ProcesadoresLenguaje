@@ -1,0 +1,7 @@
+1 input a
+2 input b
+3 aux := a
+4 c := b
+5 d := aux
+6 output c
+7 output d

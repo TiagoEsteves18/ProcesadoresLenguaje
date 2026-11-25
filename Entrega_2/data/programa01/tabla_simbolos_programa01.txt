@@ -1,0 +1,9 @@
+ ================ CONTENIDO DE LA TABLA DE SIMBOLOS ================
+SID   Nombre          Clase        Tipo                     Valor
+----------------------------------------------------------------------
+0     a               Variable     Entero                   -
+1     b               Variable     Entero                   -
+2     c               Variable     Entero                   -
+3     d               Variable     Entero                   -
+4     aux             Variable     Entero                   -
+======================================================================

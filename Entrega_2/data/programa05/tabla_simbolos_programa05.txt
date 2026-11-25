@@ -1,0 +1,33 @@
+ ================ CONTENIDO DE LA TABLA DE SIMBOLOS ================
+SID   Nombre          Clase        Tipo                     Valor
+----------------------------------------------------------------------
+0     a               Variable     Entero                   -
+1     b               Variable     Entero                   -
+2     r               Variable     Real                     -
+3     c               Variable     Booleano                 -
+4     d               Variable     Booleano                 -
+5     x               Variable     Real                     -
+6     ok              Variable     Booleano                 -
+7     e               Variable     Entero                   -
+8     2               Constante    Entero                   2
+9     t0              Temporal     Entero                   -
+10    t1              Temporal     Entero                   -
+11    t2              Temporal     Entero                   -
+12    1               Constante    Entero                   1
+13    t3              Temporal     Entero                   -
+14    3               Constante    Entero                   3
+15    t4              Temporal     Entero                   -
+16    t5              Temporal     Entero                   -
+17    t6              Temporal     Entero                   -
+18    2.500000        Constante    Real                     2.500000
+19    t7              Temporal     Real                     -
+20    t8              Temporal     Real                     -
+21    t9              Temporal     Booleano                 -
+22    1.500000        Constante    Real                     1.500000
+23    t10             Temporal     Booleano                 -
+24    t11             Temporal     Booleano                 -
+25    t12             Temporal     Booleano                 -
+26    t13             Temporal     Booleano                 -
+27    t14             Temporal     Booleano                 -
+28    t15             Temporal     Booleano                 -
+======================================================================
